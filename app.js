@@ -103,9 +103,8 @@ function updateStats() {
   d.forEach(function(r) {
     var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
     var dept = r['所属部门']||'未知';
-    // 取部门短名
-    var shortDept = dept.split('-').pop() || dept;
-    depts[shortDept] = (depts[shortDept]||0)+1;
+    var mainDept = dept.split('-')[0];
+    depts[mainDept] = (depts[mainDept]||0)+1;
     var pos = r['当前位置']||''; var person = r['责任人']||'';
     if(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person) idle++;
   });
@@ -195,7 +194,6 @@ function render() {
   }
 
   document.getElementById('tableWrapper').innerHTML = '<table><thead><tr>'+
-    thSort('序号','序号')+
     thSort('当前位置','当前位置')+
     thSort('公用个人','公用/个人')+
     thSort('责任人','责任人')+
@@ -223,7 +221,6 @@ function render() {
       var ops = '<button class="btn btn-outline btn-sm" onclick="editDevice(\''+r['序号']+'\')">\u270f\ufe0f</button>';
       if(isAdmin) ops += '<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+r['序号']+'\')">\ud83d\uddd1</button>';
       return '<tr>'+
-        '<td>'+r['序号']+'</td>'+
         '<td title="'+pos+'">'+pos.substring(0,15)+(pos.length>15?'...':'')+'</td>'+
         '<td><span class="badge '+ppBadge+'">'+(r['公用个人']||'-')+'</span></td>'+
         '<td>'+(r['责任人']||'')+'</td>'+
