@@ -84,9 +84,9 @@ function doLogin() {
 function showApp(user) {
   document.getElementById('loginWrap').style.display='none';
   document.getElementById('appWrap').style.display='block';
-  document.getElementById('sidebarAvatar').textContent = user.name[0];
-  document.getElementById('sidebarUserName').textContent = user.name;
-  document.getElementById('sidebarUserRole').textContent = user.role==='admin'?'管理员':'普通用户';
+  document.getElementById('headerAvatar').textContent = user.name[0];
+  document.getElementById('headerUserName').textContent = user.name;
+  document.getElementById('headerUserRole').textContent = user.role==='admin'?'管理员':'普通用户';
   updateStats();
   updateFilters();
   render();
@@ -118,14 +118,6 @@ document.getElementById('loginUser').addEventListener('keydown', function(e) { i
     }
   } catch(e) {}
 })();
-
-// ===== 导航切换 =====
-function switchNav(page) {
-  var items = document.querySelectorAll('.nav-item');
-  for(var i=0;i<items.length;i++) items[i].classList.remove('active');
-  var clicked = event && event.target ? event.target.closest('.nav-item') : null;
-  if(clicked) clicked.classList.add('active');
-}
 
 // ===== 统计指标卡 =====
 function updateStats() {
