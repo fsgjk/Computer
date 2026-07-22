@@ -117,11 +117,12 @@ a:hover{color:var(--primary-600)}
 
 /* ===== Table ===== */
 .table-wrapper{overflow-x:auto}
-.table-wrapper table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:1500px;font-size:13px}
+.table-wrapper table{width:100%;border-collapse:collapse;table-layout:auto;font-size:13px}
 .table-wrapper thead{position:sticky;top:0;z-index:5}
 .table-wrapper th{background:var(--neutral-50);color:var(--neutral-400);font-size:11px;font-weight:500;padding:var(--space-2) var(--space-3);text-align:left;border-bottom:0.5px solid var(--neutral-100);white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s ease}
 .table-wrapper th:hover{color:var(--neutral-600)}
-.table-wrapper td{padding:var(--space-2) var(--space-3);border-bottom:0.5px solid var(--neutral-50);color:var(--neutral-800);font-size:13px;font-weight:400;overflow:hidden;text-overflow:ellipsis}
+.table-wrapper td{padding:var(--space-2) var(--space-3);border-bottom:0.5px solid var(--neutral-50);color:var(--neutral-800);font-size:13px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.table-wrapper td.note-cell{max-width:120px;white-space:normal;word-break:break-all}
 .table-wrapper tr:hover td{background:var(--neutral-50)}
 
 /* ===== Status Badges ===== */
@@ -702,28 +703,29 @@ function render() {
   function thSort(field, label, width) {
     var arrow = '';
     if(sortField === field) arrow = sortDir === 1 ? ' ▲' : ' ▼';
-    return '<th style="width:'+width+'" onclick="toggleSort(\''+field+'\')" tabindex="0" role="columnheader" aria-sort="'+(sortField===field?(sortDir===1?'ascending':'descending'):'none')+'">'+label+'<span style="font-size:10px">'+arrow+'</span></th>';
+    var style = width ? ' style="width:'+width+'"' : '';
+    return '<th'+style+' onclick="toggleSort(\''+field+'\')" tabindex="0" role="columnheader" aria-sort="'+(sortField===field?(sortDir===1?'ascending':'descending'):'none')+'">'+label+'<span style="font-size:10px">'+arrow+'</span></th>';
   }
 
   document.getElementById('tableWrapper').innerHTML = '<table role="grid" aria-label="电脑资产明细列表"><thead><tr>'+
-    thSort('当前位置','当前位置','140px')+
-    thSort('公用个人','公用/个人','70px')+
-    thSort('责任人','责任人','70px')+
-    thSort('资产编号','资产编号','100px')+
-    thSort('用户名','用户名','70px')+
-    thSort('MAC地址','MAC地址','120px')+
-    thSort('是否加域','加域','50px')+
-    thSort('IP地址','IP地址','110px')+
-    thSort('所属部门','部门','90px')+
-    thSort('采购日期','采购日期','70px')+
-    thSort('使用年限','使用年限','70px')+
-    thSort('本地账号','本地账号','70px')+
-    thSort('分类','分类','70px')+
-    thSort('CPU','CPU','100px')+
-    thSort('内存','内存','60px')+
-    thSort('硬盘','硬盘','60px')+
-    thSort('操作系统','操作系统','110px')+
-    thSort('备注','备注','100px')+
+    thSort('当前位置','当前位置')+
+    thSort('公用个人','公用/个人')+
+    thSort('责任人','责任人')+
+    thSort('资产编号','资产编号')+
+    thSort('用户名','用户名')+
+    thSort('MAC地址','MAC地址')+
+    thSort('是否加域','加域')+
+    thSort('IP地址','IP地址')+
+    thSort('所属部门','部门')+
+    thSort('采购日期','采购日期')+
+    thSort('使用年限','使用年限')+
+    thSort('本地账号','本地账号')+
+    thSort('分类','分类')+
+    thSort('CPU','CPU')+
+    thSort('内存','内存')+
+    thSort('硬盘','硬盘')+
+    thSort('操作系统','操作系统')+
+    thSort('备注','备注','120px')+
     '<th style="width:80px">操作</th>'+
     '</tr></thead><tbody>'+
     page.map(function(r) {
@@ -758,7 +760,7 @@ function render() {
         '<td>'+(r['内存']||'')+'</td>'+
         '<td>'+(r['硬盘']||'')+'</td>'+
         '<td>'+(r['操作系统']||'')+'</td>'+
-        '<td style="max-width:100px;overflow:hidden;text-overflow:ellipsis" title="'+(r['备注']||'')+'">'+(r['备注']||'')+'</td>'+
+        '<td class="note-cell" title="'+(r['备注']||'')+'">'+(r['备注']||'')+'</td>'+
         '<td style="white-space:nowrap">'+ops+'</td>'+
         '</tr>';
     }).join('')+
