@@ -447,9 +447,6 @@ var clientIP = '';
       try { DATA = JSON.parse(el2.textContent); } catch(e) {}
     }
   }
-  // 诊断信息
-  var dbg = document.getElementById('debugInfo');
-  if(dbg) dbg.textContent = 'DATA:'+DATA.length+'条 | Token:'+(GH_TOKEN?'已内置':'无')+' | LS:'+(function(){try{var s=localStorage.getItem('ledger_data_backup');return s?JSON.parse(s).length+'条':'无';}catch(e){return '错误';}})();
 })();
 
 // UTF-8 安全 Base64 编码
@@ -730,10 +727,6 @@ function showApp(user) {
   updateFilters();
   render();
   // 诊断：渲染后检查
-  var tw2 = document.getElementById('tableWrapper');
-  var rows2 = tw2 ? tw2.querySelectorAll('tbody tr') : [];
-  var dbg2 = document.getElementById('debugInfo');
-  if(dbg2) dbg2.textContent = '已登录 | DATA:'+DATA.length+'条 | 过滤后:'+getFilteredData().length+'条 | 表格行:'+rows2.length;
   refreshLogPanel();
   startAutoSync(); // 每30秒自动检查云端更新
 }
