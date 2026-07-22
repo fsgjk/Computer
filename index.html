@@ -359,41 +359,100 @@ function sha256(msg) {
 
 var USERS = {"admin": {"pwd": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", "name": "管理员", "role": "admin"}, "user": {"pwd": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446", "name": "普通用户", "role": "user"}};
 var TOKEN_KEY = 'ledger_login_v5';
-var DATA = (function() {
-  try {
-    var el = document.getElementById('ledger-data');
-    if(el && el.textContent) return JSON.parse(el.textContent);
-  } catch(e) {}
-  return [];
-})();
+var GH_TOKEN_KEY = 'ledger_gh_token';
+var GH_REPO = 'fsgjk/Computer';
+var DATA = [];
+var DATA_SHA = null;
+var GH_TOKEN = localStorage.getItem(GH_TOKEN_KEY) || '';
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','备注'];
 var LOGIN_USER = null;
 var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1;
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
+var dataSyncReady = false;
+var dataSyncQueue = [];
 
-// 数据持久化：每次修改后自动存localStorage，页面加载时优先用localStorage
+function onDataReady(cb) {
+  if(dataSyncReady) { cb(); return; }
+  dataSyncQueue.push(cb);
+}
+function fireDataReady() {
+  dataSyncReady = true;
+  for(var i=0;i<dataSyncQueue.length;i++) dataSyncQueue[i]();
+  dataSyncQueue = [];
+}
+
+// 从 GitHub data.json 加载数据（带 localStorage 兜底）
+(function() {
+  function useLocalFallback() {
+    try {
+      var saved = localStorage.getItem('ledger_data_backup');
+      if(saved) {
+        DATA = JSON.parse(saved);
+        console.log('从localStorage加载:', DATA.length, '条');
+      }
+    } catch(e) {}
+    if(!DATA.length) {
+      var el = document.getElementById('ledger-data');
+      if(el && el.textContent) { try { DATA = JSON.parse(el.textContent); } catch(e) {} }
+    }
+    fireDataReady();
+  }
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
+  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.onload = function() {
+    if(xhr.status === 200) {
+      try {
+        var info = JSON.parse(xhr.responseText);
+        DATA_SHA = info.sha;
+        DATA = JSON.parse(atob(info.content.replace(/\s/g,'')));
+        console.log('从GitHub加载:', DATA.length, '条');
+        // 同步到localStorage
+        try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+        fireDataReady();
+        return;
+      } catch(e) { console.error('解析GitHub数据失败:', e); }
+    }
+    useLocalFallback();
+  };
+  xhr.onerror = function() { useLocalFallback(); };
+  xhr.send();
+})();
+
+// 保存数据到 GitHub
+function syncToGitHub(callback) {
+  if(!GH_TOKEN) return;
+  var content = JSON.stringify(DATA, null, 2);
+  var b64 = btoa(unescape(encodeURIComponent(content)));
+  var payload = {message: 'update data.json', content: b64};
+  if(DATA_SHA) payload.sha = DATA_SHA;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json', true);
+  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+    if(xhr.status === 200 || xhr.status === 201) {
+      try {
+        var resp = JSON.parse(xhr.responseText);
+        DATA_SHA = resp.content.sha;
+      } catch(e) {}
+    }
+    if(callback) callback(xhr.status === 200 || xhr.status === 201);
+  };
+  xhr.onerror = function() { if(callback) callback(false); };
+  xhr.send(JSON.stringify(payload));
+}
+
+// 数据持久化：存localStorage + 同步GitHub
 function saveDataToStorage() {
   try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+  syncToGitHub();
 }
-function loadDataFromStorage() {
-  try {
-    var saved = localStorage.getItem('ledger_data_backup');
-    if(saved) {
-      var parsed = JSON.parse(saved);
-      if(parsed && parsed.length > 0) {
-        // 比较本地备份和页面数据的条数，用多的那个
-        if(parsed.length >= DATA.length) {
-          DATA = parsed;
-          return true;
-        }
-      }
-    }
-  } catch(e) {}
-  return false;
-}
-// 页面加载时尝试从localStorage恢复
-loadDataFromStorage();
 
 // 获取公网IP
 (function() {
@@ -454,10 +513,28 @@ function showApp(user) {
   document.getElementById('headerAvatar').textContent = user.name[0];
   document.getElementById('headerUserName').textContent = user.name;
   document.getElementById('headerUserRole').textContent = user.role==='admin'?'管理员':'普通用户';
-  updateStats();
-  updateFilters();
-  render();
-  refreshLogPanel();
+  onDataReady(function() {
+    updateStats();
+    updateFilters();
+    render();
+    refreshLogPanel();
+  });
+  // 管理员首次登录提示设置Token
+  if(user.role === 'admin' && !GH_TOKEN) {
+    setTimeout(function() { showTokenSetup(); }, 500);
+  }
+}
+
+function showTokenSetup() {
+  var token = prompt('请输入 GitHub Token 以启用云端数据同步：\n\n（可在 GitHub Settings > Developer settings > Personal access tokens 生成，需要 repo 权限）\n\n留空则仅使用本地存储。', GH_TOKEN || '');
+  if(token !== null) {
+    if(token.trim()) {
+      GH_TOKEN = token.trim();
+      localStorage.setItem(GH_TOKEN_KEY, GH_TOKEN);
+      // 重新加载数据
+      location.reload();
+    }
+  }
 }
 
 function doLogout() {
@@ -842,6 +919,8 @@ document.getElementById('editModal').addEventListener('click', function(e){ if(e
 document.getElementById('confirmDialog').addEventListener('click', function(e){ if(e.target===this) closeConfirm(); });
 
 </script>
+
+
 
 
 
