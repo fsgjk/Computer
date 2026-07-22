@@ -483,33 +483,38 @@ var autoSyncTimer = null;
 function startAutoSync() {
   if(!GH_TOKEN) return;
   if(autoSyncTimer) clearInterval(autoSyncTimer);
-  autoSyncTimer = setInterval(function() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main&t='+Date.now(), true);
-    xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-    xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-    xhr.timeout = 8000;
-    xhr.onload = function() {
-      if(xhr.status === 200) {
-        try {
-          var info = JSON.parse(xhr.responseText);
-          var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
-          // 只有云端数据非空且确实有变化时才更新
-          if(remoteData.length > 0 && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
-            DATA = remoteData;
-            DATA_SHA = info.sha;
-            try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-            updateStats();
-            updateFilters();
-            render();
-          }
-        } catch(e) {}
-      }
-    };
-    xhr.onerror = function() {};
-    xhr.ontimeout = function() {};
-    xhr.send();
-  }, 30000);
+  // 延迟5秒后开始第一次同步，确保页面已完全渲染
+  setTimeout(function() {
+    doAutoSync();
+    autoSyncTimer = setInterval(doAutoSync, 30000);
+  }, 5000);
+}
+function doAutoSync() {
+  if(!GH_TOKEN) return;
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main&t='+Date.now(), true);
+  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.timeout = 8000;
+  xhr.onload = function() {
+    if(xhr.status === 200) {
+      try {
+        var info = JSON.parse(xhr.responseText);
+        var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+        if(remoteData.length > 0 && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
+          DATA = remoteData;
+          DATA_SHA = info.sha;
+          try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+          updateStats();
+          updateFilters();
+          render();
+        }
+      } catch(e) {}
+    }
+  };
+  xhr.onerror = function() {};
+  xhr.ontimeout = function() {};
+  xhr.send();
 }
 
 // 获取公网IP
@@ -598,7 +603,7 @@ function showApp(user) {
   updateFilters();
   render();
   refreshLogPanel();
-  startAutoSync(); // 启动定时自动同步
+  startAutoSync(); // 启动定时自动同步（延迟启动，确保页面先渲染）
 }
 
 function doLogout() {
