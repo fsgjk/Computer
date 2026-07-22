@@ -387,12 +387,13 @@ var clientIP = '';
     try { DATA = JSON.parse(el.textContent); } catch(e) {}
   }
 
-  // 2. 尝试从localStorage恢复更新的数据
+  // 2. 尝试从localStorage恢复更新的数据（仅当数据完整时）
   try {
     var saved = localStorage.getItem('ledger_data_backup');
     if(saved) {
       var p = JSON.parse(saved);
-      if(p.length > 0) DATA = p;
+      // 检查第一个记录的字段是否完整（有资产编号才算有效数据）
+      if(p.length > 0 && p[0]['资产编号']) DATA = p;
     }
   } catch(e) {}
 
@@ -603,8 +604,19 @@ function showApp(user) {
   document.getElementById('headerAvatar').textContent = user.name[0];
   document.getElementById('headerUserName').textContent = user.name;
   document.getElementById('headerUserRole').textContent = user.role==='admin'?'管理员':'普通用户';
-  // 诊断：登录后检查数据状态
-  console.log('showApp: DATA.length='+DATA.length+' filterMode='+filterMode+' currentDeptPrefix='+currentDeptPrefix);
+  // 诊断：检查数据完整性
+  var sample = DATA[0];
+  var hasRightKeys = sample && sample['资产编号'] && sample['所属部门'];
+  // 如果数据字段不完整（被损坏的localStorage覆盖），从页面内嵌数据恢复
+  if(DATA.length > 0 && !hasRightKeys) {
+    var el3 = document.getElementById('ledger-data');
+    if(el3 && el3.textContent) {
+      try {
+        DATA = JSON.parse(el3.textContent);
+        localStorage.setItem('ledger_data_backup', JSON.stringify(DATA));
+      } catch(e) {}
+    }
+  }
   updateStats();
   updateFilters();
   render();
