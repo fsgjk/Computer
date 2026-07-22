@@ -118,11 +118,12 @@ function updateStats() {
 }
 
 function updateFilters() {
-  var cats = []; var depts = [];
-  DATA.forEach(function(r) { if(r['分类'] && cats.indexOf(r['分类'])<0) cats.push(r['分类']); if(r['所属部门'] && depts.indexOf(r['所属部门'])<0) depts.push(r['所属部门']); });
-  cats.sort(); depts.sort();
+  var cats = []; var depts = []; var oss = [];
+  DATA.forEach(function(r) { if(r['分类'] && cats.indexOf(r['分类'])<0) cats.push(r['分类']); if(r['所属部门'] && depts.indexOf(r['所属部门'])<0) depts.push(r['所属部门']); if(r['操作系统'] && oss.indexOf(r['操作系统'])<0) oss.push(r['操作系统']); });
+  cats.sort(); depts.sort(); oss.sort();
   document.getElementById('filterCategory').innerHTML = '<option value="">全部分类</option>'+cats.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
   document.getElementById('filterDepartment').innerHTML = '<option value="">全部部门</option>'+depts.map(function(d){return '<option value="'+d+'">'+d+'</option>';}).join('');
+  document.getElementById('filterOS').innerHTML = '<option value="">全部系统</option>'+oss.map(function(o){return '<option value="'+o+'">'+o+'</option>';}).join('');
   document.getElementById('deptList').innerHTML = depts.map(function(d){return '<option value="'+d+'">';}).join('');
 }
 
@@ -131,6 +132,7 @@ function getFilteredData() {
   var cat = document.getElementById('filterCategory').value;
   var dept = document.getElementById('filterDepartment').value;
   var ppv = document.getElementById('filterPublic').value;
+  var osv = document.getElementById('filterOS').value;
   var filtered = DATA.slice();
   if(filterMode === 'idle') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return ['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person; });
   else if(filterMode === 'used') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return !(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person); });
@@ -138,6 +140,7 @@ function getFilteredData() {
   if(cat) filtered = filtered.filter(function(r){return r['分类']===cat;});
   if(dept) filtered = filtered.filter(function(r){return (r['所属部门']||'').includes(dept);});
   if(ppv) filtered = filtered.filter(function(r){return r['公用个人']===ppv;});
+  if(osv) filtered = filtered.filter(function(r){return (r['操作系统']||'')===osv;});
   // 排序
   if(sortField) {
     filtered.sort(function(a, b) {
