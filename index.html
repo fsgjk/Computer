@@ -396,6 +396,8 @@ var clientIP = '';
   } catch(e) {}
 
   // 3. 如果有token，后台静默从GitHub同步
+  // 重要：GitHub数据不应覆盖localStorage中可能更新的数据
+  // 仅当localStorage没有数据或GitHub数据更新时才使用GitHub数据
   if(GH_TOKEN) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
@@ -409,17 +411,22 @@ var clientIP = '';
           DATA_SHA = info.sha;
           var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
           if(remoteData.length > 0) {
-            DATA = remoteData;
-            try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+            // 仅当本地没有数据时，才使用GitHub数据初始化
+            // 如果本地已有数据（来自页面内嵌或localStorage），保留本地数据
+            // 并将本地数据同步到GitHub
+            if(DATA.length === 0) {
+              DATA = remoteData;
+              try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+            } else {
+              // 本地有数据，将本地数据同步到GitHub
+              syncToGitHub();
+            }
           }
         } catch(e) {}
       }
     };
     xhr.send();
   }
-
-  // 数据已就绪
-  dataSyncReady = true;
 })();
 
 // 保存数据到 GitHub
