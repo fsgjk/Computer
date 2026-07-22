@@ -374,7 +374,7 @@ var DATA_SHA = null;
 var GH_TOKEN = localStorage.getItem(GH_TOKEN_KEY) || '';
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','备注'];
 var LOGIN_USER = null;
-var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1;
+var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1, currentDeptPrefix = '';
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
 
@@ -663,6 +663,7 @@ function getFilteredData() {
   if(filterMode === 'idle') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return ['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person; });
   else if(filterMode === 'used') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return !(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person); });
   else if(filterMode === 'old') filtered = filtered.filter(function(r) { return calcYears(r) > 5; });
+  else if(filterMode === 'dept_prefix') filtered = filtered.filter(function(r) { var d = r['所属部门']||''; var main = d.split('-')[0]; if(!main) main = '未分配'; return main === currentDeptPrefix; });
   if(search) filtered = filtered.filter(function(r){return FIELDS.some(function(f){return String(r[f]||'').toLowerCase().includes(search);});});
   if(cat) filtered = filtered.filter(function(r){return r['分类']===cat;});
   if(dept) filtered = filtered.filter(function(r){return (r['所属部门']||'').includes(dept);});
@@ -788,8 +789,8 @@ function toggleSort(field) {
 
 function changePageSize(size) { pageSize = parseInt(size); currentPage = 1; render(); }
 function goPage(p) { if(p>=1 && p<=Math.ceil(getFilteredData().length/pageSize)){ currentPage=p; render(); } }
-function reload() { currentPage=1; render(); }
-function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function(){ currentPage=1; render(); }, 300); }
+function reload() { filterMode=''; currentDeptPrefix=''; currentPage=1; render(); }
+function debounceSearch() { filterMode=''; currentDeptPrefix=''; clearTimeout(searchTimer); searchTimer = setTimeout(function(){ currentPage=1; render(); }, 300); }
 
 function filterByCard(action) {
   document.getElementById('searchInput').value = '';
@@ -800,7 +801,13 @@ function filterByCard(action) {
   filterMode = (action === 'clear') ? '' : action;
   if(action.indexOf('dept_') === 0) {
     filterMode = '';
-    document.getElementById('searchInput').value = action.substring(5);
+    var deptName = action.substring(5);
+    // 按所属部门前缀精确筛选，而非搜索框模糊匹配
+    // 设置一个隐藏的部门筛选标记
+    document.getElementById('filterDepartment').setAttribute('data-dept-prefix', deptName);
+    // 同时设置一个特殊值让 getFilteredData 识别
+    filterMode = 'dept_prefix';
+    currentDeptPrefix = deptName;
   }
   currentPage = 1;
   render();
