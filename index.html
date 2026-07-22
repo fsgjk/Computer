@@ -276,7 +276,7 @@ a:hover{color:var(--primary-600)}
 <button class="btn btn-primary" onclick="openModal()" aria-label="新增电脑">+ 新增电脑</button>
 <button class="btn btn-secondary" onclick="exportCSV()">📥 导出CSV</button>
 <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">📤 导入数据</button>
-<button class="btn btn-ghost" onclick="syncToGitHub(function(ok){alert(ok?'同步成功':'同步失败，请检查网络')})" title="手动同步到云端">🔄 云端同步</button>
+<button class="btn btn-ghost" onclick="syncFromCloud(function(ok,msg){alert(msg)})" title="从云端同步最新数据">🔄 云端同步</button>
 <input type="file" id="importFile" accept=".csv,.json" style="display:none" onchange="importData(this)">
 </div>
 
@@ -470,6 +470,51 @@ function syncToGitHub(callback) {
 function saveDataToStorage() {
   try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
   syncToGitHub();
+}
+
+// 从云端同步：先拉取最新数据，再推送本地数据
+function syncFromCloud(callback) {
+  if(!GH_TOKEN) { if(callback) callback(false, 'Token未配置'); return; }
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main&t='+Date.now(), true);
+  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.timeout = 8000;
+  xhr.onload = function() {
+    if(xhr.status === 200) {
+      try {
+        var info = JSON.parse(xhr.responseText);
+        DATA_SHA = info.sha;
+        var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+        if(remoteData.length > 0 && remoteData[0]['资产编号']) {
+          // 云端数据有效，合并策略：云端优先
+          if(remoteData.length >= DATA.length) {
+            DATA = remoteData;
+            try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+            updateStats();
+            updateFilters();
+            render();
+            if(callback) callback(true, '已从云端加载 '+DATA.length+' 条数据');
+          } else {
+            // 本地数据更多，推送本地到云端
+            syncToGitHub(function(ok) {
+              if(callback) callback(ok, ok ? '已将本地 '+DATA.length+' 条推送到云端' : '推送失败');
+            });
+            return;
+          }
+        } else {
+          if(callback) callback(false, '云端数据无效');
+          return;
+        }
+      } catch(e) { if(callback) callback(false, '数据解析失败'); return; }
+    } else {
+      if(callback) callback(false, '请求失败('+xhr.status+')');
+      return;
+    }
+  };
+  xhr.onerror = function() { if(callback) callback(false, '网络错误'); };
+  xhr.ontimeout = function() { if(callback) callback(false, '请求超时'); };
+  xhr.send();
 }
 
 // 定时从GitHub拉取最新数据（多用户自动同步）
