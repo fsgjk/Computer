@@ -396,9 +396,7 @@ var clientIP = '';
     }
   } catch(e) {}
 
-  // 3. 如果有token，后台静默从GitHub同步
-  // 重要：GitHub数据不应覆盖localStorage中可能更新的数据
-  // 仅当localStorage没有数据或GitHub数据更新时才使用GitHub数据
+  // 3. 如果有token，优先从GitHub加载最新数据（多用户同步）
   if(GH_TOKEN) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
@@ -412,14 +410,16 @@ var clientIP = '';
           DATA_SHA = info.sha;
           var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
           if(remoteData.length > 0) {
-            // 仅当本地没有数据时，才使用GitHub数据初始化
-            // 如果本地已有数据（来自页面内嵌或localStorage），保留本地数据
-            // 并将本地数据同步到GitHub
-            if(DATA.length === 0) {
+            // 比较本地数据和云端数据：云端优先（多用户场景下云端是最新的）
+            var localLen = 0;
+            try { var local = JSON.parse(localStorage.getItem('ledger_data_backup')); localLen = local ? local.length : 0; } catch(e) {}
+            if(remoteData.length >= localLen) {
+              // 云端数据不少于本地，使用云端数据
               DATA = remoteData;
               try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-            } else {
-              // 本地有数据，将本地数据同步到GitHub
+            }
+            // 如果本地数据更多（刚做了编辑还没同步），保留本地并同步到云端
+            if(DATA.length < localLen) {
               syncToGitHub();
             }
           }
@@ -460,6 +460,38 @@ function syncToGitHub(callback) {
 function saveDataToStorage() {
   try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
   syncToGitHub();
+}
+
+// 定时从GitHub拉取最新数据（多用户自动同步）
+var autoSyncTimer = null;
+function startAutoSync() {
+  if(!GH_TOKEN) return;
+  if(autoSyncTimer) clearInterval(autoSyncTimer);
+  autoSyncTimer = setInterval(function() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main&t='+Date.now(), true);
+    xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+    xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+    xhr.timeout = 8000;
+    xhr.onload = function() {
+      if(xhr.status === 200) {
+        try {
+          var info = JSON.parse(xhr.responseText);
+          var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+          if(remoteData.length > 0 && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
+            // 云端数据有变化，更新本地
+            DATA = remoteData;
+            DATA_SHA = info.sha;
+            try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+            updateStats();
+            updateFilters();
+            render();
+          }
+        } catch(e) {}
+      }
+    };
+    xhr.send();
+  }, 30000); // 每30秒同步一次
 }
 
 // 获取公网IP
@@ -548,6 +580,7 @@ function showApp(user) {
   updateFilters();
   render();
   refreshLogPanel();
+  startAutoSync(); // 启动定时自动同步
   // 管理员首次登录提示设置Token（仅弹一次，点取消后不再提示）
   if(user.role === 'admin' && !GH_TOKEN && !localStorage.getItem('ledger_token_skipped')) {
     setTimeout(function() { showTokenSetup(); }, 500);
