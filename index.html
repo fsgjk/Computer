@@ -402,20 +402,21 @@ var clientIP = '';
 
   // 3. 从GitHub自动拉取最新数据（云端优先，多用户同步）
   if(GH_TOKEN) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main&t='+Date.now(), true);
-    xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-    xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-    xhr.timeout = 10000;
-    xhr.onload = function() {
-      if(xhr.status === 200) {
-        try {
-          var info = JSON.parse(xhr.responseText);
-          DATA_SHA = info.sha;
-          var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
-          // 仅当云端数据有效且比本地更新时才使用
-          if(remoteData.length > 0 && remoteData[0]['资产编号']) {
-            if(remoteData.length >= DATA.length) {
+    var retryCount = 0;
+    function fetchFromCloud() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main&t='+Date.now(), true);
+      xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+      xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+      xhr.timeout = 10000;
+      xhr.onload = function() {
+        if(xhr.status === 200) {
+          try {
+            var info = JSON.parse(xhr.responseText);
+            DATA_SHA = info.sha;
+            var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+            // 严格检查：云端数据必须有效且记录数不少于本地
+            if(remoteData.length > 0 && remoteData[0]['资产编号'] && remoteData.length >= DATA.length) {
               DATA = remoteData;
               try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
             }
@@ -423,11 +424,20 @@ var clientIP = '';
             if(LOGIN_USER) {
               updateStats(); updateFilters(); render();
             }
+          } catch(e) {
+            // 解析失败，重试
+            if(++retryCount < 3) setTimeout(fetchFromCloud, 3000);
           }
-        } catch(e) {}
-      }
-    };
-    xhr.send();
+        } else {
+          // 请求失败，重试
+          if(++retryCount < 3) setTimeout(fetchFromCloud, 3000);
+        }
+      };
+      xhr.onerror = function() { if(++retryCount < 3) setTimeout(fetchFromCloud, 3000); };
+      xhr.ontimeout = function() { if(++retryCount < 3) setTimeout(fetchFromCloud, 3000); };
+      xhr.send();
+    }
+    fetchFromCloud();
   }
   // 最终保护：如果DATA仍为空，从内嵌数据强制恢复
   if(DATA.length === 0) {
@@ -574,7 +584,8 @@ function doAutoSync() {
       try {
         var info = JSON.parse(xhr.responseText);
         var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
-        if(remoteData.length > 0 && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
+        // 严格检查：云端数据必须有效（有资产编号）且记录数不少于本地，才更新
+        if(remoteData.length > 0 && remoteData[0]['资产编号'] && remoteData.length >= DATA.length && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
           DATA = remoteData;
           DATA_SHA = info.sha;
           try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
