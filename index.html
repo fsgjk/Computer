@@ -333,7 +333,6 @@ function getFilteredData() {
 
 function render() {
   let filtered = getFilteredData();
-  if(cat) filtered = filtered.filter(r=>r['分类']===cat);
 
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total/pageSize));
