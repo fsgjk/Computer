@@ -154,6 +154,14 @@ function getFilteredData() {
   return filtered;
 }
 
+function calcYears(r) {
+  var py = r['采购日期']||'';
+  if(!py || py === '/') return '';
+  var year = parseInt(py);
+  if(isNaN(year)) return py;
+  return String(new Date().getFullYear() - year);
+}
+
 function render() {
   var filtered = getFilteredData();
   var total = filtered.length;
@@ -211,7 +219,7 @@ function render() {
         '<td style="font-family:monospace">'+(r['IP地址']||'')+'</td>'+
         '<td title="'+deptName+'">'+deptName.substring(0,12)+(deptName.length>12?'...':'')+'</td>'+
         '<td>'+(r['采购日期']||'')+'</td>'+
-        '<td>'+(r['使用年限']||'')+'</td>'+
+        '<td>'+calcYears(r)+'</td>'+
         '<td>'+(r['本地账号']||'')+'</td>'+
         '<td><span class="badge '+(catBadge[r['分类']]||'bg-blue')+'">'+(r['分类']||'-')+'</span></td>'+
         '<td>'+(r['CPU']||'')+'</td>'+
