@@ -119,7 +119,7 @@ function updateStats() {
   var pp = {}; var depts = {}; var idle = 0;
   d.forEach(function(r) {
     var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
-    var dept = r['所属部门']||'未知';
+    var dept = r['所属部门']||'未分配';
     var mainDept = dept.split('-')[0];
     depts[mainDept] = (depts[mainDept]||0)+1;
     var pos = r['当前位置']||''; var person = r['责任人']||'';
