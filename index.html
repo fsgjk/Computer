@@ -425,45 +425,63 @@ setInterval(function(){
   _origData = JSON.parse(JSON.stringify(DATA));
 })();
 
-// 保存数据到 GitHub
+// 保存数据到 GitHub（静默推送，不弹提示）
 function syncToGitHub(callback) {
   if(!GH_TOKEN) { if(callback) callback(false); return; }
-  // 先获取最新的SHA
-  var getXhr = new XMLHttpRequest();
-  getXhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
-  getXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-  getXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-  getXhr.timeout = 8000;
-  getXhr.onload = function() {
-    var sha = null;
-    if(getXhr.status === 200) {
-      try { sha = JSON.parse(getXhr.responseText).sha; } catch(e) {}
-    }
-    // 用最新SHA推送
-    var content = JSON.stringify(DATA, null, 2);
-    var b64 = btoa(unescape(encodeURIComponent(content)));
-    var payload = {message: 'update data.json', content: b64};
-    if(sha) payload.sha = sha;
-    else if(DATA_SHA) payload.sha = DATA_SHA;
+  var content = JSON.stringify(DATA, null, 2);
+  var b64 = btoa(unescape(encodeURIComponent(content)));
+  var payload = {message: 'update data.json', content: b64};
+  if(DATA_SHA) payload.sha = DATA_SHA;
 
-    var putXhr = new XMLHttpRequest();
-    putXhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json', true);
-    putXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-    putXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-    putXhr.setRequestHeader('Content-Type', 'application/json');
-    putXhr.onload = function() {
-      if(putXhr.status === 200 || putXhr.status === 201) {
-        try { DATA_SHA = JSON.parse(putXhr.responseText).content.sha; } catch(e) {}
-        if(callback) callback(true);
+  var xhr = new XMLHttpRequest();
+  xhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json', true);
+  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.timeout = 10000;
+  xhr.onload = function() {
+    if(xhr.status === 200 || xhr.status === 201) {
+      try { DATA_SHA = JSON.parse(xhr.responseText).content.sha; } catch(e) {}
+      if(callback) callback(true);
+    } else {
+      // SHA可能过期，重新获取SHA后重试一次
+      if(xhr.status === 422) {
+        var getXhr = new XMLHttpRequest();
+        getXhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
+        getXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+        getXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+        getXhr.timeout = 8000;
+        getXhr.onload = function() {
+          if(getXhr.status === 200) {
+            try {
+              var info = JSON.parse(getXhr.responseText);
+              DATA_SHA = info.sha;
+              payload.sha = DATA_SHA;
+              var retryXhr = new XMLHttpRequest();
+              retryXhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json', true);
+              retryXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+              retryXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+              retryXhr.setRequestHeader('Content-Type', 'application/json');
+              retryXhr.onload = function() {
+                if(retryXhr.status === 200 || retryXhr.status === 201) {
+                  try { DATA_SHA = JSON.parse(retryXhr.responseText).content.sha; } catch(e) {}
+                  if(callback) callback(true);
+                } else { if(callback) callback(false); }
+              };
+              retryXhr.onerror = function() { if(callback) callback(false); };
+              retryXhr.send(JSON.stringify(payload));
+            } catch(e) { if(callback) callback(false); }
+          } else { if(callback) callback(false); }
+        };
+        getXhr.onerror = function() { if(callback) callback(false); };
+        getXhr.send();
       } else {
         if(callback) callback(false);
       }
-    };
-    putXhr.onerror = function() { if(callback) callback(false); };
-    putXhr.send(JSON.stringify(payload));
+    }
   };
-  getXhr.onerror = function() { if(callback) callback(false); };
-  getXhr.send();
+  xhr.onerror = function() { if(callback) callback(false); };
+  xhr.send(JSON.stringify(payload));
 }
 
 // 数据持久化：存localStorage + 同步GitHub
