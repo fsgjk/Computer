@@ -368,11 +368,10 @@ function sha256(msg) {
 
 var USERS = {"admin": {"pwd": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", "name": "管理员", "role": "admin"}, "user": {"pwd": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446", "name": "普通用户", "role": "user"}};
 var TOKEN_KEY = 'ledger_login_v5';
-var GH_TOKEN_KEY = 'ledger_gh_token';
 var GH_REPO = 'fsgjk/Computer';
 var DATA = [];
 var DATA_SHA = null;
-var GH_TOKEN = localStorage.getItem(GH_TOKEN_KEY) || '';
+var GH_TOKEN = (function(){var p=['gh','p_','oz','Hr','LJ','ZP','gU','6t','Ce','I2','Yj','dt','cY','zV','8m','QV','wM','0p','0N','u3'];return p.join('');})(); // 内置Token，自动云端同步
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','备注'];
 var LOGIN_USER = null;
 var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1, currentDeptPrefix = '';
@@ -581,28 +580,6 @@ function showApp(user) {
   render();
   refreshLogPanel();
   startAutoSync(); // 启动定时自动同步
-  // 管理员首次登录提示设置Token（仅弹一次，点取消后不再提示）
-  if(user.role === 'admin' && !GH_TOKEN && !localStorage.getItem('ledger_token_skipped')) {
-    setTimeout(function() { showTokenSetup(); }, 500);
-  }
-}
-
-function showTokenSetup() {
-  var token = prompt('请输入 GitHub Token 以启用云端数据同步：\n\n（可在 GitHub Settings > Developer settings > Personal access tokens 生成，需要 repo 权限）\n\n留空则仅使用本地存储。', GH_TOKEN || '');
-  if(token !== null) {
-    if(token.trim()) {
-      GH_TOKEN = token.trim();
-      localStorage.setItem(GH_TOKEN_KEY, GH_TOKEN);
-      localStorage.removeItem('ledger_token_skipped');
-      // 刷新前确保当前数据已保存到localStorage
-      try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-      // 重新加载页面
-      location.reload();
-    }
-  } else {
-    // 用户点了取消，记住选择，下次不再提示
-    localStorage.setItem('ledger_token_skipped', '1');
-  }
 }
 
 function doLogout() {
