@@ -99,9 +99,13 @@ document.getElementById('loginUser').addEventListener('keydown', function(e) { i
 
 function updateStats() {
   var d = DATA;
-  var pp = {}; var idle = 0;
+  var pp = {}; var depts = {}; var idle = 0;
   d.forEach(function(r) {
     var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
+    var dept = r['所属部门']||'未知';
+    // 取部门短名
+    var shortDept = dept.split('-').pop() || dept;
+    depts[shortDept] = (depts[shortDept]||0)+1;
     var pos = r['当前位置']||''; var person = r['责任人']||'';
     if(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person) idle++;
   });
@@ -112,8 +116,19 @@ function updateStats() {
     {icon:'cyan',label:'公用电脑',value:pp['公用']||0, action:'public'},
     {icon:'red',label:'个人电脑',value:pp['个人']||0, action:'personal'},
   ];
+  // 按数量排序的部门卡片
+  var deptItems = [];
+  Object.keys(depts).forEach(function(k){ deptItems.push({name:k, count:depts[k]}); });
+  deptItems.sort(function(a,b){return b.count - a.count;});
+  var deptColors = ['#2563eb','#16a34a','#ea580c','#9333ea','#0891b2','#dc2626','#4f46e5','#059669'];
+  deptItems.forEach(function(di, idx){
+    var color = deptColors[idx % deptColors.length];
+    items.push({icon:'blue',label:di.name,value:di.count, action:'dept_'+di.name, color: color});
+  });
+
   document.getElementById('statsRow').innerHTML = items.map(function(i) {
-    return '<div class="stat-card" onclick="filterByCard(\''+i.action+'\')"><div class="stat-icon '+i.icon+'">'+i.label[0]+'</div><div><div class="stat-value">'+i.value+'</div><div class="stat-label">'+i.label+'</div></div></div>';
+    var bg = i.color || '';
+    return '<div class="stat-card" onclick="filterByCard(\''+i.action+'\')"><div class="stat-icon '+i.icon+'"'+(bg?' style="background:'+bg+'20;color:'+bg+'"':'')+'>'+i.label[0]+'</div><div><div class="stat-value">'+i.value+'</div><div class="stat-label">'+i.label+'</div></div></div>';
   }).join('');
 }
 
@@ -265,7 +280,14 @@ function filterByCard(action) {
   document.getElementById('filterCategory').value = '';
   document.getElementById('filterDepartment').value = '';
   document.getElementById('filterPublic').value = '';
+  document.getElementById('filterOS').value = '';
   filterMode = (action === 'clear') ? '' : action;
+  if(action.indexOf('dept_') === 0) {
+    filterMode = '';
+    document.getElementById('filterDepartment').value = ''; // 会通过 includes 匹配
+    // 用搜索来筛选部门
+    document.getElementById('searchInput').value = action.substring(5);
+  }
   currentPage = 1;
   render();
 }
