@@ -455,7 +455,8 @@ var clientIP = '';
 function syncToGitHub(callback) {
   if(!GH_TOKEN) { if(callback) callback(false); return; }
   var content = JSON.stringify(DATA, null, 2);
-  var b64 = btoa(unescape(encodeURIComponent(content)));
+  // 正确的UTF-8 Base64编码
+  var b64 = btoa(String.fromCharCode.apply(null, new TextEncoder().encode(content)));
   var payload = {message: 'update data.json', content: b64};
   if(DATA_SHA) payload.sha = DATA_SHA;
 
