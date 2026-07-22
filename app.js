@@ -126,7 +126,7 @@ function updateStats() {
     var pos = r['当前位置']||''; var person = r['责任人']||'';
     if(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person) idle++;
   });
-  var items = [
+  var baseItems = [
     {icon:'blue',label:'总电脑数',value:d.length, action:'clear'},
     {icon:'green',label:'已用电脑',value:d.length - idle, action:'used'},
     {icon:'slate',label:'空闲电脑',value:idle, action:'idle'},
@@ -138,15 +138,25 @@ function updateStats() {
   Object.keys(depts).forEach(function(k){ deptItems.push({name:k, count:depts[k]}); });
   deptItems.sort(function(a,b){return b.count - a.count;});
   var deptColors = ['#2563eb','#16a34a','#ea580c','#9333ea','#0891b2','#dc2626','#4f46e5','#059669'];
-  deptItems.forEach(function(di, idx){
-    var color = deptColors[idx % deptColors.length];
-    items.push({icon:'blue',label:di.name,value:di.count, action:'dept_'+di.name, color: color});
-  });
 
-  document.getElementById('statsRow').innerHTML = items.map(function(i) {
-    var bg = i.color || '';
-    return '<div class="stat-card" onclick="filterByCard(\''+i.action+'\')"><div class="stat-icon '+i.icon+'"'+(bg?' style="background:'+bg+'20;color:'+bg+'"':'')+'>'+i.label[0]+'</div><div><div class="stat-value">'+i.value+'</div><div class="stat-label">'+i.label+'</div></div></div>';
+  var html = '';
+  // 基础统计卡片
+  html += '<div class="stats-section"><div class="section-label">基础统计</div><div class="stats-grid">';
+  html += baseItems.map(function(i) {
+    return '<div class="stat-card" onclick="filterByCard(\''+i.action+'\')"><div class="stat-icon '+i.icon+'">'+i.label[0]+'</div><div><div class="stat-value">'+i.value+'</div><div class="stat-label">'+i.label+'</div></div></div>';
   }).join('');
+  html += '</div></div>';
+  // 部门统计卡片
+  if(deptItems.length > 0) {
+    html += '<div class="stats-section"><div class="section-label">部门统计 <span style="font-weight:400;font-size:11px;color:#888">（点击卡片筛选）</span></div><div class="stats-grid">';
+    html += deptItems.map(function(di, idx){
+      var color = deptColors[idx % deptColors.length];
+      return '<div class="stat-card dept-card" onclick="filterByCard(\'dept_'+di.name+'\')" style="border-left:3px solid '+color+'"><div class="stat-icon" style="background:'+color+'20;color:'+color+'">'+di.name[0]+'</div><div><div class="stat-value">'+di.count+'</div><div class="stat-label">'+di.name+'</div></div></div>';
+    }).join('');
+    html += '</div></div>';
+  }
+
+  document.getElementById('statsRow').innerHTML = html;
 }
 
 function updateFilters() {

@@ -25,7 +25,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .btn-logout{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px}
 .btn-logout:hover{background:rgba(255,255,255,.25)}
 .container{max-width:1400px;margin:0 auto;padding:16px}
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.stats-row{margin-bottom:14px}
+.stats-section{background:#fff;border-radius:10px;padding:14px 16px 10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:12px}
+.stats-section .section-label{font-size:12px;font-weight:600;color:#475569;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed #e5e7eb;letter-spacing:.5px;text-transform:uppercase}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .stat-card{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;cursor:pointer;transition:transform .2s}
 .stat-card:hover{transform:translateY(-2px)}
 .stat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
@@ -301,7 +304,7 @@ function updateStats() {
     var pos = r['当前位置']||''; var person = r['责任人']||'';
     if(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person) idle++;
   });
-  var items = [
+  var baseItems = [
     {icon:'blue',label:'总电脑数',value:d.length, action:'clear'},
     {icon:'green',label:'已用电脑',value:d.length - idle, action:'used'},
     {icon:'slate',label:'空闲电脑',value:idle, action:'idle'},
@@ -313,15 +316,25 @@ function updateStats() {
   Object.keys(depts).forEach(function(k){ deptItems.push({name:k, count:depts[k]}); });
   deptItems.sort(function(a,b){return b.count - a.count;});
   var deptColors = ['#2563eb','#16a34a','#ea580c','#9333ea','#0891b2','#dc2626','#4f46e5','#059669'];
-  deptItems.forEach(function(di, idx){
-    var color = deptColors[idx % deptColors.length];
-    items.push({icon:'blue',label:di.name,value:di.count, action:'dept_'+di.name, color: color});
-  });
 
-  document.getElementById('statsRow').innerHTML = items.map(function(i) {
-    var bg = i.color || '';
-    return '<div class="stat-card" onclick="filterByCard(\''+i.action+'\')"><div class="stat-icon '+i.icon+'"'+(bg?' style="background:'+bg+'20;color:'+bg+'"':'')+'>'+i.label[0]+'</div><div><div class="stat-value">'+i.value+'</div><div class="stat-label">'+i.label+'</div></div></div>';
+  var html = '';
+  // 基础统计卡片
+  html += '<div class="stats-section"><div class="section-label">基础统计</div><div class="stats-grid">';
+  html += baseItems.map(function(i) {
+    return '<div class="stat-card" onclick="filterByCard(\''+i.action+'\')"><div class="stat-icon '+i.icon+'">'+i.label[0]+'</div><div><div class="stat-value">'+i.value+'</div><div class="stat-label">'+i.label+'</div></div></div>';
   }).join('');
+  html += '</div></div>';
+  // 部门统计卡片
+  if(deptItems.length > 0) {
+    html += '<div class="stats-section"><div class="section-label">部门统计 <span style="font-weight:400;font-size:11px;color:#888">（点击卡片筛选）</span></div><div class="stats-grid">';
+    html += deptItems.map(function(di, idx){
+      var color = deptColors[idx % deptColors.length];
+      return '<div class="stat-card dept-card" onclick="filterByCard(\'dept_'+di.name+'\')" style="border-left:3px solid '+color+'"><div class="stat-icon" style="background:'+color+'20;color:'+color+'">'+di.name[0]+'</div><div><div class="stat-value">'+di.count+'</div><div class="stat-label">'+di.name+'</div></div></div>';
+    }).join('');
+    html += '</div></div>';
+  }
+
+  document.getElementById('statsRow').innerHTML = html;
 }
 
 function updateFilters() {
