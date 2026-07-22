@@ -227,7 +227,6 @@ a:hover{color:var(--primary-600)}
 <!-- Login -->
 <div class="login-wrap" id="loginWrap">
 <div class="login-box">
-<div id="debugInfo" style="font-size:11px;color:#E24B4A;text-align:center;margin-bottom:12px;font-weight:500"></div>
 <h2>上海外服门诊部电脑台账系统</h2>
 <div class="sub">请登录后使用</div>
 <div class="field"><label>用户名</label><input type="text" id="loginUser" placeholder="请输入用户名" autocomplete="username"></div>
@@ -244,6 +243,7 @@ a:hover{color:var(--primary-600)}
 <header class="header">
 <h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260723</span></h1>
 <div class="header-spacer"></div>
+<span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
 <span class="user-avatar" id="headerAvatar">管</span>
 <span id="headerUserName">管理员</span>
@@ -254,7 +254,6 @@ a:hover{color:var(--primary-600)}
 </header>
 
 <div class="content-area">
-<div id="syncStatus" style="text-align:center;font-size:11px;color:#888;margin-bottom:8px;min-height:18px"></div>
 <!-- Metric Cards -->
 <section class="metrics-row" id="metricsRow" aria-label="资产概览指标"></section>
 
