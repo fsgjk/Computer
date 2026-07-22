@@ -381,6 +381,16 @@ var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTi
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
 
+// 诊断：监控DATA变化
+var _origData = null;
+setInterval(function(){
+  if(_origData && JSON.stringify(DATA) !== JSON.stringify(_origData)) {
+    var dbg2 = document.getElementById('debugInfo');
+    if(dbg2) dbg2.textContent = '⚠DATA变化! '+_origData.length+'→'+DATA.length+'条 | 首条资产编号:'+(DATA[0]?(DATA[0]['资产编号']||'无'):'空');
+    _origData = JSON.parse(JSON.stringify(DATA));
+  }
+}, 2000);
+
 // 从 GitHub data.json 加载数据（带 localStorage 兜底）
 (function() {
   // 1. 立即从页面内嵌数据初始化
@@ -412,6 +422,7 @@ var clientIP = '';
   // 诊断信息
   var dbg = document.getElementById('debugInfo');
   if(dbg) dbg.textContent = 'DATA:'+DATA.length+'条 | Token:'+(GH_TOKEN?'已内置':'无')+' | LS:'+(function(){try{var s=localStorage.getItem('ledger_data_backup');return s?JSON.parse(s).length+'条':'无';}catch(e){return '错误';}})();
+  _origData = JSON.parse(JSON.stringify(DATA));
 })();
 
 // 保存数据到 GitHub
