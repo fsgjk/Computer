@@ -23,7 +23,13 @@ function sha256(msg) {
 
 var USERS = __USERS__;
 var TOKEN_KEY = 'ledger_login_v5';
-var DATA = __DATA__;
+var DATA = (function() {
+  try {
+    var el = document.getElementById('ledger-data');
+    if(el && el.textContent) return JSON.parse(el.textContent);
+  } catch(e) {}
+  return [];
+})();
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','备注'];
 var LOGIN_USER = null;
 var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1;
