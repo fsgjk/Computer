@@ -26,7 +26,7 @@ var TOKEN_KEY = 'ledger_login_v4';
 var DATA = __DATA__;
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','备注'];
 var LOGIN_USER = null;
-var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '';
+var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1;
 
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 function addOpLog(action, target, detail) {
@@ -138,6 +138,16 @@ function getFilteredData() {
   if(cat) filtered = filtered.filter(function(r){return r['分类']===cat;});
   if(dept) filtered = filtered.filter(function(r){return (r['所属部门']||'').includes(dept);});
   if(ppv) filtered = filtered.filter(function(r){return r['公用个人']===ppv;});
+  // 排序
+  if(sortField) {
+    filtered.sort(function(a, b) {
+      var va = (a[sortField] || '').toString();
+      var vb = (b[sortField] || '').toString();
+      var na = parseFloat(va), nb = parseFloat(vb);
+      if(!isNaN(na) && !isNaN(nb) && va === String(na) && vb === String(nb)) { return (na - nb) * sortDir; }
+      return va.localeCompare(vb, 'zh-CN') * sortDir;
+    });
+  }
   return filtered;
 }
 
@@ -152,11 +162,33 @@ function render() {
   var catBadge = {'台式':'bg-blue','笔记本':'bg-green','一体机':'bg-yellow','sruface':'bg-purple'};
   var isAdmin = LOGIN_USER && LOGIN_USER.role === 'admin';
 
+  function thSort(field, label) {
+    var arrow = '';
+    if(sortField === field) arrow = sortDir === 1 ? ' \u25b2' : ' \u25bc';
+    return '<th style="cursor:pointer" onclick="toggleSort(\''+field+'\')">'+label+arrow+'</th>';
+  }
+
   document.getElementById('tableWrapper').innerHTML = '<table><thead><tr>'+
-    '<th>序号</th><th>当前位置</th><th>公用/个人</th><th>责任人</th><th>资产编号</th>'+
-    '<th>用户名</th><th>MAC地址</th><th>加域</th><th>IP地址</th><th>所属部门</th>'+
-    '<th>采购日期</th><th>使用年限</th><th>本地账号</th><th>分类</th>'+
-    '<th>CPU</th><th>内存</th><th>硬盘</th><th>操作系统</th><th>备注</th><th>操作</th>'+
+    thSort('序号','序号')+
+    thSort('当前位置','当前位置')+
+    thSort('公用个人','公用/个人')+
+    thSort('责任人','责任人')+
+    thSort('资产编号','资产编号')+
+    thSort('用户名','用户名')+
+    thSort('MAC地址','MAC地址')+
+    thSort('是否加域','加域')+
+    thSort('IP地址','IP地址')+
+    thSort('所属部门','所属部门')+
+    thSort('采购日期','采购日期')+
+    thSort('使用年限','使用年限')+
+    thSort('本地账号','本地账号')+
+    thSort('分类','分类')+
+    thSort('CPU','CPU')+
+    thSort('内存','内存')+
+    thSort('硬盘','硬盘')+
+    thSort('操作系统','操作系统')+
+    thSort('备注','备注')+
+    '<th>操作</th>'+
     '</tr></thead><tbody>'+
     page.map(function(r) {
       var ppBadge = (r['公用个人']==='个人')?'bg-pink':'bg-cyan';
@@ -197,6 +229,13 @@ function render() {
   for(var i=s;i<=e;i++) ph += '<button class="'+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
   ph += '<button '+(currentPage===totalPages?'disabled':'')+' onclick="goPage('+(currentPage+1)+')">\u25b6</button>';
   pag.innerHTML = '<div class="pagination-info">\u5171 <strong>'+total+'</strong> \u53f0\u7535\u8111\uff0c\u7b2c '+currentPage+'/'+totalPages+' \u9875</div><div class="pagination-btns">'+ph+'</div>';
+}
+
+function toggleSort(field) {
+  if(sortField === field) { sortDir = -sortDir; }
+  else { sortField = field; sortDir = 1; }
+  currentPage = 1;
+  render();
 }
 
 function goPage(p) { if(p>=1 && p<=Math.ceil(DATA.length/pageSize)){ currentPage=p; render(); } }
