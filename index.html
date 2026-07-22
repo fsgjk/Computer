@@ -427,28 +427,43 @@ setInterval(function(){
 
 // 保存数据到 GitHub
 function syncToGitHub(callback) {
-  if(!GH_TOKEN) return;
-  var content = JSON.stringify(DATA, null, 2);
-  var b64 = btoa(unescape(encodeURIComponent(content)));
-  var payload = {message: 'update data.json', content: b64};
-  if(DATA_SHA) payload.sha = DATA_SHA;
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json', true);
-  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function() {
-    if(xhr.status === 200 || xhr.status === 201) {
-      try {
-        var resp = JSON.parse(xhr.responseText);
-        DATA_SHA = resp.content.sha;
-      } catch(e) {}
+  if(!GH_TOKEN) { if(callback) callback(false); return; }
+  // 先获取最新的SHA
+  var getXhr = new XMLHttpRequest();
+  getXhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
+  getXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  getXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  getXhr.timeout = 8000;
+  getXhr.onload = function() {
+    var sha = null;
+    if(getXhr.status === 200) {
+      try { sha = JSON.parse(getXhr.responseText).sha; } catch(e) {}
     }
-    if(callback) callback(xhr.status === 200 || xhr.status === 201);
+    // 用最新SHA推送
+    var content = JSON.stringify(DATA, null, 2);
+    var b64 = btoa(unescape(encodeURIComponent(content)));
+    var payload = {message: 'update data.json', content: b64};
+    if(sha) payload.sha = sha;
+    else if(DATA_SHA) payload.sha = DATA_SHA;
+
+    var putXhr = new XMLHttpRequest();
+    putXhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json', true);
+    putXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+    putXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+    putXhr.setRequestHeader('Content-Type', 'application/json');
+    putXhr.onload = function() {
+      if(putXhr.status === 200 || putXhr.status === 201) {
+        try { DATA_SHA = JSON.parse(putXhr.responseText).content.sha; } catch(e) {}
+        if(callback) callback(true);
+      } else {
+        if(callback) callback(false);
+      }
+    };
+    putXhr.onerror = function() { if(callback) callback(false); };
+    putXhr.send(JSON.stringify(payload));
   };
-  xhr.onerror = function() { if(callback) callback(false); };
-  xhr.send(JSON.stringify(payload));
+  getXhr.onerror = function() { if(callback) callback(false); };
+  getXhr.send();
 }
 
 // 数据持久化：存localStorage + 同步GitHub
