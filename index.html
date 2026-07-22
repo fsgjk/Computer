@@ -453,12 +453,27 @@ var clientIP = '';
   if(dbg) dbg.textContent = 'DATA:'+DATA.length+'条 | Token:'+(GH_TOKEN?'已内置':'无')+' | LS:'+(function(){try{var s=localStorage.getItem('ledger_data_backup');return s?JSON.parse(s).length+'条':'无';}catch(e){return '错误';}})();
 })();
 
+// UTF-8 安全 Base64 编码
+function utf8ToBase64(str) {
+  var bytes = [];
+  for(var i = 0; i < str.length; i++) {
+    var c = str.charCodeAt(i);
+    if(c < 0x80) { bytes.push(c); }
+    else if(c < 0x800) { bytes.push(0xC0|(c>>6), 0x80|(c&0x3F)); }
+    else if(c < 0xD800 || c >= 0xE000) { bytes.push(0xE0|(c>>12), 0x80|((c>>6)&0x3F), 0x80|(c&0x3F)); }
+    else { i++; c = 0x10000+(((c&0x3FF)<<10)|(str.charCodeAt(i)&0x3FF)); bytes.push(0xF0|(c>>18), 0x80|((c>>12)&0x3F), 0x80|((c>>6)&0x3F), 0x80|(c&0x3F)); }
+  }
+  var binary = '';
+  for(var j = 0; j < bytes.length; j++) { binary += String.fromCharCode(bytes[j]); }
+  return btoa(binary);
+}
+
 // 保存数据到 GitHub（静默推送，不弹提示）
 function syncToGitHub(callback) {
   if(!GH_TOKEN) { if(callback) callback(false); return; }
   var content = JSON.stringify(DATA, null, 2);
-  // 正确的UTF-8 Base64编码
-  var b64 = btoa(String.fromCharCode.apply(null, new TextEncoder().encode(content)));
+  var b64;
+  try { b64 = utf8ToBase64(content); } catch(e) { if(callback) callback(false); return; }
   var payload = {message: 'update data.json', content: b64};
   if(DATA_SHA) payload.sha = DATA_SHA;
 
@@ -516,12 +531,16 @@ function syncToGitHub(callback) {
 // 数据持久化：存localStorage + 同步GitHub
 function saveDataToStorage() {
   try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-  syncToGitHub(function(ok) {
-    var st = document.getElementById('syncStatus');
-    if(st) st.textContent = ok ? '✅ 已同步云端' : '❌ 云端同步失败，请检查网络';
-    // 3秒后自动清除状态
-    setTimeout(function(){ if(st) st.textContent = ''; }, 3000);
-  });
+  try {
+    syncToGitHub(function(ok) {
+      var st = document.getElementById('syncStatus');
+      if(st) st.textContent = ok ? '✅ 已同步云端' : '❌ 云端同步失败，请检查网络';
+      setTimeout(function(){ var s=document.getElementById('syncStatus'); if(s) s.textContent=''; }, 3000);
+    });
+  } catch(e) {
+    var st2 = document.getElementById('syncStatus');
+    if(st2) st2.textContent = '❌ 同步异常: '+e.message;
+  }
 }
 
 // 从云端同步：先拉取最新数据，再推送本地数据
