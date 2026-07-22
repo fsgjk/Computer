@@ -374,71 +374,49 @@ var LOGIN_USER = null;
 var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1;
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
-var dataSyncReady = false;
-var dataSyncQueue = [];
-
-function onDataReady(cb) {
-  if(dataSyncReady) { cb(); return; }
-  dataSyncQueue.push(cb);
-}
-function fireDataReady() {
-  dataSyncReady = true;
-  for(var i=0;i<dataSyncQueue.length;i++) dataSyncQueue[i]();
-  dataSyncQueue = [];
-}
 
 // 从 GitHub data.json 加载数据（带 localStorage 兜底）
 (function() {
-  function useLocalFallback() {
-    try {
-      var saved = localStorage.getItem('ledger_data_backup');
-      if(saved) {
-        DATA = JSON.parse(saved);
-        console.log('从localStorage加载:', DATA.length, '条');
-      }
-    } catch(e) {}
-    if(!DATA.length) {
-      var el = document.getElementById('ledger-data');
-      if(el && el.textContent) { try { DATA = JSON.parse(el.textContent); } catch(e) {} }
-    }
-    if(!dataSyncReady) fireDataReady();
-  }
-
-  // 先立即用内嵌数据兜底，避免白屏
+  // 1. 立即从页面内嵌数据初始化
   var el = document.getElementById('ledger-data');
-  if(el && el.textContent) { try { DATA = JSON.parse(el.textContent); } catch(e) {} }
-
-  // 如果没有token，直接用localStorage或内嵌数据
-  if(!GH_TOKEN) {
-    try {
-      var saved = localStorage.getItem('ledger_data_backup');
-      if(saved) { var p = JSON.parse(saved); if(p.length > 0) DATA = p; }
-    } catch(e) {}
-    fireDataReady();
-    return;
+  if(el && el.textContent) {
+    try { DATA = JSON.parse(el.textContent); } catch(e) {}
   }
 
-  // 有token：从GitHub拉取最新数据
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
-  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-  xhr.timeout = 8000;
-  xhr.onload = function() {
-    if(xhr.status === 200) {
-      try {
-        var info = JSON.parse(xhr.responseText);
-        DATA_SHA = info.sha;
-        DATA = JSON.parse(atob(info.content.replace(/\s/g,'')));
-        console.log('从GitHub加载:', DATA.length, '条');
-        try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-      } catch(e) { console.error('解析GitHub数据失败:', e); }
+  // 2. 尝试从localStorage恢复更新的数据
+  try {
+    var saved = localStorage.getItem('ledger_data_backup');
+    if(saved) {
+      var p = JSON.parse(saved);
+      if(p.length > 0) DATA = p;
     }
-    if(!dataSyncReady) fireDataReady();
-  };
-  xhr.onerror = function() { useLocalFallback(); };
-  xhr.ontimeout = function() { useLocalFallback(); };
-  xhr.send();
+  } catch(e) {}
+
+  // 3. 如果有token，后台静默从GitHub同步
+  if(GH_TOKEN) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
+    xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+    xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+    xhr.timeout = 8000;
+    xhr.onload = function() {
+      if(xhr.status === 200) {
+        try {
+          var info = JSON.parse(xhr.responseText);
+          DATA_SHA = info.sha;
+          var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+          if(remoteData.length > 0) {
+            DATA = remoteData;
+            try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+          }
+        } catch(e) {}
+      }
+    };
+    xhr.send();
+  }
+
+  // 数据已就绪
+  dataSyncReady = true;
 })();
 
 // 保存数据到 GitHub
@@ -555,12 +533,10 @@ function showApp(user) {
   document.getElementById('headerAvatar').textContent = user.name[0];
   document.getElementById('headerUserName').textContent = user.name;
   document.getElementById('headerUserRole').textContent = user.role==='admin'?'管理员':'普通用户';
-  onDataReady(function() {
-    updateStats();
-    updateFilters();
-    render();
-    refreshLogPanel();
-  });
+  updateStats();
+  updateFilters();
+  render();
+  refreshLogPanel();
   // 管理员首次登录提示设置Token
   if(user.role === 'admin' && !GH_TOKEN) {
     setTimeout(function() { showTokenSetup(); }, 500);
@@ -962,6 +938,7 @@ document.getElementById('confirmDialog').addEventListener('click', function(e){ 
 document.getElementById('logModal').addEventListener('click', function(e){ if(e.target===this) closeLogPanel(); });
 
 </script>
+
 
 
 
