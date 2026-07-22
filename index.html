@@ -559,7 +559,9 @@ function showTokenSetup() {
     if(token.trim()) {
       GH_TOKEN = token.trim();
       localStorage.setItem(GH_TOKEN_KEY, GH_TOKEN);
-      // 重新加载数据
+      // 刷新前确保当前数据已保存到localStorage
+      try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+      // 重新加载页面
       location.reload();
     }
   }
