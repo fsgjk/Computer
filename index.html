@@ -315,7 +315,7 @@ function updateFilters() {
   document.getElementById('deptList').innerHTML = depts.map(d=>`<option value="${d}">`).join('');
 }
 
-function render() {
+function getFilteredData() {
   const search = document.getElementById('searchInput').value.toLowerCase();
   const cat = document.getElementById('filterCategory').value;
   const dept = document.getElementById('filterDepartment').value;
@@ -328,6 +328,12 @@ function render() {
   if(cat) filtered = filtered.filter(r=>r['分类']===cat);
   if(dept) filtered = filtered.filter(r=>(r['所属部门']||'').includes(dept));
   if(ppv) filtered = filtered.filter(r=>r['公用个人']===ppv);
+  return filtered;
+}
+
+function render() {
+  let filtered = getFilteredData();
+  if(cat) filtered = filtered.filter(r=>r['分类']===cat);
 
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total/pageSize));
@@ -440,8 +446,9 @@ function closeConfirm() { document.getElementById('confirmDialog').classList.rem
 function executeConfirm() { if(confirmCb){ confirmCb(); closeConfirm(); } }
 
 function exportCSV() {
+  const filtered = getFilteredData();
   let csv = '\uFEFF' + FIELDS.join(',') + '\n';
-  DATA.forEach(r=>{
+  filtered.forEach(r=>{
     csv += FIELDS.map(f=>{ let v = String(r[f]||''); if(v.includes(',')||v.includes('"')||v.includes('\n')) v = '"'+v.replace(/"/g,'""')+'"'; return v; }).join(',')+'\n';
   });
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
@@ -449,7 +456,7 @@ function exportCSV() {
   a.href = URL.createObjectURL(blob);
   a.download = '电脑台账_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
-  addOpLog('导出', `${DATA.length}条记录`, '');
+  addOpLog('导出', `${filtered.length}条记录`, '');
   showToast('导出成功', 'success');
 }
 
