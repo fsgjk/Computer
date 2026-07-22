@@ -228,7 +228,12 @@ function render() {
   ph += '<button '+(currentPage===1?'disabled':'')+' onclick="goPage('+(currentPage-1)+')">\u25c0</button>';
   for(var i=s;i<=e;i++) ph += '<button class="'+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
   ph += '<button '+(currentPage===totalPages?'disabled':'')+' onclick="goPage('+(currentPage+1)+')">\u25b6</button>';
-  pag.innerHTML = '<div class="pagination-info">\u5171 <strong>'+total+'</strong> \u53f0\u7535\u8111\uff0c\u7b2c '+currentPage+'/'+totalPages+' \u9875</div><div class="pagination-btns">'+ph+'</div>';
+  pag.innerHTML = '<div class="pagination-info">共 <strong>'+total+'</strong> 台电脑，第 '+currentPage+'/'+totalPages+' 页 &nbsp; 每页 <select onchange="changePageSize(this.value)" style="height:28px;border:1px solid #d1d5db;border-radius:4px;font-size:12px">'+
+    '<option value="50"'+(pageSize===50?' selected':'')+'>50条</option>'+
+    '<option value="100"'+(pageSize===100?' selected':'')+'>100条</option>'+
+    '<option value="200"'+(pageSize===200?' selected':'')+'>200条</option>'+
+    '<option value="500"'+(pageSize===500?' selected':'')+'>500条</option>'+
+    '</select></div><div class="pagination-btns">'+ph+'</div>';
 }
 
 function toggleSort(field) {
@@ -238,7 +243,9 @@ function toggleSort(field) {
   render();
 }
 
-function goPage(p) { if(p>=1 && p<=Math.ceil(DATA.length/pageSize)){ currentPage=p; render(); } }
+function changePageSize(size) { pageSize = parseInt(size); currentPage = 1; render(); }
+
+function goPage(p) { if(p>=1 && p<=Math.ceil(getFilteredData().length/pageSize)){ currentPage=p; render(); } }
 function reload() { currentPage=1; render(); }
 function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function(){ currentPage=1; render(); }, 300); }
 
