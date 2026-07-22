@@ -152,7 +152,7 @@ function updateStats() {
   var deptSection = document.getElementById('deptSection');
   if(deptSection) {
     var deptItems = [];
-    Object.keys(depts).forEach(function(k){ deptItems.push({name:k, count:depts[k]}); });
+    Object.keys(depts).forEach(function(k){ if(k !== '未分配') deptItems.push({name:k, count:depts[k]}); });
     deptItems.sort(function(a,b){return b.count - a.count;});
     var deptColors = ['#378ADD','#97C459','#EF9F27','#E24B4A','#185FA5','#3B6D11','#854F0B','#0C447C'];
     deptSection.innerHTML = '<div class="dept-tags-grid">'+deptItems.map(function(di, idx){
