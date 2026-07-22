@@ -141,11 +141,11 @@ function updateStats() {
   var html = '';
   // 4 Metric Cards (design spec)
   html += '<div class="metric-card" onclick="filterByCard(\'clear\')"><div class="metric-label"><span class="metric-dot blue"></span>电脑总数</div><div class="metric-value">'+d.length+'<span class="metric-unit">台</span></div><div class="metric-sub">含台式机'+desktopCount+' + 笔记本'+laptopCount+'</div></div>';
-  html += '<div class="metric-card" onclick="filterByCard(\'used\')"><div class="metric-label"><span class="metric-dot green"></span>在线率</div><div class="metric-value">'+onlineRate+'<span class="metric-unit">%</span></div><div class="metric-sub">已用 '+used+' 台 / 共 '+d.length+' 台</div></div>';
+  html += '<div class="metric-card" onclick="filterByCard(\'used\')"><div class="metric-label"><span class="metric-dot green"></span>使用率</div><div class="metric-value">'+onlineRate+'<span class="metric-unit">%</span></div><div class="metric-sub">已用 '+used+' 台 / 共 '+d.length+' 台</div></div>';
   html += '<div class="metric-card" onclick="filterByCard(\'idle\')"><div class="metric-label"><span class="metric-dot amber"></span>空闲电脑</div><div class="metric-value">'+idle+'<span class="metric-unit">台</span></div><div class="metric-sub">待分配或闲置设备</div></div>';
-  // 使用年限 >5 年
-  var oldCount = d.filter(function(r){return calcYears(r) > 5;}).length;
-  html += '<div class="metric-card" onclick="filterByCard(\'old\')"><div class="metric-label"><span class="metric-dot red"></span>即将过保</div><div class="metric-value">'+oldCount+'<span class="metric-unit">台</span></div><div class="metric-sub">使用超5年需关注</div></div>';
+  var old5 = d.filter(function(r){return calcYears(r) > 5;}).length;
+  var old10 = d.filter(function(r){return calcYears(r) > 10;}).length;
+  html += '<div class="metric-card" onclick="filterByCard(\'old\')"><div class="metric-label"><span class="metric-dot red"></span>超年限电脑</div><div class="metric-value">'+old5+'<span class="metric-unit">台</span></div><div class="metric-sub">超5年 '+old5+' 台 / 超10年 '+old10+' 台</div></div>';
   document.getElementById('metricsRow').innerHTML = html;
 
   // 部门分布卡片 (在section-card中)
