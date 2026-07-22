@@ -242,6 +242,7 @@ a:hover{color:var(--primary-600)}
 <span class="user-avatar" id="headerAvatar">管</span>
 <span id="headerUserName">管理员</span>
 <span class="user-role" id="headerUserRole"></span>
+<button class="btn-logout" onclick="showLogPanel()" style="margin-right:4px">📋 日志</button>
 <button class="btn-logout" onclick="doLogout()">退出</button>
 </div>
 </header>
@@ -255,12 +256,6 @@ a:hover{color:var(--primary-600)}
 <div class="section-header"><h2>部门电脑分布</h2><span style="font-size:11px;color:var(--neutral-400)">点击标签筛选</span></div>
 <div class="section-body" id="deptSection"></div>
 </section>
-
-<!-- Operation Log -->
-<div class="log-panel" id="logPanel">
-<div class="log-header"><h3>📝 操作日志</h3><button class="btn btn-ghost btn-sm" onclick="clearLogs()">清空</button></div>
-<div class="log-list" id="logList"></div>
-</div>
 
 <!-- Toolbar + Table -->
 <div class="toolbar-wrap">
@@ -327,6 +322,16 @@ a:hover{color:var(--primary-600)}
 
 <!-- Toast Container -->
 <div id="toastContainer" aria-live="polite"></div>
+
+<!-- Log Panel Modal -->
+<div class="modal-overlay" id="logModal" role="dialog" aria-modal="true" aria-label="操作日志">
+<div class="modal" style="max-width:800px">
+<div class="modal-header"><h3>📋 操作日志</h3><div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="clearLogs()">清空日志</button><button class="btn btn-ghost btn-sm" onclick="exportLogs()">导出日志</button><button class="modal-close" onclick="closeLogPanel()" aria-label="关闭">✕</button></div></div>
+<div class="modal-body" style="max-height:60vh;overflow-y:auto">
+<div id="logListFull" style="font-size:12px"></div>
+</div>
+</div>
+</div>
 
 <h2 class="sr-only">上海外服门诊部电脑台账系统资产总览</h2>
 
@@ -478,18 +483,41 @@ function addOpLog(action, target, detail) {
   refreshLogPanel();
 }
 function refreshLogPanel() {
-  var panel = document.getElementById('logPanel');
-  var list = document.getElementById('logList');
-  if(opLogs.length === 0) { panel.style.display = 'none'; return; }
-  panel.style.display = 'block';
-  var recent = opLogs.slice(-20).reverse();
-  list.innerHTML = recent.map(function(l) {
-    var icon = l.action==='新增'?'➕':l.action==='删除'?'🗑':'✏';
-    var color = l.action==='新增'?'#3B6D11':l.action==='删除'?'#A32D2D':'#185FA5';
-    return '<div class="log-item"><span class="log-time">['+l.time+']</span><span style="color:'+color+';font-weight:500">'+icon+' '+l.action+'</span><span style="color:var(--neutral-800)">'+l.target+'</span>'+(l.detail?'<div style="font-size:10px;color:var(--neutral-400);margin-top:2px;padding-left:4px">'+l.detail+'</div>':'')+(l.ip?'<span class="log-ip">IP:'+l.ip+'</span>':'')+'</div>';
-  }).join('');
+  // 日志改为弹窗模式，不自动显示在主界面
 }
-function clearLogs() { opLogs = []; localStorage.removeItem('ledger_op_logs'); refreshLogPanel(); }
+
+function showLogPanel() {
+  var list = document.getElementById('logListFull');
+  if(opLogs.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--neutral-400)">暂无操作记录</div>';
+  } else {
+    var all = opLogs.slice().reverse();
+    list.innerHTML = all.map(function(l) {
+      var icon = l.action==='新增'?'➕':l.action==='删除'?'🗑':l.action==='导出'?'📥':l.action==='导入'?'📤':'✏';
+      var color = l.action==='新增'?'#3B6D11':l.action==='删除'?'#A32D2D':'#185FA5';
+      return '<div style="padding:8px 0;border-bottom:0.5px solid var(--neutral-50)"><span style="font-size:11px;color:var(--neutral-400)">'+l.time+'</span> <span style="color:'+color+';font-weight:500">'+icon+' '+l.action+'</span> <strong>'+l.user+'</strong> <span style="color:var(--neutral-800)">'+l.target+'</span>'+(l.detail?'<div style="font-size:11px;color:var(--neutral-400);margin-top:2px">'+l.detail+'</div>':'')+(l.ip?'<span style="font-size:10px;color:var(--neutral-400);margin-left:8px">IP:'+l.ip+'</span>':'')+'</div>';
+    }).join('');
+  }
+  document.getElementById('logModal').classList.add('active');
+}
+
+function closeLogPanel() {
+  document.getElementById('logModal').classList.remove('active');
+}
+
+function exportLogs() {
+  var csv = '\uFEFF时间,用户,操作,目标,详情,IP\n';
+  opLogs.forEach(function(l) {
+    csv += [l.time, l.user, l.action, l.target, l.detail||'', l.ip||''].map(function(v){ var s=String(v); if(s.includes(',')||s.includes('"')) s='"'+s.replace(/"/g,'""')+'"'; return s; }).join(',') + '\n';
+  });
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '操作日志_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('日志已导出', 'success');
+}
+function clearLogs() { opLogs = []; localStorage.removeItem('ledger_op_logs'); closeLogPanel(); showToast('日志已清空', 'success'); }
 
 // ===== 登录 =====
 function doLogin() {
@@ -917,8 +945,10 @@ function showToast(msg, type) {
 // Modal overlay click to close
 document.getElementById('editModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
 document.getElementById('confirmDialog').addEventListener('click', function(e){ if(e.target===this) closeConfirm(); });
+document.getElementById('logModal').addEventListener('click', function(e){ if(e.target===this) closeLogPanel(); });
 
 </script>
+
 
 
 
