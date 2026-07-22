@@ -548,8 +548,8 @@ function showApp(user) {
   updateFilters();
   render();
   refreshLogPanel();
-  // 管理员首次登录提示设置Token
-  if(user.role === 'admin' && !GH_TOKEN) {
+  // 管理员首次登录提示设置Token（仅弹一次，点取消后不再提示）
+  if(user.role === 'admin' && !GH_TOKEN && !localStorage.getItem('ledger_token_skipped')) {
     setTimeout(function() { showTokenSetup(); }, 500);
   }
 }
@@ -560,11 +560,15 @@ function showTokenSetup() {
     if(token.trim()) {
       GH_TOKEN = token.trim();
       localStorage.setItem(GH_TOKEN_KEY, GH_TOKEN);
+      localStorage.removeItem('ledger_token_skipped');
       // 刷新前确保当前数据已保存到localStorage
       try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
       // 重新加载页面
       location.reload();
     }
+  } else {
+    // 用户点了取消，记住选择，下次不再提示
+    localStorage.setItem('ledger_token_skipped', '1');
   }
 }
 
