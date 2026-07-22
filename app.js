@@ -22,12 +22,11 @@ function sha256(msg) {
 }
 
 var USERS = __USERS__;
-var TOKEN_KEY = 'ledger_login_v4';
+var TOKEN_KEY = 'ledger_login_v5';
 var DATA = __DATA__;
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','备注'];
 var LOGIN_USER = null;
 var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1;
-
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
 
@@ -46,6 +45,7 @@ var clientIP = '';
   } catch(e) {}
 })();
 
+// ===== 操作日志 =====
 function addOpLog(action, target, detail) {
   if(!LOGIN_USER) return;
   opLogs.push({time: new Date().toLocaleString(), user: LOGIN_USER.name, username: LOGIN_USER.username, action: action, target: target, detail: detail, ip: clientIP});
@@ -59,10 +59,13 @@ function refreshLogPanel() {
   if(opLogs.length === 0) { panel.style.display = 'none'; return; }
   panel.style.display = 'block';
   var recent = opLogs.slice(-20).reverse();
-  list.innerHTML = recent.map(function(l) { return '<div style="padding:2px 0;border-bottom:1px solid #f5f5f5">['+l.time+'] <strong>'+l.user+'</strong> '+l.action+' '+l.target+' '+l.detail+(l.ip?' <span style="color:#999;font-size:10px">IP:'+l.ip+'</span>':'')+'</div>'; }).join('');
+  list.innerHTML = recent.map(function(l) {
+    return '<div class="log-item"><span class="log-time">['+l.time+']</span><span class="log-user">'+l.user+'</span>'+l.action+' '+l.target+' '+l.detail+(l.ip?' <span class="log-ip">IP:'+l.ip+'</span>':'')+'</div>';
+  }).join('');
 }
 function clearLogs() { opLogs = []; localStorage.removeItem('ledger_op_logs'); refreshLogPanel(); }
 
+// ===== 登录 =====
 function doLogin() {
   var u = document.getElementById('loginUser').value.trim();
   var p = document.getElementById('loginPass').value;
@@ -81,8 +84,9 @@ function doLogin() {
 function showApp(user) {
   document.getElementById('loginWrap').style.display='none';
   document.getElementById('appWrap').style.display='block';
-  document.getElementById('loginUserName').textContent = user.name;
-  document.getElementById('loginUserRole').textContent = user.role==='admin'?'(管理员)':'';
+  document.getElementById('sidebarAvatar').textContent = user.name[0];
+  document.getElementById('sidebarUserName').textContent = user.name;
+  document.getElementById('sidebarUserRole').textContent = user.role==='admin'?'管理员':'普通用户';
   updateStats();
   updateFilters();
   render();
@@ -101,6 +105,7 @@ function doLogout() {
 document.getElementById('loginPass').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
+// 自动登录
 (function() {
   var saved = localStorage.getItem(TOKEN_KEY);
   if(!saved) return;
@@ -114,51 +119,58 @@ document.getElementById('loginUser').addEventListener('keydown', function(e) { i
   } catch(e) {}
 })();
 
+// ===== 导航切换 =====
+function switchNav(page) {
+  var items = document.querySelectorAll('.nav-item');
+  for(var i=0;i<items.length;i++) items[i].classList.remove('active');
+  var clicked = event && event.target ? event.target.closest('.nav-item') : null;
+  if(clicked) clicked.classList.add('active');
+}
+
+// ===== 统计指标卡 =====
 function updateStats() {
   var d = DATA;
-  var pp = {}; var depts = {}; var idle = 0;
+  var pp = {}; var depts = {}; var idle = 0; var desktopCount = 0; var laptopCount = 0;
   d.forEach(function(r) {
     var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
     var dept = r['所属部门']||'未分配';
-    var mainDept = dept.split('-')[0] || '未分配';
+    var mainDept = dept.split('-')[0];
     if(!mainDept) mainDept = '未分配';
     depts[mainDept] = (depts[mainDept]||0)+1;
     var pos = r['当前位置']||''; var person = r['责任人']||'';
     if(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person) idle++;
+    if(r['分类']==='台式') desktopCount++;
+    if(r['分类']==='笔记本') laptopCount++;
   });
-  var baseItems = [
-    {icon:'blue',label:'总电脑数',value:d.length, action:'clear'},
-    {icon:'green',label:'已用电脑',value:d.length - idle, action:'used'},
-    {icon:'slate',label:'空闲电脑',value:idle, action:'idle'},
-    {icon:'cyan',label:'公用电脑',value:pp['公用']||0, action:'public'},
-    {icon:'red',label:'个人电脑',value:pp['个人']||0, action:'personal'},
-  ];
-  // 按数量排序的部门卡片
-  var deptItems = [];
-  Object.keys(depts).forEach(function(k){ deptItems.push({name:k, count:depts[k]}); });
-  deptItems.sort(function(a,b){return b.count - a.count;});
-  var deptColors = ['#2563eb','#16a34a','#ea580c','#9333ea','#0891b2','#dc2626','#4f46e5','#059669'];
+
+  var used = d.length - idle;
+  var onlineRate = d.length > 0 ? Math.round(used/d.length*1000)/10 : 0;
 
   var html = '';
-  // 基础统计卡片
-  html += '<div class="stats-section"><div class="section-label">基础统计</div><div class="stats-grid">';
-  html += baseItems.map(function(i) {
-    return '<div class="stat-card" onclick="filterByCard(\''+i.action+'\')"><div class="stat-icon '+i.icon+'">'+i.label[0]+'</div><div><div class="stat-value">'+i.value+'</div><div class="stat-label">'+i.label+'</div></div></div>';
-  }).join('');
-  html += '</div></div>';
-  // 部门统计卡片
-  if(deptItems.length > 0) {
-    html += '<div class="stats-section"><div class="section-label">部门统计 <span style="font-weight:400;font-size:11px;color:#888">（点击卡片筛选）</span></div><div class="stats-grid">';
-    html += deptItems.map(function(di, idx){
-      var color = deptColors[idx % deptColors.length];
-      return '<div class="stat-card dept-card" onclick="filterByCard(\'dept_'+di.name+'\')" style="border-left:3px solid '+color+'"><div class="stat-icon" style="background:'+color+'20;color:'+color+'">'+di.name[0]+'</div><div><div class="stat-value">'+di.count+'</div><div class="stat-label">'+di.name+'</div></div></div>';
-    }).join('');
-    html += '</div></div>';
-  }
+  // 4 Metric Cards (design spec)
+  html += '<div class="metric-card" onclick="filterByCard(\'clear\')"><div class="metric-label"><span class="metric-dot blue"></span>电脑总数</div><div class="metric-value">'+d.length+'<span class="metric-unit">台</span></div><div class="metric-sub">含台式机'+desktopCount+' + 笔记本'+laptopCount+'</div></div>';
+  html += '<div class="metric-card" onclick="filterByCard(\'used\')"><div class="metric-label"><span class="metric-dot green"></span>在线率</div><div class="metric-value">'+onlineRate+'<span class="metric-unit">%</span></div><div class="metric-sub">已用 '+used+' 台 / 共 '+d.length+' 台</div></div>';
+  html += '<div class="metric-card" onclick="filterByCard(\'idle\')"><div class="metric-label"><span class="metric-dot amber"></span>空闲电脑</div><div class="metric-value">'+idle+'<span class="metric-unit">台</span></div><div class="metric-sub">待分配或闲置设备</div></div>';
+  // 使用年限 >5 年
+  var oldCount = d.filter(function(r){return calcYears(r) > 5;}).length;
+  html += '<div class="metric-card" onclick="filterByCard(\'old\')"><div class="metric-label"><span class="metric-dot red"></span>即将过保</div><div class="metric-value">'+oldCount+'<span class="metric-unit">台</span></div><div class="metric-sub">使用超5年需关注</div></div>';
+  document.getElementById('metricsRow').innerHTML = html;
 
-  document.getElementById('statsRow').innerHTML = html;
+  // 部门分布卡片 (在section-card中)
+  var deptSection = document.getElementById('deptSection');
+  if(deptSection) {
+    var deptItems = [];
+    Object.keys(depts).forEach(function(k){ deptItems.push({name:k, count:depts[k]}); });
+    deptItems.sort(function(a,b){return b.count - a.count;});
+    var deptColors = ['#378ADD','#97C459','#EF9F27','#E24B4A','#185FA5','#3B6D11','#854F0B','#0C447C'];
+    deptSection.innerHTML = '<div class="dept-tags-grid">'+deptItems.map(function(di, idx){
+      var color = deptColors[idx % deptColors.length];
+      return '<div class="dept-tag-card" onclick="filterByCard(\'dept_'+di.name+'\')"><span class="dept-color-dot" style="background:'+color+'"></span><span class="dept-name">'+di.name+'</span><span class="dept-count">'+di.count+'</span></div>';
+    }).join('')+'</div>';
+  }
 }
 
+// ===== 筛选器 =====
 function updateFilters() {
   var cats = []; var depts = []; var oss = [];
   DATA.forEach(function(r) { if(r['分类'] && cats.indexOf(r['分类'])<0) cats.push(r['分类']); if(r['所属部门'] && depts.indexOf(r['所属部门'])<0) depts.push(r['所属部门']); if(r['操作系统'] && oss.indexOf(r['操作系统'])<0) oss.push(r['操作系统']); });
@@ -169,6 +181,7 @@ function updateFilters() {
   document.getElementById('deptList').innerHTML = depts.map(function(d){return '<option value="'+d+'">';}).join('');
 }
 
+// ===== 数据过滤 =====
 function getFilteredData() {
   var search = document.getElementById('searchInput').value.toLowerCase();
   var cat = document.getElementById('filterCategory').value;
@@ -178,12 +191,12 @@ function getFilteredData() {
   var filtered = DATA.slice();
   if(filterMode === 'idle') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return ['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person; });
   else if(filterMode === 'used') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return !(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person); });
+  else if(filterMode === 'old') filtered = filtered.filter(function(r) { return calcYears(r) > 5; });
   if(search) filtered = filtered.filter(function(r){return FIELDS.some(function(f){return String(r[f]||'').toLowerCase().includes(search);});});
   if(cat) filtered = filtered.filter(function(r){return r['分类']===cat;});
   if(dept) filtered = filtered.filter(function(r){return (r['所属部门']||'').includes(dept);});
   if(ppv) filtered = filtered.filter(function(r){return r['公用个人']===ppv;});
   if(osv) filtered = filtered.filter(function(r){return (r['操作系统']||'')===osv;});
-  // 排序
   if(sortField) {
     filtered.sort(function(a, b) {
       var va = (a[sortField] || '').toString();
@@ -198,12 +211,13 @@ function getFilteredData() {
 
 function calcYears(r) {
   var py = r['采购日期']||'';
-  if(!py || py === '/') return '';
+  if(!py || py === '/') return 0;
   var year = parseInt(py);
-  if(isNaN(year)) return py;
-  return String(new Date().getFullYear() - year);
+  if(isNaN(year)) return 0;
+  return new Date().getFullYear() - year;
 }
 
+// ===== 渲染表格 =====
 function render() {
   var filtered = getFilteredData();
   var total = filtered.length;
@@ -211,75 +225,82 @@ function render() {
   if(currentPage > totalPages) currentPage = totalPages;
   var start = (currentPage-1)*pageSize;
   var page = filtered.slice(start, start+pageSize);
-
-  var catBadge = {'台式':'bg-blue','笔记本':'bg-green','一体机':'bg-yellow','sruface':'bg-purple'};
   var isAdmin = LOGIN_USER && LOGIN_USER.role === 'admin';
 
-  function thSort(field, label) {
+  function thSort(field, label, width) {
     var arrow = '';
-    if(sortField === field) arrow = sortDir === 1 ? ' \u25b2' : ' \u25bc';
-    return '<th style="cursor:pointer" onclick="toggleSort(\''+field+'\')">'+label+arrow+'</th>';
+    if(sortField === field) arrow = sortDir === 1 ? ' ▲' : ' ▼';
+    return '<th style="width:'+width+'" onclick="toggleSort(\''+field+'\')" tabindex="0" role="columnheader" aria-sort="'+(sortField===field?(sortDir===1?'ascending':'descending'):'none')+'">'+label+'<span style="font-size:10px">'+arrow+'</span></th>';
   }
 
-  document.getElementById('tableWrapper').innerHTML = '<table><thead><tr>'+
-    thSort('当前位置','当前位置')+
-    thSort('公用个人','公用/个人')+
-    thSort('责任人','责任人')+
-    thSort('资产编号','资产编号')+
-    thSort('用户名','用户名')+
-    thSort('MAC地址','MAC地址')+
-    thSort('是否加域','加域')+
-    thSort('IP地址','IP地址')+
-    thSort('所属部门','所属部门')+
-    thSort('采购日期','采购日期')+
-    thSort('使用年限','使用年限')+
-    thSort('本地账号','本地账号')+
-    thSort('分类','分类')+
-    thSort('CPU','CPU')+
-    thSort('内存','内存')+
-    thSort('硬盘','硬盘')+
-    thSort('操作系统','操作系统')+
-    thSort('备注','备注')+
-    '<th>操作</th>'+
+  document.getElementById('tableWrapper').innerHTML = '<table role="grid" aria-label="电脑资产明细列表"><thead><tr>'+
+    thSort('当前位置','当前位置','140px')+
+    thSort('公用个人','公用/个人','70px')+
+    thSort('责任人','责任人','70px')+
+    thSort('资产编号','资产编号','100px')+
+    thSort('用户名','用户名','70px')+
+    thSort('MAC地址','MAC地址','120px')+
+    thSort('是否加域','加域','50px')+
+    thSort('IP地址','IP地址','110px')+
+    thSort('所属部门','科室','90px')+
+    thSort('采购日期','采购日期','70px')+
+    thSort('使用年限','使用年限','70px')+
+    thSort('本地账号','本地账号','70px')+
+    thSort('分类','分类','70px')+
+    thSort('CPU','CPU','100px')+
+    thSort('内存','内存','60px')+
+    thSort('硬盘','硬盘','60px')+
+    thSort('操作系统','操作系统','110px')+
+    thSort('备注','备注','100px')+
+    '<th style="width:80px">操作</th>'+
     '</tr></thead><tbody>'+
     page.map(function(r) {
-      var ppBadge = (r['公用个人']==='个人')?'bg-pink':'bg-cyan';
+      var isPersonal = r['公用个人']==='个人';
+      var ppBadge = isPersonal ? 'status-badge pending' : 'status-badge active';
+      var ppLabel = r['公用个人']==='个人'?'个人':'公用';
       var pos = r['当前位置']||'';
       var deptName = r['所属部门']||'';
-      var ops = '<button class="btn btn-outline btn-sm" onclick="editDevice(\''+r['序号']+'\')">\u270f\ufe0f</button>';
-      if(isAdmin) ops += '<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+r['序号']+'\')">\ud83d\uddd1</button>';
+      var years = calcYears(r);
+      var cat = r['分类']||'';
+      var catCls = cat==='台式'?'desktop':cat==='笔记本'?'laptop':cat==='一体机'?'aio':'surface';
+      var catLabel = cat==='sruface'?'Surface':cat||'-';
+      var domain = r['是否加域']==='是'?'active':'pending';
+      var domainLabel = r['是否加域']==='是'?'是':'否';
+      var ops = '<button class="btn-icon" onclick="editDevice(\''+r['序号']+'\')" title="编辑" aria-label="编辑">✏</button>';
+      if(isAdmin) ops += '<button class="btn-icon danger" onclick="confirmDelete(\''+r['序号']+'\')" title="删除" aria-label="删除">🗑</button>';
       return '<tr>'+
-        '<td title="'+pos+'">'+pos.substring(0,15)+(pos.length>15?'...':'')+'</td>'+
-        '<td><span class="badge '+ppBadge+'">'+(r['公用个人']||'-')+'</span></td>'+
-        '<td>'+(r['责任人']||'')+'</td>'+
-        '<td><strong>'+(r['资产编号']||'')+'</strong></td>'+
+        '<td title="'+pos+'" style="overflow:hidden;text-overflow:ellipsis">'+pos+'</td>'+
+        '<td><span class="status-badge '+(isPersonal?'pending':'active')+'">'+ppLabel+'</span></td>'+
+        '<td>'+(r['责任人']||'<span style="color:var(--neutral-400)">--</span>')+'</td>'+
+        '<td class="mono" style="font-size:12px"><strong>'+(r['资产编号']||'')+'</strong></td>'+
         '<td>'+(r['用户名']||'')+'</td>'+
-        '<td style="font-family:monospace;font-size:10px">'+(r['MAC地址']||'')+'</td>'+
-        '<td><span class="badge '+(r['是否加域']==='是'?'bg-yes':'bg-no')+'">'+(r['是否加域']||'-')+'</span></td>'+
-        '<td style="font-family:monospace">'+(r['IP地址']||'')+'</td>'+
-        '<td title="'+deptName+'">'+deptName.substring(0,12)+(deptName.length>12?'...':'')+'</td>'+
-        '<td>'+(r['采购日期']||'')+'</td>'+
-        '<td'+(calcYears(r)>5?' style="color:#dc2626;font-weight:700"':'')+'>'+calcYears(r)+'</td>'+
+        '<td class="mono" style="font-size:11px">'+(r['MAC地址']||'')+'</td>'+
+        '<td><span class="status-badge '+(r['是否加域']==='是'?'active':'pending')+'">'+domainLabel+'</span></td>'+
+        '<td class="mono" style="font-size:11px">'+(r['IP地址']||'')+'</td>'+
+        '<td><span class="dept-tag" title="'+deptName+'">'+deptName.substring(0,8)+(deptName.length>8?'…':'')+'</span></td>'+
+        '<td class="mono" style="font-size:11px">'+(r['采购日期']||'')+'</td>'+
+        '<td class="mono'+(years>5?' years-old':'')+'">'+years+'年</td>'+
         '<td>'+(r['本地账号']||'')+'</td>'+
-        '<td><span class="badge '+(catBadge[r['分类']]||'bg-blue')+'">'+(r['分类']||'-')+'</span></td>'+
+        '<td><span class="cat-badge '+catCls+'">'+catLabel+'</span></td>'+
         '<td>'+(r['CPU']||'')+'</td>'+
         '<td>'+(r['内存']||'')+'</td>'+
         '<td>'+(r['硬盘']||'')+'</td>'+
         '<td>'+(r['操作系统']||'')+'</td>'+
         '<td style="max-width:100px;overflow:hidden;text-overflow:ellipsis" title="'+(r['备注']||'')+'">'+(r['备注']||'')+'</td>'+
-        '<td>'+ops+'</td>'+
+        '<td style="white-space:nowrap">'+ops+'</td>'+
         '</tr>';
     }).join('')+
     '</tbody></table>';
 
+  // Pagination
   var pag = document.getElementById('pagination');
   var ph = ''; var maxB = 7;
   var s = Math.max(1, currentPage-3), e = Math.min(totalPages, s+maxB-1);
   if(e-s < maxB-1) s = Math.max(1, e-maxB+1);
-  ph += '<button '+(currentPage===1?'disabled':'')+' onclick="goPage('+(currentPage-1)+')">\u25c0</button>';
+  ph += '<button '+(currentPage===1?'disabled':'')+' onclick="goPage('+(currentPage-1)+')" aria-label="上一页">◀</button>';
   for(var i=s;i<=e;i++) ph += '<button class="'+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
-  ph += '<button '+(currentPage===totalPages?'disabled':'')+' onclick="goPage('+(currentPage+1)+')">\u25b6</button>';
-  pag.innerHTML = '<div class="pagination-info">共 <strong>'+total+'</strong> 台电脑，第 '+currentPage+'/'+totalPages+' 页 &nbsp; 每页 <select onchange="changePageSize(this.value)" style="height:28px;border:1px solid #d1d5db;border-radius:4px;font-size:12px">'+
+  ph += '<button '+(currentPage===totalPages?'disabled':'')+' onclick="goPage('+(currentPage+1)+')" aria-label="下一页">▶</button>';
+  pag.innerHTML = '<div class="pagination-info">共 <strong>'+total+'</strong> 台电脑，第 '+currentPage+'/'+totalPages+' 页 &nbsp; 每页 <select onchange="changePageSize(this.value)">'+
     '<option value="50"'+(pageSize===50?' selected':'')+'>50条</option>'+
     '<option value="100"'+(pageSize===100?' selected':'')+'>100条</option>'+
     '<option value="200"'+(pageSize===200?' selected':'')+'>200条</option>'+
@@ -295,7 +316,6 @@ function toggleSort(field) {
 }
 
 function changePageSize(size) { pageSize = parseInt(size); currentPage = 1; render(); }
-
 function goPage(p) { if(p>=1 && p<=Math.ceil(getFilteredData().length/pageSize)){ currentPage=p; render(); } }
 function reload() { currentPage=1; render(); }
 function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function(){ currentPage=1; render(); }, 300); }
@@ -309,21 +329,20 @@ function filterByCard(action) {
   filterMode = (action === 'clear') ? '' : action;
   if(action.indexOf('dept_') === 0) {
     filterMode = '';
-    document.getElementById('filterDepartment').value = ''; // 会通过 includes 匹配
-    // 用搜索来筛选部门
     document.getElementById('searchInput').value = action.substring(5);
   }
   currentPage = 1;
   render();
 }
 
+// ===== CRUD =====
 function openModal(id) {
-  if(!LOGIN_USER) { showToast('\u8bf7\u5148\u767b\u5f55', 'error'); return; }
+  if(!LOGIN_USER) { showToast('请先登录', 'error'); return; }
   editingId = id || null;
-  document.getElementById('modalTitle').textContent = id ? '\u7f16\u8f91\u7535\u8111 #'+id : '\u65b0\u589e\u7535\u8111';
+  document.getElementById('modalTitle').textContent = id ? '编辑电脑 #'+id : '新增电脑';
   document.getElementById('editForm').reset();
   if(id) {
-    var r = DATA.find(function(d){return d['\u5e8f\u53f7']===id;});
+    var r = DATA.find(function(d){return d['序号']===id;});
     if(r) {
       var form = document.getElementById('editForm');
       FIELDS.forEach(function(f){ var el = form.querySelector('[name="'+f+'"]'); if(el && r[f]!==undefined) el.value = r[f]; });
@@ -341,40 +360,41 @@ function saveDevice() {
   var obj = {};
   FIELDS.forEach(function(f){ obj[f] = fd.get(f) || ''; });
   if(editingId) {
-    var idx = DATA.findIndex(function(d){return d['\u5e8f\u53f7']===editingId;});
+    var idx = DATA.findIndex(function(d){return d['序号']===editingId;});
     if(idx >= 0) {
-      var merged = {}; Object.keys(DATA[idx]).forEach(function(k){merged[k]=DATA[idx][k];}); Object.keys(obj).forEach(function(k){merged[k]=obj[k];}); merged['\u5e8f\u53f7']=editingId;
+      var merged = {}; Object.keys(DATA[idx]).forEach(function(k){merged[k]=DATA[idx][k];}); Object.keys(obj).forEach(function(k){merged[k]=obj[k];}); merged['序号']=editingId;
       DATA[idx] = merged;
     }
   } else {
-    var maxId = Math.max.apply(null, [0].concat(DATA.map(function(d){return parseInt(d['\u5e8f\u53f7'])||0;})));
-    obj['\u5e8f\u53f7'] = String(maxId + 1);
+    var maxId = Math.max.apply(null, [0].concat(DATA.map(function(d){return parseInt(d['序号'])||0;})));
+    obj['序号'] = String(maxId + 1);
     DATA.push(obj);
   }
   closeModal();
-  addOpLog(editingId ? '\u7f16\u8f91' : '\u65b0\u589e', '#'+obj['\u5e8f\u53f7'], obj['\u5206\u7c7b']+' - '+obj['\u5f53\u524d\u4f4d\u7f6e']);
+  addOpLog(editingId ? '编辑' : '新增', '#'+obj['序号'], obj['分类']+' - '+obj['当前位置']);
   updateStats();
   render();
-  showToast(editingId ? '\u7535\u8111\u66f4\u65b0\u6210\u529f' : '\u7535\u8111\u6dfb\u52a0\u6210\u529f', 'success');
+  showToast(editingId ? '电脑更新成功' : '电脑添加成功', 'success');
 }
 
 function confirmDelete(id) {
-  if(!LOGIN_USER || LOGIN_USER.role !== 'admin') { showToast('\u4ec5\u7ba1\u7406\u5458\u53ef\u5220\u9664', 'error'); return; }
-  document.getElementById('confirmMsg').textContent = '\u786e\u8ba4\u5220\u9664\u5e8f\u53f7\u4e3a '+id+' \u7684\u7535\u8111\uff1f';
+  if(!LOGIN_USER || LOGIN_USER.role !== 'admin') { showToast('仅管理员可删除', 'error'); return; }
+  document.getElementById('confirmMsg').textContent = '确认删除序号为 '+id+' 的电脑？';
   document.getElementById('confirmDialog').classList.add('active');
   confirmCb = function() {
-    var del = DATA.find(function(d){return d['\u5e8f\u53f7']===id;});
-    DATA = DATA.filter(function(d){return d['\u5e8f\u53f7']!==id;});
-    addOpLog('\u5220\u9664', '#'+id, del ? del['\u5206\u7c7b']+' - '+del['\u5f53\u524d\u4f4d\u7f6e'] : '');
+    var del = DATA.find(function(d){return d['序号']===id;});
+    DATA = DATA.filter(function(d){return d['序号']!==id;});
+    addOpLog('删除', '#'+id, del ? del['分类']+' - '+del['当前位置'] : '');
     updateStats();
     render();
-    showToast('\u5df2\u5220\u9664', 'success');
+    showToast('已删除', 'success');
   };
 }
 
 function closeConfirm() { document.getElementById('confirmDialog').classList.remove('active'); confirmCb = null; }
 function executeConfirm() { if(confirmCb){ confirmCb(); closeConfirm(); } }
 
+// ===== 导出/导入 =====
 function exportCSV() {
   var filtered = getFilteredData();
   var csv = '\uFEFF' + FIELDS.join(',') + '\n';
@@ -384,14 +404,14 @@ function exportCSV() {
   var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = '\u7535\u8111\u53f0\u8d26_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.download = '电脑台账_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
-  addOpLog('\u5bfc\u51fa', filtered.length+'\u6761\u8bb0\u5f55', '');
-  showToast('\u5bfc\u51fa\u6210\u529f', 'success');
+  addOpLog('导出', filtered.length+'条记录', '');
+  showToast('导出成功', 'success');
 }
 
 function importData(input) {
-  if(!LOGIN_USER) { showToast('\u8bf7\u5148\u767b\u5f55', 'error'); return; }
+  if(!LOGIN_USER) { showToast('请先登录', 'error'); return; }
   var file = input.files[0];
   if(!file) return;
   var ext = file.name.split('.').pop().toLowerCase();
@@ -402,7 +422,7 @@ function importData(input) {
       if(ext === 'json') { imported = JSON.parse(e.target.result); if(!Array.isArray(imported)) imported = imported.data || []; }
       else {
         var lines = e.target.result.split('\n').filter(Boolean);
-        if(lines.length < 2) { showToast('\u6587\u4ef6\u683c\u5f0f\u9519\u8bef', 'error'); return; }
+        if(lines.length < 2) { showToast('文件格式错误', 'error'); return; }
         var headers = lines[0].replace(/^\uFEFF/,'').split(',');
         imported = lines.slice(1).map(function(line) {
           var vals = [], inQ = false, cur = '';
@@ -412,30 +432,33 @@ function importData(input) {
           return obj;
         });
       }
-      if(imported.length === 0) { showToast('\u672a\u8bc6\u522b\u5230\u6570\u636e', 'error'); return; }
-      document.getElementById('confirmMsg').textContent = '\u786e\u8ba4\u5bfc\u5165 '+imported.length+' \u6761\u6570\u636e\uff1f';
+      if(imported.length === 0) { showToast('未识别到数据', 'error'); return; }
+      document.getElementById('confirmMsg').textContent = '确认导入 '+imported.length+' 条数据？';
       document.getElementById('confirmDialog').classList.add('active');
       confirmCb = function() {
         DATA = imported;
-        addOpLog('\u5bfc\u5165', imported.length+'\u6761\u8bb0\u5f55', '');
+        addOpLog('导入', imported.length+'条记录', '');
         updateStats();
         updateFilters();
         render();
-        showToast('\u5df2\u5bfc\u5165 '+imported.length+' \u6761', 'success');
+        showToast('已导入 '+imported.length+' 条', 'success');
       };
-    } catch(err) { showToast('\u89e3\u6790\u5931\u8d25: '+err.message, 'error'); }
+    } catch(err) { showToast('解析失败: '+err.message, 'error'); }
   };
   if(ext === 'json') reader.readAsText(file); else reader.readAsText(file);
   input.value = '';
 }
 
+// ===== Toast =====
 function showToast(msg, type) {
   var el = document.createElement('div');
   el.className = 'toast '+type;
   el.textContent = msg;
+  el.setAttribute('role', 'alert');
   document.getElementById('toastContainer').appendChild(el);
   setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(function(){el.remove();},300); }, 2500);
 }
 
+// Modal overlay click to close
 document.getElementById('editModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
 document.getElementById('confirmDialog').addEventListener('click', function(e){ if(e.target===this) closeConfirm(); });
