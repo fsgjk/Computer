@@ -130,7 +130,7 @@ document.getElementById('loginUser').addEventListener('keydown', function(e) { i
 // ===== 统计指标卡 =====
 function updateStats() {
   var d = DATA;
-  var pp = {}; var depts = {}; var idle = 0; var desktopCount = 0; var laptopCount = 0;
+  var pp = {}; var depts = {}; var idle = 0; var catCounts = {};
   d.forEach(function(r) {
     var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
     var dept = r['所属部门']||'未分配';
@@ -139,8 +139,9 @@ function updateStats() {
     depts[mainDept] = (depts[mainDept]||0)+1;
     var pos = r['当前位置']||''; var person = r['责任人']||'';
     if(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person) idle++;
-    if(r['分类']==='台式') desktopCount++;
-    if(r['分类']==='笔记本') laptopCount++;
+    var cat = r['分类']||'其他';
+    if(cat==='sruface') cat='Surface';
+    catCounts[cat] = (catCounts[cat]||0)+1;
   });
 
   var used = d.length - idle;
@@ -148,7 +149,11 @@ function updateStats() {
 
   var html = '';
   // 4 Metric Cards (design spec)
-  html += '<div class="metric-card" onclick="filterByCard(\'clear\')"><div class="metric-label"><span class="metric-dot blue"></span>电脑总数</div><div class="metric-value">'+d.length+'<span class="metric-unit">台</span></div><div class="metric-sub">含台式机'+desktopCount+' + 笔记本'+laptopCount+'</div></div>';
+  // 按数量排序分类
+  var catList = [];
+  Object.keys(catCounts).forEach(function(k){ catList.push(k+catCounts[k]); });
+  var catSub = catList.join(' + ');
+  html += '<div class="metric-card" onclick="filterByCard(\'clear\')"><div class="metric-label"><span class="metric-dot blue"></span>电脑总数</div><div class="metric-value">'+d.length+'<span class="metric-unit">台</span></div><div class="metric-sub">含'+catSub+'</div></div>';
   html += '<div class="metric-card" onclick="filterByCard(\'used\')"><div class="metric-label"><span class="metric-dot green"></span>使用率</div><div class="metric-value">'+onlineRate+'<span class="metric-unit">%</span></div><div class="metric-sub">已用 '+used+' 台 / 共 '+d.length+' 台</div></div>';
   html += '<div class="metric-card" onclick="filterByCard(\'idle\')"><div class="metric-label"><span class="metric-dot amber"></span>空闲电脑</div><div class="metric-value">'+idle+'<span class="metric-unit">台</span></div><div class="metric-sub">待分配或闲置设备</div></div>';
   var old5 = d.filter(function(r){return calcYears(r) > 5;}).length;
