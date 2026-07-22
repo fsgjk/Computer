@@ -603,9 +603,16 @@ function showApp(user) {
   document.getElementById('headerAvatar').textContent = user.name[0];
   document.getElementById('headerUserName').textContent = user.name;
   document.getElementById('headerUserRole').textContent = user.role==='admin'?'管理员':'普通用户';
+  // 诊断：登录后检查数据状态
+  console.log('showApp: DATA.length='+DATA.length+' filterMode='+filterMode+' currentDeptPrefix='+currentDeptPrefix);
   updateStats();
   updateFilters();
   render();
+  // 诊断：渲染后检查
+  var tw2 = document.getElementById('tableWrapper');
+  var rows2 = tw2 ? tw2.querySelectorAll('tbody tr') : [];
+  var dbg2 = document.getElementById('debugInfo');
+  if(dbg2) dbg2.textContent = '已登录 | DATA:'+DATA.length+'条 | 过滤后:'+getFilteredData().length+'条 | 表格行:'+rows2.length;
   refreshLogPanel();
   startAutoSync(); // 启动定时自动同步（延迟启动，确保页面先渲染）
 }
