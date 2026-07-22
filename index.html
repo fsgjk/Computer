@@ -233,6 +233,7 @@ a:hover{color:var(--primary-600)}
 <div class="field"><label>密码</label><input type="password" id="loginPass" placeholder="请输入密码" autocomplete="current-password"></div>
 <button class="btn-login" onclick="doLogin()" aria-label="登录">登 录</button>
 <div class="error" id="loginError" role="alert"></div>
+<div id="debugInfo" style="font-size:10px;color:#888;text-align:center;margin-top:8px"></div>
 </div>
 </div>
 
@@ -240,7 +241,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统</h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260723</span></h1>
 <div class="header-spacer"></div>
 <div class="header-user">
 <span class="user-avatar" id="headerAvatar">管</span>
@@ -444,6 +445,9 @@ var clientIP = '';
       try { DATA = JSON.parse(el2.textContent); } catch(e) {}
     }
   }
+  // 诊断信息
+  var dbg = document.getElementById('debugInfo');
+  if(dbg) dbg.textContent = 'DATA:'+DATA.length+'条 | Token:'+(GH_TOKEN?'已内置':'无')+' | LS:'+(function(){try{var s=localStorage.getItem('ledger_data_backup');return s?JSON.parse(s).length+'条':'无';}catch(e){return '错误';}})();
 })();
 
 // 保存数据到 GitHub
