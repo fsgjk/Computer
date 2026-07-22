@@ -234,6 +234,7 @@ a:hover{color:var(--primary-600)}
 <button class="btn-login" onclick="doLogin()" aria-label="登录">登 录</button>
 <div class="error" id="loginError" role="alert"></div>
 <div id="debugInfo" style="font-size:10px;color:#888;text-align:center;margin-top:8px"></div>
+<div style="text-align:center;margin-top:4px"><a href="javascript:localStorage.removeItem('ledger_data_backup');localStorage.removeItem('ledger_op_logs');localStorage.removeItem('ledger_login_v5');alert('缓存已清除，页面将刷新');location.reload()" style="font-size:10px;color:#999">清除本地缓存</a></div>
 </div>
 </div>
 
