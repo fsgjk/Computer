@@ -252,7 +252,7 @@ a:hover{color:var(--primary-600)}
 
 <!-- Department Section -->
 <section class="section-card">
-<div class="section-header"><h2>科室分布</h2><span style="font-size:11px;color:var(--neutral-400)">点击标签筛选</span></div>
+<div class="section-header"><h2>部门分布</h2><span style="font-size:11px;color:var(--neutral-400)">点击标签筛选</span></div>
 <div class="section-body" id="deptSection"></div>
 </section>
 
@@ -567,7 +567,7 @@ function render() {
     thSort('MAC地址','MAC地址','120px')+
     thSort('是否加域','加域','50px')+
     thSort('IP地址','IP地址','110px')+
-    thSort('所属部门','科室','90px')+
+    thSort('所属部门','部门','90px')+
     thSort('采购日期','采购日期','70px')+
     thSort('使用年限','使用年限','70px')+
     thSort('本地账号','本地账号','70px')+
@@ -789,6 +789,7 @@ document.getElementById('editModal').addEventListener('click', function(e){ if(e
 document.getElementById('confirmDialog').addEventListener('click', function(e){ if(e.target===this) closeConfirm(); });
 
 </script>
+
 
 </body>
 </html>

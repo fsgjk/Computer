@@ -234,7 +234,7 @@ function render() {
     thSort('MAC地址','MAC地址','120px')+
     thSort('是否加域','加域','50px')+
     thSort('IP地址','IP地址','110px')+
-    thSort('所属部门','科室','90px')+
+    thSort('所属部门','部门','90px')+
     thSort('采购日期','采购日期','70px')+
     thSort('使用年限','使用年限','70px')+
     thSort('本地账号','本地账号','70px')+
