@@ -276,6 +276,7 @@ a:hover{color:var(--primary-600)}
 <button class="btn btn-primary" onclick="openModal()" aria-label="新增电脑">+ 新增电脑</button>
 <button class="btn btn-secondary" onclick="exportCSV()">📥 导出CSV</button>
 <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">📤 导入数据</button>
+<button class="btn btn-ghost" onclick="syncToGitHub(function(ok){alert(ok?'同步成功':'同步失败，请检查网络')})" title="手动同步到云端">🔄 云端同步</button>
 <input type="file" id="importFile" accept=".csv,.json" style="display:none" onchange="importData(this)">
 </div>
 
@@ -398,48 +399,9 @@ var clientIP = '';
     }
   } catch(e) {}
 
-  // 3. 如果有token，优先从GitHub加载最新数据（多用户同步）
-  if(GH_TOKEN) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
-    xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-    xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-    xhr.timeout = 8000;
-    xhr.onload = function() {
-      if(xhr.status === 200) {
-        try {
-          var info = JSON.parse(xhr.responseText);
-          DATA_SHA = info.sha;
-          var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
-          if(remoteData.length > 0) {
-            // 比较本地数据和云端数据：云端优先（多用户场景下云端是最新的）
-            var localLen = 0;
-            try { var local = JSON.parse(localStorage.getItem('ledger_data_backup')); localLen = local ? local.length : 0; } catch(e) {}
-            if(remoteData.length >= localLen) {
-              // 云端数据不少于本地，使用云端数据
-              DATA = remoteData;
-              try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-            }
-            // 如果本地数据更多（刚做了编辑还没同步），保留本地并同步到云端
-            if(DATA.length < localLen) {
-              syncToGitHub();
-            }
-            // 数据变化后刷新界面
-            updateStats();
-            updateFilters();
-            render();
-          }
-        } catch(e) {}
-      }
-    };
-    xhr.onerror = function() {
-      // GitHub请求失败，使用本地数据（已在步骤1/2加载），无需处理
-    };
-    xhr.ontimeout = function() {
-      // 超时，同上
-    };
-    xhr.send();
-  }
+  // 3. GitHub同步暂时关闭排查问题
+  // 等数据稳定后通过 syncToGitHub() 手动同步
+  DATA_SHA = null;
   // 最终保护：如果DATA仍为空，从内嵌数据强制恢复
   if(DATA.length === 0) {
     var el2 = document.getElementById('ledger-data');
@@ -627,7 +589,7 @@ function showApp(user) {
   var dbg2 = document.getElementById('debugInfo');
   if(dbg2) dbg2.textContent = '已登录 | DATA:'+DATA.length+'条 | 过滤后:'+getFilteredData().length+'条 | 表格行:'+rows2.length;
   refreshLogPanel();
-  startAutoSync(); // 启动定时自动同步（延迟启动，确保页面先渲染）
+  // startAutoSync(); // 暂时关闭自动同步，排查数据丢失问题
 }
 
 function doLogout() {
