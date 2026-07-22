@@ -421,11 +421,28 @@ var clientIP = '';
             if(DATA.length < localLen) {
               syncToGitHub();
             }
+            // 数据变化后刷新界面
+            updateStats();
+            updateFilters();
+            render();
           }
         } catch(e) {}
       }
     };
+    xhr.onerror = function() {
+      // GitHub请求失败，使用本地数据（已在步骤1/2加载），无需处理
+    };
+    xhr.ontimeout = function() {
+      // 超时，同上
+    };
     xhr.send();
+  }
+  // 最终保护：如果DATA仍为空，从内嵌数据强制恢复
+  if(DATA.length === 0) {
+    var el2 = document.getElementById('ledger-data');
+    if(el2 && el2.textContent) {
+      try { DATA = JSON.parse(el2.textContent); } catch(e) {}
+    }
   }
 })();
 
@@ -477,8 +494,8 @@ function startAutoSync() {
         try {
           var info = JSON.parse(xhr.responseText);
           var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+          // 只有云端数据非空且确实有变化时才更新
           if(remoteData.length > 0 && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
-            // 云端数据有变化，更新本地
             DATA = remoteData;
             DATA_SHA = info.sha;
             try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
@@ -489,8 +506,10 @@ function startAutoSync() {
         } catch(e) {}
       }
     };
+    xhr.onerror = function() {};
+    xhr.ontimeout = function() {};
     xhr.send();
-  }, 30000); // 每30秒同步一次
+  }, 30000);
 }
 
 // 获取公网IP
