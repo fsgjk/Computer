@@ -60,13 +60,29 @@ function fireDataReady() {
       var el = document.getElementById('ledger-data');
       if(el && el.textContent) { try { DATA = JSON.parse(el.textContent); } catch(e) {} }
     }
-    fireDataReady();
+    if(!dataSyncReady) fireDataReady();
   }
 
+  // 先立即用内嵌数据兜底，避免白屏
+  var el = document.getElementById('ledger-data');
+  if(el && el.textContent) { try { DATA = JSON.parse(el.textContent); } catch(e) {} }
+
+  // 如果没有token，直接用localStorage或内嵌数据
+  if(!GH_TOKEN) {
+    try {
+      var saved = localStorage.getItem('ledger_data_backup');
+      if(saved) { var p = JSON.parse(saved); if(p.length > 0) DATA = p; }
+    } catch(e) {}
+    fireDataReady();
+    return;
+  }
+
+  // 有token：从GitHub拉取最新数据
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main', true);
   xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
   xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.timeout = 8000;
   xhr.onload = function() {
     if(xhr.status === 200) {
       try {
@@ -74,15 +90,13 @@ function fireDataReady() {
         DATA_SHA = info.sha;
         DATA = JSON.parse(atob(info.content.replace(/\s/g,'')));
         console.log('从GitHub加载:', DATA.length, '条');
-        // 同步到localStorage
         try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-        fireDataReady();
-        return;
       } catch(e) { console.error('解析GitHub数据失败:', e); }
     }
-    useLocalFallback();
+    if(!dataSyncReady) fireDataReady();
   };
   xhr.onerror = function() { useLocalFallback(); };
+  xhr.ontimeout = function() { useLocalFallback(); };
   xhr.send();
 })();
 
