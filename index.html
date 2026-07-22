@@ -204,9 +204,26 @@ var LOGIN_USER = null;
 var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1;
 
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
+var clientIP = '';
+
+// 获取公网IP
+(function() {
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.ipify.org?format=json', true);
+    xhr.onload = function() {
+      if(xhr.status === 200) {
+        var resp = JSON.parse(xhr.responseText);
+        clientIP = resp.ip || '';
+      }
+    };
+    xhr.send();
+  } catch(e) {}
+})();
+
 function addOpLog(action, target, detail) {
   if(!LOGIN_USER) return;
-  opLogs.push({time: new Date().toLocaleString(), user: LOGIN_USER.name, username: LOGIN_USER.username, action: action, target: target, detail: detail});
+  opLogs.push({time: new Date().toLocaleString(), user: LOGIN_USER.name, username: LOGIN_USER.username, action: action, target: target, detail: detail, ip: clientIP});
   if(opLogs.length > 500) opLogs = opLogs.slice(-500);
   localStorage.setItem('ledger_op_logs', JSON.stringify(opLogs));
   refreshLogPanel();
@@ -217,7 +234,7 @@ function refreshLogPanel() {
   if(opLogs.length === 0) { panel.style.display = 'none'; return; }
   panel.style.display = 'block';
   var recent = opLogs.slice(-20).reverse();
-  list.innerHTML = recent.map(function(l) { return '<div style="padding:2px 0;border-bottom:1px solid #f5f5f5">['+l.time+'] <strong>'+l.user+'</strong> '+l.action+' '+l.target+' '+l.detail+'</div>'; }).join('');
+  list.innerHTML = recent.map(function(l) { return '<div style="padding:2px 0;border-bottom:1px solid #f5f5f5">['+l.time+'] <strong>'+l.user+'</strong> '+l.action+' '+l.target+' '+l.detail+(l.ip?' <span style="color:#999;font-size:10px">IP:'+l.ip+'</span>':'')+'</div>'; }).join('');
 }
 function clearLogs() { opLogs = []; localStorage.removeItem('ledger_op_logs'); refreshLogPanel(); }
 
