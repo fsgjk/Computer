@@ -116,6 +116,13 @@ tr:hover td{background:#f0f7ff}
 
 <div class="container">
 <div class="stats-row" id="statsRow"></div>
+<div id="logPanel" style="background:#fff;border-radius:10px;padding:10px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <strong style="font-size:13px">📝 操作日志</strong>
+    <button class="btn btn-outline btn-sm" onclick="clearLogs()">清空</button>
+  </div>
+  <div id="logList" style="max-height:120px;overflow-y:auto;font-size:12px;color:#666"></div>
+</div>
 <div class="toolbar">
 <input type="text" id="searchInput" placeholder="🔍 搜索（序号、位置、责任人、资产编号、IP、部门...）" oninput="debounceSearch()">
 <select id="filterCategory" onchange="render()"><option value="">全部分类</option></select>
@@ -209,7 +216,7 @@ function doLogin() {
     document.getElementById('appWrap').style.display='block';
     document.getElementById('loginUserName').textContent = user.name;
     document.getElementById('loginUserRole').textContent = user.role==='admin'?'(管理员)':'';
-    document.getElementById('btnAdd').style.display = user.role==='admin'?'':'none';
+    document.getElementById('btnAdd').style.display = '';
     initApp();
   });
 }
@@ -255,10 +262,31 @@ let editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTi
 function getData() { return DATA; }
 function saveData(d) { DATA = d; render(); updateStats(); }
 
+// ===== 操作日志 =====
+let opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
+function addOpLog(action, target, detail) {
+  if(!LOGIN_USER) return;
+  opLogs.push({time: new Date().toLocaleString(), user: LOGIN_USER.name, username: LOGIN_USER.username, action, target, detail});
+  if(opLogs.length > 500) opLogs = opLogs.slice(-500);
+  localStorage.setItem('ledger_op_logs', JSON.stringify(opLogs));
+  refreshLogPanel();
+}
+function getOpLogs() { return opLogs; }
+function refreshLogPanel() {
+  const panel = document.getElementById('logPanel');
+  const list = document.getElementById('logList');
+  if(opLogs.length === 0) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  const recent = opLogs.slice(-20).reverse();
+  list.innerHTML = recent.map(l => `<div style="padding:2px 0;border-bottom:1px solid #f5f5f5">[${l.time}] <strong>${l.user}</strong> ${l.action} ${l.target} ${l.detail}</div>`).join('');
+}
+function clearLogs() { opLogs = []; localStorage.removeItem('ledger_op_logs'); refreshLogPanel(); }
+
 function initApp() {
   updateStats();
   updateFilters();
   render();
+  refreshLogPanel();
 }
 
 function updateStats() {
@@ -337,7 +365,7 @@ ${page.map(r=>`<tr>
 <td>${r['硬盘']||''}</td>
 <td>${r['操作系统']||''}</td>
 <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis" title="${r['备注']}">${r['备注']||''}</td>
-<td>${isAdmin ? `<button class="btn btn-outline btn-sm" onclick="editDevice('${r['序号']}')">✏️</button><button class="btn btn-danger btn-sm" onclick="confirmDelete('${r['序号']}')">🗑</button>` : '<span style="font-size:11px;color:#888">只读</span>'}</td>
+<td>${isAdmin ? `<button class="btn btn-outline btn-sm" onclick="editDevice('${r['序号']}')">✏️</button><button class="btn btn-danger btn-sm" onclick="confirmDelete('${r['序号']}')">🗑</button>` : `<button class="btn btn-outline btn-sm" onclick="editDevice('${r['序号']}')">✏️</button>`}</td>
 </tr>`).join('')}
 </tbody></table>`;
 
@@ -365,7 +393,7 @@ function filterByCard(action) {
 }
 
 function openModal(id) {
-  if(!LOGIN_USER || LOGIN_USER.role !== 'admin') { showToast('仅管理员可操作', 'error'); return; }
+  if(!LOGIN_USER) { showToast('请先登录', 'error'); return; }
   editingId = id || null;
   document.getElementById('modalTitle').textContent = id ? '编辑电脑 #'+id : '新增电脑';
   document.getElementById('editForm').reset();
@@ -397,6 +425,7 @@ function saveDevice() {
   }
   saveData(DATA);
   closeModal();
+  addOpLog(editingId ? '编辑' : '新增', `#${obj['序号']}`, `${obj['分类']} - ${obj['当前位置']}`);
   showToast(editingId ? '电脑更新成功' : '电脑添加成功', 'success');
 }
 
@@ -404,7 +433,7 @@ function confirmDelete(id) {
   if(!LOGIN_USER || LOGIN_USER.role !== 'admin') { showToast('仅管理员可删除', 'error'); return; }
   document.getElementById('confirmMsg').textContent = `确认删除序号为 ${id} 的电脑？`;
   document.getElementById('confirmDialog').classList.add('active');
-  confirmCb = () => { DATA = DATA.filter(d=>d['序号']!==id); saveData(DATA); showToast('已删除', 'success'); };
+  confirmCb = () => { const del = DATA.find(d=>d['序号']===id); DATA = DATA.filter(d=>d['序号']!==id); saveData(DATA); addOpLog('删除', `#${id}`, del ? `${del['分类']} - ${del['当前位置']}` : ''); showToast('已删除', 'success'); };
 }
 
 function closeConfirm() { document.getElementById('confirmDialog').classList.remove('active'); confirmCb = null; }
@@ -420,11 +449,12 @@ function exportCSV() {
   a.href = URL.createObjectURL(blob);
   a.download = '电脑台账_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
+  addOpLog('导出', `${DATA.length}条记录`, '');
   showToast('导出成功', 'success');
 }
 
 function importData(input) {
-  if(!LOGIN_USER || LOGIN_USER.role !== 'admin') { showToast('仅管理员可导入', 'error'); return; }
+  if(!LOGIN_USER) { showToast('请先登录', 'error'); return; }
   const file = input.files[0];
   if(!file) return;
   const ext = file.name.split('.').pop().toLowerCase();
@@ -448,7 +478,7 @@ function importData(input) {
       if(imported.length === 0) { showToast('未识别到数据', 'error'); return; }
       document.getElementById('confirmMsg').textContent = `确认导入 ${imported.length} 条数据？这将替换当前所有数据。`;
       document.getElementById('confirmDialog').classList.add('active');
-      confirmCb = () => { DATA = imported; saveData(DATA); updateFilters(); showToast(`已导入 ${imported.length} 条`, 'success'); };
+      confirmCb = () => { DATA = imported; saveData(DATA); updateFilters(); addOpLog('导入', `${imported.length}条记录`, ''); showToast(`已导入 ${imported.length} 条`, 'success'); };
     } catch(err) { showToast('解析失败: '+err.message, 'error'); }
   };
   if(ext === 'json') reader.readAsText(file); else reader.readAsText(file);
