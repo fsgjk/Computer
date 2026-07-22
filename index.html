@@ -416,7 +416,7 @@ var clientIP = '';
           try {
             var info = JSON.parse(xhr.responseText);
             DATA_SHA = info.sha;
-            var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+            var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
             // 严格检查：云端数据必须有效且记录数不少于本地
             if(remoteData.length > 0 && remoteData[0]['资产编号'] && remoteData.length >= DATA.length) {
               DATA = remoteData;
@@ -466,6 +466,23 @@ function utf8ToBase64(str) {
   var binary = '';
   for(var j = 0; j < bytes.length; j++) { binary += String.fromCharCode(bytes[j]); }
   return btoa(binary);
+}
+
+// Base64 解码为 UTF-8 字符串
+function base64ToUtf8(b64) {
+  var binary = atob(b64);
+  var bytes = [];
+  for(var i = 0; i < binary.length; i++) { bytes.push(binary.charCodeAt(i)); }
+  var str = '';
+  var i = 0;
+  while(i < bytes.length) {
+    var c = bytes[i];
+    if(c < 0x80) { str += String.fromCharCode(c); i += 1; }
+    else if(c < 0xE0) { str += String.fromCharCode(((c&0x1F)<<6)|(bytes[i+1]&0x3F)); i += 2; }
+    else if(c < 0xF0) { str += String.fromCharCode(((c&0x0F)<<12)|((bytes[i+1]&0x3F)<<6)|(bytes[i+2]&0x3F)); i += 3; }
+    else { str += String.fromCharCode(((c&0x07)<<18)|((bytes[i+1]&0x3F)<<12)|((bytes[i+2]&0x3F)<<6)|(bytes[i+3]&0x3F)); i += 4; }
+  }
+  return str;
 }
 
 // 保存数据到 GitHub（静默推送，不弹提示）
@@ -556,7 +573,7 @@ function syncFromCloud(callback) {
       try {
         var info = JSON.parse(xhr.responseText);
         DATA_SHA = info.sha;
-        var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+        var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
         if(remoteData.length > 0 && remoteData[0]['资产编号']) {
           // 云端数据有效，合并策略：云端优先
           if(remoteData.length >= DATA.length) {
@@ -610,7 +627,7 @@ function doAutoSync() {
     if(xhr.status === 200) {
       try {
         var info = JSON.parse(xhr.responseText);
-        var remoteData = JSON.parse(atob(info.content.replace(/\s/g,'')));
+        var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
         // 严格检查：云端数据必须有效（有资产编号）且记录数不少于本地，才更新
         if(remoteData.length > 0 && remoteData[0]['资产编号'] && remoteData.length >= DATA.length && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
           DATA = remoteData;
