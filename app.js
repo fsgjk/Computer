@@ -36,6 +36,29 @@ var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTi
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
 
+// 数据持久化：每次修改后自动存localStorage，页面加载时优先用localStorage
+function saveDataToStorage() {
+  try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+}
+function loadDataFromStorage() {
+  try {
+    var saved = localStorage.getItem('ledger_data_backup');
+    if(saved) {
+      var parsed = JSON.parse(saved);
+      if(parsed && parsed.length > 0) {
+        // 比较本地备份和页面数据的条数，用多的那个
+        if(parsed.length >= DATA.length) {
+          DATA = parsed;
+          return true;
+        }
+      }
+    }
+  } catch(e) {}
+  return false;
+}
+// 页面加载时尝试从localStorage恢复
+loadDataFromStorage();
+
 // 获取公网IP
 (function() {
   try {
@@ -389,6 +412,7 @@ function saveDevice() {
   closeModal();
   updateStats();
   render();
+  saveDataToStorage();
   showToast(editingId ? '电脑更新成功' : '电脑添加成功', 'success');
 }
 
@@ -403,6 +427,7 @@ function confirmDelete(id) {
     addOpLog('删除', '#'+id+' '+(del?del['资产编号']:'')+' ('+(del?del['当前位置']:'')+')', 'IP:'+(del?del['IP地址']:'无')+' | '+del['分类']);
     updateStats();
     render();
+    saveDataToStorage();
     showToast('已删除', 'success');
   };
 }
@@ -457,6 +482,7 @@ function importData(input) {
         updateStats();
         updateFilters();
         render();
+        saveDataToStorage();
         showToast('已导入 '+imported.length+' 条', 'success');
       };
     } catch(err) { showToast('解析失败: '+err.message, 'error'); }
