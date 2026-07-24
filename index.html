@@ -371,6 +371,7 @@ function sha256(msg) {
 var USERS = {"admin": {"pwd": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", "name": "管理员", "role": "admin"}, "user": {"pwd": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446", "name": "普通用户", "role": "user"}};
 var TOKEN_KEY = 'ledger_login_v5';
 var GH_REPO = 'fsgjk/Computer';
+var OP_LOGS_SHA = null;
 var DATA = [];
 var DATA_SHA = null;
 var GH_TOKEN = (function(){var p=['gh','p_','oz','Hr','LJ','ZP','gU','6t','Ce','I2','Yj','dt','cY','zV','8m','QV','wM','0p','0N','u3'];return p.join('');})(); // 内置Token，自动云端同步
@@ -440,6 +441,8 @@ var clientIP = '';
     }
     fetchFromCloud();
   }
+  // 从云端拉取操作日志
+  loadOpLogsFromCloud();
   // 最终保护：如果DATA仍为空，从内嵌数据强制恢复
   if(DATA.length === 0) {
     var el2 = document.getElementById('ledger-data');
@@ -662,7 +665,94 @@ function addOpLog(action, target, detail) {
   opLogs.push({time: new Date().toLocaleString(), user: LOGIN_USER.name, username: LOGIN_USER.username, action: action, target: target, detail: detail, ip: clientIP});
   if(opLogs.length > 500) opLogs = opLogs.slice(-500);
   localStorage.setItem('ledger_op_logs', JSON.stringify(opLogs));
+  syncOpLogs();
   refreshLogPanel();
+}
+
+// 推送操作日志到云端（合并策略：取并集去重）
+function syncOpLogs(callback) {
+  if(!GH_TOKEN) { if(callback) callback(false); return; }
+  var localLogs = opLogs.slice();
+  // 先拉取云端现有日志，合并后再推送
+  var getXhr = new XMLHttpRequest();
+  getXhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/op_logs.json?ref=main', true);
+  getXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  getXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  getXhr.timeout = 8000;
+  getXhr.onload = function() {
+    var merged = localLogs.slice();
+    var cloudSha = null;
+    if(getXhr.status === 200) {
+      try {
+        var info = JSON.parse(getXhr.responseText);
+        cloudSha = info.sha;
+        var cloudLogs = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
+        // 去重合并：用 time+user+action+target 作为唯一标识
+        var seen = {};
+        localLogs.forEach(function(l){ seen[l.time+'|'+l.user+'|'+l.action+'|'+l.target] = true; });
+        cloudLogs.forEach(function(l){
+          var k = l.time+'|'+l.user+'|'+l.action+'|'+l.target;
+          if(!seen[k]) merged.push(l);
+        });
+        merged.sort(function(a,b){ return a.time < b.time ? -1 : 1; });
+        if(merged.length > 500) merged = merged.slice(-500);
+      } catch(e) {}
+    }
+    // 推送合并后的日志
+    var b64 = utf8ToBase64(JSON.stringify(merged, null, 2));
+    var payload = {message: 'update op_logs.json', content: b64};
+    if(cloudSha) payload.sha = cloudSha;
+    var putXhr = new XMLHttpRequest();
+    putXhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/op_logs.json', true);
+    putXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+    putXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+    putXhr.setRequestHeader('Content-Type', 'application/json');
+    putXhr.timeout = 10000;
+    putXhr.onload = function() {
+      if(putXhr.status === 200 || putXhr.status === 201) {
+        try { OP_LOGS_SHA = JSON.parse(putXhr.responseText).content.sha; } catch(e) {}
+        // 用云端合并后的数据更新本地
+        opLogs = merged;
+        try { localStorage.setItem('ledger_op_logs', JSON.stringify(opLogs)); } catch(e) {}
+        if(callback) callback(true);
+      } else { if(callback) callback(false); }
+    };
+    putXhr.onerror = function() { if(callback) callback(false); };
+    putXhr.send(JSON.stringify(payload));
+  };
+  getXhr.onerror = function() { if(callback) callback(false); };
+  getXhr.send();
+}
+
+// 页面加载时从云端拉取操作日志并合并
+function loadOpLogsFromCloud() {
+  if(!GH_TOKEN) return;
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/op_logs.json?ref=main&t='+Date.now(), true);
+  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.timeout = 10000;
+  xhr.onload = function() {
+    if(xhr.status === 200) {
+      try {
+        var info = JSON.parse(xhr.responseText);
+        OP_LOGS_SHA = info.sha;
+        var cloudLogs = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
+        if(cloudLogs.length > 0) {
+          var seen = {};
+          opLogs.forEach(function(l){ seen[l.time+'|'+l.user+'|'+l.action+'|'+l.target] = true; });
+          cloudLogs.forEach(function(l){
+            var k = l.time+'|'+l.user+'|'+l.action+'|'+l.target;
+            if(!seen[k]) opLogs.push(l);
+          });
+          opLogs.sort(function(a,b){ return a.time < b.time ? -1 : 1; });
+          if(opLogs.length > 500) opLogs = opLogs.slice(-500);
+          try { localStorage.setItem('ledger_op_logs', JSON.stringify(opLogs)); } catch(e) {}
+        }
+      } catch(e) {}
+    }
+  };
+  xhr.send();
 }
 function refreshLogPanel() {
   // 日志改为弹窗模式，不自动显示在主界面
