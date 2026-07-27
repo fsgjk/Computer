@@ -423,22 +423,24 @@ var clientIP = '';
               try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
             }
             // 云端数据有效，如果已登录则刷新界面
-            if(LOGIN_USER) {
-              updateStats(); updateFilters(); render();
-            }
+            if(LOGIN_USER) { updateStats(); updateFilters(); render(); }
+            setSyncStatus('✅ 云端已同步');
           } catch(e) {
             // 解析失败，重试
             if(++retryCount < 3) setTimeout(fetchFromCloud, 3000);
+            else setSyncStatus('⚠ 同步失败，点此重试', true);
           }
         } else {
           // 请求失败，重试
           if(++retryCount < 3) setTimeout(fetchFromCloud, 3000);
+          else setSyncStatus('⚠ 同步失败，点此重试', true);
         }
       };
-      xhr.onerror = function() { if(++retryCount < 3) setTimeout(fetchFromCloud, 3000); };
-      xhr.ontimeout = function() { if(++retryCount < 3) setTimeout(fetchFromCloud, 3000); };
+      xhr.onerror = function() { if(++retryCount < 3) setTimeout(fetchFromCloud, 3000); else setSyncStatus('⚠ 同步失败，点此重试', true); };
+      xhr.ontimeout = function() { if(++retryCount < 3) setTimeout(fetchFromCloud, 3000); else setSyncStatus('⚠ 同步失败，点此重试', true); };
       xhr.send();
     }
+    setSyncStatus('正在同步云端…');
     fetchFromCloud();
   }
   // 从云端拉取操作日志
@@ -549,13 +551,10 @@ function saveDataToStorage() {
   try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
   try {
     syncToGitHub(function(ok) {
-      var st = document.getElementById('syncStatus');
-      if(st) st.textContent = ok ? '✅ 已同步云端' : '❌ 云端同步失败，请检查网络';
-      setTimeout(function(){ var s=document.getElementById('syncStatus'); if(s) s.textContent=''; }, 3000);
+      setSyncStatus(ok ? '✅ 已同步云端' : '⚠ 同步失败，点此重试', !ok);
     });
   } catch(e) {
-    var st2 = document.getElementById('syncStatus');
-    if(st2) st2.textContent = '❌ 同步异常: '+e.message;
+    setSyncStatus('⚠ 同步异常，点此重试', true);
   }
 }
 
@@ -754,6 +753,45 @@ function loadOpLogsFromCloud() {
   };
   xhr.send();
 }
+
+// 设置顶部同步状态（可点击重试）
+function setSyncStatus(text, clickable) {
+  var el = document.getElementById('syncStatus');
+  if(!el) return;
+  el.textContent = text;
+  if(clickable) { el.style.cursor = 'pointer'; el.onclick = forceReloadFromCloud; el.style.textDecoration = 'underline'; }
+  else { el.style.cursor = 'default'; el.onclick = null; el.style.textDecoration = 'none'; }
+}
+
+// 手动从云端重新拉取数据
+function forceReloadFromCloud() {
+  if(!GH_TOKEN) return;
+  setSyncStatus('正在同步云端…');
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json?ref=main&t='+Date.now(), true);
+  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.timeout = 10000;
+  xhr.onload = function() {
+    if(xhr.status === 200) {
+      try {
+        var info = JSON.parse(xhr.responseText);
+        DATA_SHA = info.sha;
+        var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
+        if(remoteData.length > 0 && remoteData[0]['资产编号']) {
+          DATA = remoteData;
+          try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+          updateStats(); updateFilters(); render();
+          setSyncStatus('✅ 云端已同步');
+        } else { setSyncStatus('⚠ 云端数据无效，点此重试', true); }
+      } catch(e) { setSyncStatus('⚠ 同步失败，点此重试', true); }
+    } else { setSyncStatus('⚠ 同步失败，点此重试', true); }
+  };
+  xhr.onerror = function() { setSyncStatus('⚠ 同步失败，点此重试', true); };
+  xhr.ontimeout = function() { setSyncStatus('⚠ 同步失败，点此重试', true); };
+  xhr.send();
+}
+
 function refreshLogPanel() {
   // 日志改为弹窗模式，不自动显示在主界面
 }
