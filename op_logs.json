@@ -432,6 +432,15 @@
     "ip": ""
   },
   {
+    "time": "2026/8/18 15:10:33",
+    "user": "管理员",
+    "username": "admin",
+    "action": "导出",
+    "target": "175条记录",
+    "detail": "",
+    "ip": ""
+  },
+  {
     "time": "2026/8/3 10:25:28",
     "user": "普通用户",
     "username": "user",
