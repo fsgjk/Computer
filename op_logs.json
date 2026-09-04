@@ -925,5 +925,14 @@
     "target": "175条记录",
     "detail": "",
     "ip": ""
+  },
+  {
+    "time": "2026/9/4 13:39:22",
+    "user": "管理员",
+    "username": "admin",
+    "action": "删除",
+    "target": "#102  ()",
+    "detail": "IP: | ",
+    "ip": ""
   }
 ]
