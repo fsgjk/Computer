@@ -979,5 +979,14 @@
     "target": "#102  ()",
     "detail": "IP: | ",
     "ip": ""
+  },
+  {
+    "time": "2026/9/7 09:18:42",
+    "user": "管理员",
+    "username": "admin",
+    "action": "删除",
+    "target": "#102  ()",
+    "detail": "IP: | ",
+    "ip": ""
   }
 ]
