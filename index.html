@@ -4407,6 +4407,31 @@ var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTi
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
 
+// ===== 删除修复：可见数据（排除软删除墓碑） =====
+function visibleData() {
+  return DATA.filter(function(r){ return !r._deleted; });
+}
+
+// 合并本地与云端数据：按“资产编号”去重，墓碑(_deleted)优先，杜绝旧本地副本回灌复活已删记录
+function mergeData(cloud) {
+  if(!cloud || !cloud.length) return DATA.slice();
+  var map = {};
+  // 以云端为基准
+  cloud.forEach(function(r){ map[r['资产编号'] || ('#'+r['序号'])] = r; });
+  // 叠加本地：本地独有的记录（如离线新增）保留；任一侧标记为删除则保持删除
+  DATA.forEach(function(r){
+    var k = r['资产编号'] || ('#'+r['序号']);
+    if(map[k]) {
+      map[k]._deleted = !!(map[k]._deleted || r._deleted);
+    } else {
+      map[k] = r;
+    }
+  });
+  var arr = Object.keys(map).map(function(k){ return map[k]; });
+  arr.sort(function(a,b){ return (parseInt(a['序号'])||0) - (parseInt(b['序号'])||0); });
+  return arr;
+}
+
 // 从 GitHub data.json 加载数据（带 localStorage 兜底）
 (function() {
   // 1. 立即从页面内嵌数据初始化
@@ -4443,9 +4468,9 @@ var clientIP = '';
             var info = JSON.parse(xhr.responseText);
             DATA_SHA = info.sha;
             var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
-            // 严格检查：云端数据必须有效且记录数不少于本地
-            if(remoteData.length > 0 && remoteData[0]['资产编号'] && remoteData.length >= DATA.length) {
-              DATA = remoteData;
+            // 修复：云端数据有效即合并（墓碑优先），不再用“记录数≥本地”简单覆盖
+            if(remoteData.length > 0 && remoteData[0]['资产编号']) {
+              DATA = mergeData(remoteData);
               try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
             }
             // 云端数据有效，如果已登录则刷新界面
@@ -4544,6 +4569,12 @@ function syncToGitHub(callback) {
             try {
               var info = JSON.parse(getXhr.responseText);
               DATA_SHA = info.sha;
+              try {
+                var cloudData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
+                // 关键修复：先把云端（含删除墓碑）合并进本地，再推送合并结果，杜绝旧数据回灌复活已删记录
+                DATA = mergeData(cloudData);
+                payload.content = utf8ToBase64(JSON.stringify(DATA, null, 2));
+              } catch(e) {}
               payload.sha = DATA_SHA;
               var retryXhr = new XMLHttpRequest();
               retryXhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/data.json', true);
@@ -4599,21 +4630,15 @@ function syncFromCloud(callback) {
         DATA_SHA = info.sha;
         var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
         if(remoteData.length > 0 && remoteData[0]['资产编号']) {
-          // 云端数据有效，合并策略：云端优先
-          if(remoteData.length >= DATA.length) {
-            DATA = remoteData;
-            try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-            updateStats();
-            updateFilters();
-            render();
-            if(callback) callback(true, '已从云端加载 '+DATA.length+' 条数据');
-          } else {
-            // 本地数据更多，推送本地到云端
-            syncToGitHub(function(ok) {
-              if(callback) callback(ok, ok ? '已将本地 '+DATA.length+' 条推送到云端' : '推送失败');
-            });
-            return;
-          }
+          // 修复：合并（墓碑优先），避免旧本地数据回灌复活已删记录
+          DATA = mergeData(remoteData);
+          try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+          updateStats();
+          updateFilters();
+          render();
+          // 合并后本地可能含云端没有的新记录/删除，推回云端保持一致
+          saveDataToStorage();
+          if(callback) callback(true, '已与云端合并，共 '+visibleData().length+' 条可见数据');
         } else {
           if(callback) callback(false, '云端数据无效');
           return;
@@ -4652,14 +4677,13 @@ function doAutoSync() {
       try {
         var info = JSON.parse(xhr.responseText);
         var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
-        // 严格检查：云端数据必须有效（有资产编号）且记录数不少于本地，才更新
-        if(remoteData.length > 0 && remoteData[0]['资产编号'] && remoteData.length >= DATA.length && JSON.stringify(remoteData) !== JSON.stringify(DATA)) {
-          DATA = remoteData;
+        // 修复：云端数据有效即合并（墓碑优先），不再用“记录数≥本地”覆盖
+        if(remoteData.length > 0 && remoteData[0]['资产编号']) {
+          var before = JSON.stringify(visibleData());
+          DATA = mergeData(remoteData);
           DATA_SHA = info.sha;
           try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
-          updateStats();
-          updateFilters();
-          render();
+          if(JSON.stringify(visibleData()) !== before) { updateStats(); updateFilters(); render(); }
         }
       } catch(e) {}
     }
@@ -4805,8 +4829,9 @@ function forceReloadFromCloud() {
         DATA_SHA = info.sha;
         var remoteData = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
         if(remoteData.length > 0 && remoteData[0]['资产编号']) {
-          DATA = remoteData;
+          DATA = mergeData(remoteData);
           try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
+          saveDataToStorage();
           updateStats(); updateFilters(); render();
           setSyncStatus('✅ 云端已同步');
         } else { setSyncStatus('⚠ 云端数据无效，点此重试', true); }
@@ -4913,7 +4938,7 @@ document.getElementById('loginUser').addEventListener('keydown', function(e) { i
 
 // ===== 统计指标卡 =====
 function updateStats() {
-  var d = DATA;
+  var d = visibleData();
   var pp = {}; var depts = {}; var idle = 0; var catCounts = {};
   d.forEach(function(r) {
     var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
@@ -4962,7 +4987,7 @@ function updateStats() {
 // ===== 筛选器 =====
 function updateFilters() {
   var cats = []; var depts = []; var oss = [];
-  DATA.forEach(function(r) { if(r['分类'] && cats.indexOf(r['分类'])<0) cats.push(r['分类']); if(r['所属部门'] && depts.indexOf(r['所属部门'])<0) depts.push(r['所属部门']); if(r['操作系统'] && oss.indexOf(r['操作系统'])<0) oss.push(r['操作系统']); });
+  visibleData().forEach(function(r) { if(r['分类'] && cats.indexOf(r['分类'])<0) cats.push(r['分类']); if(r['所属部门'] && depts.indexOf(r['所属部门'])<0) depts.push(r['所属部门']); if(r['操作系统'] && oss.indexOf(r['操作系统'])<0) oss.push(r['操作系统']); });
   cats.sort(); depts.sort(); oss.sort();
   document.getElementById('filterCategory').innerHTML = '<option value="">全部分类</option>'+cats.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
   document.getElementById('filterDepartment').innerHTML = '<option value="">全部部门</option>'+depts.map(function(d){return '<option value="'+d+'">'+d+'</option>';}).join('');
@@ -4977,7 +5002,7 @@ function getFilteredData() {
   var dept = document.getElementById('filterDepartment').value;
   var ppv = document.getElementById('filterPublic').value;
   var osv = document.getElementById('filterOS').value;
-  var filtered = DATA.slice();
+  var filtered = visibleData();
   if(filterMode === 'idle') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return ['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person; });
   else if(filterMode === 'used') filtered = filtered.filter(function(r) { var pos = r['当前位置']||''; var person = r['责任人']||''; return !(['空闲','备用','库存','闲置','未分配'].some(function(k){return pos.includes(k);}) || !person); });
   else if(filterMode === 'old') filtered = filtered.filter(function(r) { return calcYears(r) > 5; });
@@ -5192,7 +5217,8 @@ function confirmDelete(id) {
   document.getElementById('confirmDialog').classList.add('active');
   confirmCb = function() {
     var del = DATA.find(function(d){return d['序号']===id;});
-    DATA = DATA.filter(function(d){return d['序号']!==id;});
+    // 修复：软删除（打墓碑），保留在 DATA 中但标记为 _deleted，合并时墓碑优先，杜绝复活
+    if(del) { del._deleted = true; if(!del._delTime) del._delTime = new Date().toLocaleString(); }
     addOpLog('删除', '#'+id+' '+(del?del['资产编号']:'')+' ('+(del?del['当前位置']:'')+')', 'IP:'+(del?del['IP地址']:'无')+' | '+del['分类']);
     updateStats();
     render();
@@ -5246,13 +5272,23 @@ function importData(input) {
       document.getElementById('confirmMsg').textContent = '确认导入 '+imported.length+' 条数据？';
       document.getElementById('confirmDialog').classList.add('active');
       confirmCb = function() {
-        DATA = imported;
-        addOpLog('导入', imported.length+'条记录', '');
+        // 修复：合并导入，按资产编号合并；本地已删记录(_deleted)不被旧导出文件覆盖复活
+        var map = {};
+        DATA.forEach(function(r){ map[r['资产编号'] || ('#'+r['序号'])] = r; });
+        imported.forEach(function(r){
+          var k = r['资产编号'] || ('#'+r['序号']);
+          if(map[k] && map[k]._deleted) return; // 已删除记录保持删除
+          map[k] = r;
+        });
+        var mergedArr = Object.keys(map).map(function(k){return map[k];});
+        mergedArr.sort(function(a,b){return (parseInt(a['序号'])||0)-(parseInt(b['序号'])||0);});
+        DATA = mergedArr;
+        addOpLog('导入', imported.length+'条记录', '合并后共 '+visibleData().length+' 条可见');
         updateStats();
         updateFilters();
         render();
         saveDataToStorage();
-        showToast('已导入 '+imported.length+' 条', 'success');
+        showToast('已合并导入 '+imported.length+' 条', 'success');
       };
     } catch(err) { showToast('解析失败: '+err.message, 'error'); }
   };
