@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925f</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925g</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -5130,16 +5130,18 @@ function updateStats() {
   var pp = {}; var depts = {}; var catCounts = {};
   var idle = 0, wastePending = 0, scrapped = 0, repairing = 0;
   d.forEach(function(r) {
-    var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
-    var dept = r['所属部门']||'未分配';
-    var mainDept = dept.split('-')[0];
-    if(!mainDept) mainDept = '未分配';
-    depts[mainDept] = (depts[mainDept]||0)+1;
     var st = getStatus(r);
     if(st === '空闲') idle++;
     else if(st === '待报废') wastePending++;
     else if(st === '已报废') scrapped++;
     else if(st === '维修') repairing++;
+    // 部门分布与分类统计只算在册设备，排除待报废/已报废
+    if(st === '待报废' || st === '已报废') return;
+    var p = r['公用个人']||'未知'; pp[p] = (pp[p]||0)+1;
+    var dept = r['所属部门']||'未分配';
+    var mainDept = dept.split('-')[0];
+    if(!mainDept) mainDept = '未分配';
+    depts[mainDept] = (depts[mainDept]||0)+1;
     var cat = r['分类']||'其他';
     if(cat==='sruface') cat='Surface';
     catCounts[cat] = (catCounts[cat]||0)+1;
@@ -5169,7 +5171,7 @@ function updateStats() {
   var deptSection = document.getElementById('deptSection');
   if(deptSection) {
     var deptItems = [];
-    Object.keys(depts).forEach(function(k){ if(k !== '未分配') deptItems.push({name:k, count:depts[k]}); });
+    Object.keys(depts).forEach(function(k){ if(depts[k] > 0) deptItems.push({name:k, count:depts[k]}); });
     deptItems.sort(function(a,b){return b.count - a.count;});
     var deptColors = ['#378ADD','#97C459','#EF9F27','#E24B4A','#185FA5','#3B6D11','#854F0B','#0C447C'];
     deptSection.innerHTML = '<div class="dept-tags-grid">'+deptItems.map(function(di, idx){
@@ -5361,7 +5363,8 @@ function filterByCard(action) {
   document.getElementById('filterDepartment').value = '';
   document.getElementById('filterPublic').value = '';
   document.getElementById('filterOS').value = '';
-  var stEl = document.getElementById('filterStatus'); if(stEl) stEl.value = (action === 'active') ? 'active' : '';
+  var stEl = document.getElementById('filterStatus');
+  if(stEl) stEl.value = (action === 'active' || action.indexOf('dept_') === 0) ? 'active' : '';
   filterMode = (action === 'clear') ? '' : action;
   if(action.indexOf('dept_') === 0) {
     filterMode = '';
