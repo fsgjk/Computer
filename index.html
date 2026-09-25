@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925h</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925i</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -5173,7 +5173,8 @@ function updateStats() {
   var deptSection = document.getElementById('deptSection');
   if(deptSection) {
     var deptItems = [];
-    Object.keys(depts).forEach(function(k){ if(depts[k] > 0) deptItems.push({name:k, count:depts[k]}); });
+    // 部门分布不显示「未分配」（所属部门为空的设备）
+    Object.keys(depts).forEach(function(k){ if(depts[k] > 0 && k !== '未分配') deptItems.push({name:k, count:depts[k]}); });
     deptItems.sort(function(a,b){return b.count - a.count;});
     var deptColors = ['#378ADD','#97C459','#EF9F27','#E24B4A','#185FA5','#3B6D11','#854F0B','#0C447C'];
     deptSection.innerHTML = '<div class="dept-tags-grid">'+deptItems.map(function(di, idx){
