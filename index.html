@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925k</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925l</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -5545,7 +5545,8 @@ function exportCSV() {
   var filtered = getFilteredData();
   var csv = '\uFEFF' + FIELDS.join(',') + '\n';
   filtered.forEach(function(r){
-    csv += FIELDS.map(function(f){ var v = String(r[f]||''); if(v.includes(',')||v.includes('"')||v.includes('\n')) v = '"'+v.replace(/"/g,'""')+'"'; return v; }).join(',')+'\n';
+    // 「资产状态」是运行时推导的，导出时按列表显示的值输出，避免导出空列
+    csv += FIELDS.map(function(f){ var v = (f === '资产状态') ? getStatus(r) : String(r[f]||''); if(v.includes(',')||v.includes('"')||v.includes('\n')) v = '"'+v.replace(/"/g,'""')+'"'; return v; }).join(',')+'\n';
   });
   var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
   var a = document.createElement('a');
