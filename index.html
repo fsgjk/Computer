@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925j</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925k</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -276,7 +276,6 @@ a:hover{color:var(--primary-600)}
 <select id="filterDepartment" onchange="reload()" aria-label="部门筛选"><option value="">全部部门</option></select>
 <select id="filterPublic" onchange="reload()" aria-label="公用个人筛选"><option value="">公用/个人</option><option value="公用">公用</option><option value="个人">个人</option></select>
 <select id="filterOS" onchange="reload()" aria-label="操作系统筛选"><option value="">全部系统</option></select>
-<select id="filterStatus" onchange="filterMode='';reload()" aria-label="状态筛选"><option value="active">在册（不含报废）</option><option value="">全部（含报废）</option><option value="在用">在用</option><option value="空闲">空闲</option><option value="待报废">待报废</option><option value="已报废">已报废</option></select>
 <button class="btn btn-primary" onclick="openModal()" aria-label="新增电脑">+ 新增电脑</button>
 <button class="btn btn-secondary" onclick="exportCSV()">📥 导出CSV</button>
 <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">📤 导入数据</button>
@@ -5202,8 +5201,6 @@ function getFilteredData() {
   var dept = document.getElementById('filterDepartment').value;
   var ppv = document.getElementById('filterPublic').value;
   var osv = document.getElementById('filterOS').value;
-  var stvEl = document.getElementById('filterStatus');
-  var stv = stvEl ? stvEl.value : 'active';
   var filtered = visibleData();
   if(filterMode === 'active') filtered = filtered.filter(function(r) { var s = getStatus(r); return s !== '待报废' && s !== '已报废'; });
   else if(filterMode === 'idle') filtered = filtered.filter(function(r) { return getStatus(r) === '空闲'; });
@@ -5218,8 +5215,10 @@ function getFilteredData() {
   if(dept) filtered = filtered.filter(function(r){return (r['所属部门']||'').includes(dept);});
   if(ppv) filtered = filtered.filter(function(r){return r['公用个人']===ppv;});
   if(osv) filtered = filtered.filter(function(r){return (r['操作系统']||'')===osv;});
-  if(stv === 'active') filtered = filtered.filter(function(r) { var s = getStatus(r); return s !== '待报废' && s !== '已报废'; });
-  else if(stv) filtered = filtered.filter(function(r){return getStatus(r)===stv;});
+  // 默认口径：列表不显示待报废/已报废（点击「报废设备」相关卡片时例外）
+  if(['waste','scrapped','wasteAll'].indexOf(filterMode) < 0) {
+    filtered = filtered.filter(function(r) { var s = getStatus(r); return s !== '待报废' && s !== '已报废'; });
+  }
   if(sortField) {
     filtered.sort(function(a, b) {
       var va = (a[sortField] || '').toString();
@@ -5376,8 +5375,6 @@ function filterByCard(action) {
   document.getElementById('filterDepartment').value = '';
   document.getElementById('filterPublic').value = '';
   document.getElementById('filterOS').value = '';
-  var stEl = document.getElementById('filterStatus');
-  if(stEl) stEl.value = (action === 'active' || action.indexOf('dept_') === 0) ? 'active' : '';
   filterMode = (action === 'clear') ? '' : action;
   if(action.indexOf('dept_') === 0) {
     filterMode = '';
