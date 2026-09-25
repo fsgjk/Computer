@@ -61,7 +61,7 @@ a:hover{color:var(--primary-600)}
 .toolbar-wrap .search-box .search-icon{position:absolute;left:var(--space-3);top:50%;transform:translateY(-50%);color:var(--neutral-400);font-size:14px;pointer-events:none}
 .toolbar-wrap select{height:36px;border:0.5px solid var(--neutral-100);border-radius:var(--radius-md);padding:0 var(--space-3);font-size:13px;font-family:var(--font-sans);outline:none;background:#fff;cursor:pointer;transition:border-color .15s ease;min-width:110px}
 .toolbar-wrap select:focus{border-color:var(--primary-400);box-shadow:0 0 0 3px rgba(55,138,221,.15)}
-.content-area{padding:var(--space-6);max-width:1500px;margin:0 auto}
+.content-area{padding:var(--space-6);width:100%;max-width:none;margin:0;box-sizing:border-box}
 
 /* ===== Metric Cards ===== */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-3);margin-bottom:var(--space-4)}
@@ -118,7 +118,7 @@ a:hover{color:var(--primary-600)}
 /* ===== Table ===== */
 .table-wrapper{overflow-x:auto}
 .table-wrapper table{width:100%;border-collapse:collapse;table-layout:auto;font-size:13px}
-.table-wrapper thead{position:sticky;top:0;z-index:5}
+.table-wrapper thead th{position:sticky;top:52px;z-index:5;box-shadow:0 0.5px 0 var(--neutral-100)}
 .table-wrapper th{background:var(--neutral-50);color:var(--neutral-400);font-size:11px;font-weight:500;padding:var(--space-2) var(--space-3);text-align:left;border-bottom:0.5px solid var(--neutral-100);white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s ease}
 .table-wrapper th:hover{color:var(--neutral-600)}
 .table-wrapper td{padding:var(--space-2) var(--space-3);border-bottom:0.5px solid var(--neutral-50);color:var(--neutral-800);font-size:13px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925g</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925h</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -4575,7 +4575,9 @@ var DATA_SHA = null;
 var GH_TOKEN = (function(){var p=['gh','p_','oz','Hr','LJ','ZP','gU','6t','Ce','I2','Yj','dt','cY','zV','8m','QV','wM','0p','0N','u3'];return p.join('');})(); // 内置Token，自动云端同步
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','资产状态','报废日期','报废原因','备注'];
 var LOGIN_USER = null;
-var editingId = null, currentPage = 1, pageSize = 50, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1, currentDeptPrefix = '';
+// pageSize=-1 表示全部显示（不分页）；记住用户上次选择的每页条数
+var _savedSize = parseInt(localStorage.getItem('ledger_page_size'));
+var editingId = null, currentPage = 1, pageSize = isNaN(_savedSize) ? -1 : _savedSize, confirmCb = null, searchTimer = null, filterMode = '', sortField = '', sortDir = 1, currentDeptPrefix = '';
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
 
@@ -5208,7 +5210,7 @@ function getFilteredData() {
   else if(filterMode === 'waste') filtered = filtered.filter(function(r) { return getStatus(r) === '待报废'; });
   else if(filterMode === 'wasteAll') filtered = filtered.filter(function(r) { var s = getStatus(r); return s === '待报废' || s === '已报废'; });
   else if(filterMode === 'scrapped') filtered = filtered.filter(function(r) { return getStatus(r) === '已报废'; });
-  else if(filterMode === 'old') filtered = filtered.filter(function(r) { return getStatus(r) !== '已报废' && calcYears(r) > 5; });
+  else if(filterMode === 'old') filtered = filtered.filter(function(r) { var s = getStatus(r); return s !== '已报废' && s !== '待报废' && calcYears(r) > 5; });
   else if(filterMode === 'dept_prefix') filtered = filtered.filter(function(r) { var d = r['所属部门']||''; var main = d.split('-')[0]; if(!main) main = '未分配'; return main === currentDeptPrefix; });
   if(search) filtered = filtered.filter(function(r){return FIELDS.some(function(f){return String(r[f]||'').toLowerCase().includes(search);});});
   if(cat) filtered = filtered.filter(function(r){return r['分类']===cat;});
@@ -5241,10 +5243,11 @@ function calcYears(r) {
 function render() {
   var filtered = getFilteredData();
   var total = filtered.length;
-  var totalPages = Math.max(1, Math.ceil(total/pageSize));
+  var size = pageSize > 0 ? pageSize : Math.max(1, total); // pageSize<0 → 全部显示
+  var totalPages = Math.max(1, Math.ceil(total/size));
   if(currentPage > totalPages) currentPage = totalPages;
-  var start = (currentPage-1)*pageSize;
-  var page = filtered.slice(start, start+pageSize);
+  var start = (currentPage-1)*size;
+  var page = filtered.slice(start, start+size);
   var isAdmin = LOGIN_USER && LOGIN_USER.role === 'admin';
 
   function thSort(field, label, width) {
@@ -5337,12 +5340,16 @@ function render() {
   ph += '<button '+(currentPage===1?'disabled':'')+' onclick="goPage('+(currentPage-1)+')" aria-label="上一页">◀</button>';
   for(var i=s;i<=e;i++) ph += '<button class="'+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
   ph += '<button '+(currentPage===totalPages?'disabled':'')+' onclick="goPage('+(currentPage+1)+')" aria-label="下一页">▶</button>';
-  pag.innerHTML = '<div class="pagination-info">共 <strong>'+total+'</strong> 台电脑，第 '+currentPage+'/'+totalPages+' 页 &nbsp; 每页 <select onchange="changePageSize(this.value)">'+
+  var pageInfo = (pageSize > 0)
+    ? ('共 <strong>'+total+'</strong> 台电脑，第 '+currentPage+'/'+totalPages+' 页')
+    : ('共 <strong>'+total+'</strong> 台电脑，全部显示');
+  pag.innerHTML = '<div class="pagination-info">'+pageInfo+' &nbsp; 每页 <select onchange="changePageSize(this.value)">'+
+    '<option value="-1"'+(pageSize<0?' selected':'')+'>全部</option>'+
     '<option value="50"'+(pageSize===50?' selected':'')+'>50条</option>'+
     '<option value="100"'+(pageSize===100?' selected':'')+'>100条</option>'+
     '<option value="200"'+(pageSize===200?' selected':'')+'>200条</option>'+
     '<option value="500"'+(pageSize===500?' selected':'')+'>500条</option>'+
-    '</select></div><div class="pagination-btns">'+ph+'</div>';
+    '</select></div>' + (pageSize > 0 ? '<div class="pagination-btns">'+ph+'</div>' : '');
 }
 
 function toggleSort(field) {
@@ -5352,8 +5359,13 @@ function toggleSort(field) {
   render();
 }
 
-function changePageSize(size) { pageSize = parseInt(size); currentPage = 1; render(); }
-function goPage(p) { if(p>=1 && p<=Math.ceil(getFilteredData().length/pageSize)){ currentPage=p; render(); } }
+function changePageSize(size) {
+  pageSize = parseInt(size);
+  if(isNaN(pageSize)) pageSize = -1;
+  try { localStorage.setItem('ledger_page_size', String(pageSize)); } catch(e) {}
+  currentPage = 1; render();
+}
+function goPage(p) { var t = getFilteredData().length; var sz = pageSize > 0 ? pageSize : Math.max(1,t); if(p>=1 && p<=Math.ceil(t/sz)){ currentPage=p; render(); } }
 function reload() { filterMode=''; currentDeptPrefix=''; currentPage=1; render(); }
 function debounceSearch() { filterMode=''; currentDeptPrefix=''; clearTimeout(searchTimer); searchTimer = setTimeout(function(){ currentPage=1; render(); }, 300); }
 
