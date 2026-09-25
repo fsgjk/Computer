@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925e</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925f</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -276,7 +276,7 @@ a:hover{color:var(--primary-600)}
 <select id="filterDepartment" onchange="reload()" aria-label="部门筛选"><option value="">全部部门</option></select>
 <select id="filterPublic" onchange="reload()" aria-label="公用个人筛选"><option value="">公用/个人</option><option value="公用">公用</option><option value="个人">个人</option></select>
 <select id="filterOS" onchange="reload()" aria-label="操作系统筛选"><option value="">全部系统</option></select>
-<select id="filterStatus" onchange="filterMode='';reload()" aria-label="状态筛选"><option value="">全部状态</option><option value="在用">在用</option><option value="空闲">空闲</option><option value="待报废">待报废</option><option value="已报废">已报废</option></select>
+<select id="filterStatus" onchange="filterMode='';reload()" aria-label="状态筛选"><option value="active">在册（不含报废）</option><option value="">全部（含报废）</option><option value="在用">在用</option><option value="空闲">空闲</option><option value="待报废">待报废</option><option value="已报废">已报废</option></select>
 <button class="btn btn-primary" onclick="openModal()" aria-label="新增电脑">+ 新增电脑</button>
 <button class="btn btn-secondary" onclick="exportCSV()">📥 导出CSV</button>
 <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">📤 导入数据</button>
@@ -5159,7 +5159,7 @@ function updateStats() {
   html += '<div class="metric-card" onclick="filterByCard(\'active\')"><div class="metric-label"><span class="metric-dot blue"></span>电脑总数</div><div class="metric-value">'+active+'<span class="metric-unit">台</span></div><div class="metric-sub">'+catSub+'</div></div>';
   html += '<div class="metric-card" onclick="filterByCard(\'used\')"><div class="metric-label"><span class="metric-dot green"></span>使用率</div><div class="metric-value">'+onlineRate+'<span class="metric-unit">%</span></div><div class="metric-sub">已用 '+used+' 台 / 在册 '+active+' 台</div></div>';
   html += '<div class="metric-card" onclick="filterByCard(\'idle\')"><div class="metric-label"><span class="metric-dot amber"></span>空闲电脑</div><div class="metric-value">'+idle+'<span class="metric-unit">台</span></div><div class="metric-sub">待分配或闲置设备</div></div>';
-  html += '<div class="metric-card" onclick="filterByCard(\'waste\')"><div class="metric-label"><span class="metric-dot orange"></span>报废设备</div><div class="metric-value">'+(wastePending+scrapped)+'<span class="metric-unit">台</span></div><div class="metric-sub">待报废 <span onclick="event.stopPropagation();filterByCard(\'waste\')" style="color:#B45309;font-weight:600;cursor:pointer">'+wastePending+'</span> 台 · 已报废 <span onclick="event.stopPropagation();filterByCard(\'scrapped\')" style="color:#B45309;font-weight:600;cursor:pointer">'+scrapped+'</span> 台</div></div>';
+  html += '<div class="metric-card" onclick="filterByCard(\'wasteAll\')"><div class="metric-label"><span class="metric-dot orange"></span>报废设备</div><div class="metric-value">'+(wastePending+scrapped)+'<span class="metric-unit">台</span></div><div class="metric-sub">待报废 <span onclick="event.stopPropagation();filterByCard(\'waste\')" style="color:#B45309;font-weight:600;cursor:pointer">'+wastePending+'</span> 台 · 已报废 <span onclick="event.stopPropagation();filterByCard(\'scrapped\')" style="color:#B45309;font-weight:600;cursor:pointer">'+scrapped+'</span> 台</div></div>';
   var old5 = d.filter(function(r){var s=getStatus(r); return s!=='已报废' && s!=='待报废' && calcYears(r) > 5;}).length;
   var old10 = d.filter(function(r){var s=getStatus(r); return s!=='已报废' && s!=='待报废' && calcYears(r) > 10;}).length;
   html += '<div class="metric-card" onclick="filterByCard(\'old\')"><div class="metric-label"><span class="metric-dot red"></span>超年限电脑</div><div class="metric-value">'+old5+'<span class="metric-unit">台</span></div><div class="metric-sub">超5年 '+old5+' 台 / 超10年 '+old10+' 台</div></div>';
@@ -5198,12 +5198,13 @@ function getFilteredData() {
   var ppv = document.getElementById('filterPublic').value;
   var osv = document.getElementById('filterOS').value;
   var stvEl = document.getElementById('filterStatus');
-  var stv = stvEl ? stvEl.value : '';
+  var stv = stvEl ? stvEl.value : 'active';
   var filtered = visibleData();
   if(filterMode === 'active') filtered = filtered.filter(function(r) { var s = getStatus(r); return s !== '待报废' && s !== '已报废'; });
   else if(filterMode === 'idle') filtered = filtered.filter(function(r) { return getStatus(r) === '空闲'; });
   else if(filterMode === 'used') filtered = filtered.filter(function(r) { return getStatus(r) === '在用'; });
   else if(filterMode === 'waste') filtered = filtered.filter(function(r) { return getStatus(r) === '待报废'; });
+  else if(filterMode === 'wasteAll') filtered = filtered.filter(function(r) { var s = getStatus(r); return s === '待报废' || s === '已报废'; });
   else if(filterMode === 'scrapped') filtered = filtered.filter(function(r) { return getStatus(r) === '已报废'; });
   else if(filterMode === 'old') filtered = filtered.filter(function(r) { return getStatus(r) !== '已报废' && calcYears(r) > 5; });
   else if(filterMode === 'dept_prefix') filtered = filtered.filter(function(r) { var d = r['所属部门']||''; var main = d.split('-')[0]; if(!main) main = '未分配'; return main === currentDeptPrefix; });
@@ -5212,7 +5213,8 @@ function getFilteredData() {
   if(dept) filtered = filtered.filter(function(r){return (r['所属部门']||'').includes(dept);});
   if(ppv) filtered = filtered.filter(function(r){return r['公用个人']===ppv;});
   if(osv) filtered = filtered.filter(function(r){return (r['操作系统']||'')===osv;});
-  if(stv) filtered = filtered.filter(function(r){return getStatus(r)===stv;});
+  if(stv === 'active') filtered = filtered.filter(function(r) { var s = getStatus(r); return s !== '待报废' && s !== '已报废'; });
+  else if(stv) filtered = filtered.filter(function(r){return getStatus(r)===stv;});
   if(sortField) {
     filtered.sort(function(a, b) {
       var va = (a[sortField] || '').toString();
@@ -5359,7 +5361,7 @@ function filterByCard(action) {
   document.getElementById('filterDepartment').value = '';
   document.getElementById('filterPublic').value = '';
   document.getElementById('filterOS').value = '';
-  var stEl = document.getElementById('filterStatus'); if(stEl) stEl.value = '';
+  var stEl = document.getElementById('filterStatus'); if(stEl) stEl.value = (action === 'active') ? 'active' : '';
   filterMode = (action === 'clear') ? '' : action;
   if(action.indexOf('dept_') === 0) {
     filterMode = '';
