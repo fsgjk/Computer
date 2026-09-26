@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260925l</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926a</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -4898,9 +4898,26 @@ function doAutoSync() {
 })();
 
 // ===== 操作日志 =====
+// 日志时间值（毫秒）：优先用时间戳 ts；老日志没 ts 时解析 "2026/9/26 下午7:50:00" 这类本地化字符串
+function logTime(l) {
+  if(!l) return 0;
+  if(l.ts) return l.ts;
+  var t = String(l.time || '');
+  var dm = t.match(/(\d{4})[\/\-年](\d{1,2})[\/\-月](\d{1,2})/);
+  if(!dm) return 0;
+  var hh = 0, mm = 0, ss = 0;
+  var tm = t.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+  if(tm) {
+    hh = parseInt(tm[1], 10); mm = parseInt(tm[2], 10); ss = tm[3] ? parseInt(tm[3], 10) : 0;
+    if(/下午|晚上|PM|pm/.test(t) && hh < 12) hh += 12;
+    if(/上午|AM|am/.test(t) && hh === 12) hh = 0;
+  }
+  return new Date(parseInt(dm[1],10), parseInt(dm[2],10)-1, parseInt(dm[3],10), hh, mm, ss).getTime();
+}
+
 function addOpLog(action, target, detail) {
   if(!LOGIN_USER) return;
-  opLogs.push({time: new Date().toLocaleString(), user: LOGIN_USER.name, username: LOGIN_USER.username, action: action, target: target, detail: detail, ip: clientIP});
+  opLogs.push({time: new Date().toLocaleString(), ts: Date.now(), user: LOGIN_USER.name, username: LOGIN_USER.username, action: action, target: target, detail: detail, ip: clientIP});
   if(opLogs.length > 500) opLogs = opLogs.slice(-500);
   localStorage.setItem('ledger_op_logs', JSON.stringify(opLogs));
   syncOpLogs();
@@ -4932,7 +4949,7 @@ function syncOpLogs(callback) {
           var k = l.time+'|'+l.user+'|'+l.action+'|'+l.target;
           if(!seen[k]) merged.push(l);
         });
-        merged.sort(function(a,b){ return a.time < b.time ? -1 : 1; });
+        merged.sort(function(a,b){ return logTime(a) - logTime(b); });
         if(merged.length > 500) merged = merged.slice(-500);
       } catch(e) {}
     }
@@ -4983,7 +5000,7 @@ function loadOpLogsFromCloud() {
             var k = l.time+'|'+l.user+'|'+l.action+'|'+l.target;
             if(!seen[k]) opLogs.push(l);
           });
-          opLogs.sort(function(a,b){ return a.time < b.time ? -1 : 1; });
+          opLogs.sort(function(a,b){ return logTime(a) - logTime(b); });
           if(opLogs.length > 500) opLogs = opLogs.slice(-500);
           try { localStorage.setItem('ledger_op_logs', JSON.stringify(opLogs)); } catch(e) {}
         }
@@ -5041,7 +5058,8 @@ function showLogPanel() {
   if(opLogs.length === 0) {
     list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--neutral-400)">暂无操作记录</div>';
   } else {
-    var all = opLogs.slice().reverse();
+    // 按日期降序（最新在前）
+    var all = opLogs.slice().sort(function(a,b){ return logTime(b) - logTime(a); });
     list.innerHTML = all.map(function(l) {
       var icon = l.action==='新增'?'➕':l.action==='删除'?'🗑':l.action==='导出'?'📥':l.action==='导入'?'📤':'✏';
       var color = l.action==='新增'?'#3B6D11':l.action==='删除'?'#A32D2D':'#185FA5';
@@ -5057,7 +5075,7 @@ function closeLogPanel() {
 
 function exportLogs() {
   var csv = '\uFEFF时间,用户,操作,目标,详情,IP\n';
-  opLogs.forEach(function(l) {
+  opLogs.slice().sort(function(a,b){ return logTime(b) - logTime(a); }).forEach(function(l) {
     csv += [l.time, l.user, l.action, l.target, l.detail||'', l.ip||''].map(function(v){ var s=String(v); if(s.includes(',')||s.includes('"')) s='"'+s.replace(/"/g,'""')+'"'; return s; }).join(',') + '\n';
   });
   var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
