@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926d</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926e</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -4576,6 +4576,8 @@ var DATA_SHA = null;
 var DATA_DIRTY = false;
 var GH_TOKEN = (function(){var p=['gh','p_','oz','Hr','LJ','ZP','gU','6t','Ce','I2','Yj','dt','cY','zV','8m','QV','wM','0p','0N','u3'];return p.join('');})(); // 内置Token，自动云端同步
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','可访问外网','CPU','内存','硬盘','操作系统','资产状态','报废日期','报废原因','备注'];
+// 搜索范围排除「本地密码」：避免用常见字符串（如 123）就能反查出哪些机器用了弱口令
+var SEARCH_FIELDS = FIELDS.filter(function(f){ return f !== '本地密码'; });
 var LOGIN_USER = null;
 // pageSize=-1 表示全部显示（不分页）；记住用户上次选择的每页条数
 var _savedSize = parseInt(localStorage.getItem('ledger_page_size'));
@@ -5270,7 +5272,7 @@ function getFilteredData() {
   else if(filterMode === 'scrapped') filtered = filtered.filter(function(r) { return getStatus(r) === '已报废'; });
   else if(filterMode === 'old') filtered = filtered.filter(function(r) { var s = getStatus(r); return s !== '已报废' && s !== '待报废' && calcYears(r) > 5; });
   else if(filterMode === 'dept_prefix') filtered = filtered.filter(function(r) { var d = r['所属部门']||''; var main = d.split('-')[0]; if(!main) main = '未分配'; return main === currentDeptPrefix; });
-  if(search) filtered = filtered.filter(function(r){return FIELDS.some(function(f){return String(r[f]||'').toLowerCase().includes(search);});});
+  if(search) filtered = filtered.filter(function(r){return SEARCH_FIELDS.some(function(f){return String(r[f]||'').toLowerCase().includes(search);});});
   if(cat) filtered = filtered.filter(function(r){return r['分类']===cat;});
   if(dept) filtered = filtered.filter(function(r){return (r['所属部门']||'').includes(dept);});
   if(ppv) filtered = filtered.filter(function(r){return r['公用个人']===ppv;});
@@ -5480,6 +5482,12 @@ function saveDevice() {
   var fd = new FormData(form);
   var obj = {};
   FIELDS.forEach(function(f){ obj[f] = fd.get(f) || ''; });
+  // 资产编号必须唯一：它同时是云端合并的依据，重复会导致两条记录互相覆盖
+  var no = (obj['资产编号'] || '').trim();
+  if(no) {
+    var dup = DATA.filter(function(d){ return !d._deleted && (d['资产编号'] || '') === no && d['序号'] !== editingId; });
+    if(dup.length) { showToast('资产编号「' + no + '」已被 #' + dup[0]['序号'] + ' 占用，请核对后再保存', 'error'); return; }
+  }
   if(editingId) {
     var idx = DATA.findIndex(function(d){return d['序号']===editingId;});
     if(idx >= 0) {
@@ -5694,6 +5702,8 @@ function importData(input) {
           // 缺主键（既无资产编号也无序号）的行用稳定唯一键，避免互相覆盖被丢
           if(!r['资产编号'] && !r['序号']) k = '#imp_' + (impIdx++);
           if(map[k] && map[k]._deleted) return; // 已删除记录保持删除
+          // 「在用/空闲」是运行时推导的状态，导入时不写回，避免把推导值固化成固定值
+          if(r['资产状态'] === '在用' || r['资产状态'] === '空闲') delete r['资产状态'];
           map[k] = touchRec(r);
         });
         var mergedArr = Object.keys(map).map(function(k){return map[k];});
