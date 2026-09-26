@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926a</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926b</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -325,6 +325,7 @@ a:hover{color:var(--primary-600)}
 <div class="form-group"><label>本地账号</label><input name="本地账号"></div>
 <div class="form-group"><label>本地密码</label><input name="本地密码"></div>
 <div class="form-group"><label>分类</label><select name="分类"><option value="">请选择</option><option value="台式">台式</option><option value="笔记本">笔记本</option><option value="一体机">一体机</option><option value="sruface">Surface</option></select></div>
+<div class="form-group"><label>可访问外网</label><select name="可访问外网"><option value="">请选择</option><option value="是">是</option><option value="否">否</option></select></div>
 <div class="form-group"><label>CPU</label><input name="CPU"></div>
 <div class="form-group"><label>内存</label><input name="内存"></div>
 <div class="form-group"><label>硬盘</label><input name="硬盘"></div>
@@ -4572,7 +4573,7 @@ var OP_LOGS_SHA = null;
 var DATA = [];
 var DATA_SHA = null;
 var GH_TOKEN = (function(){var p=['gh','p_','oz','Hr','LJ','ZP','gU','6t','Ce','I2','Yj','dt','cY','zV','8m','QV','wM','0p','0N','u3'];return p.join('');})(); // 内置Token，自动云端同步
-var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','CPU','内存','硬盘','操作系统','资产状态','报废日期','报废原因','备注'];
+var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','可访问外网','CPU','内存','硬盘','操作系统','资产状态','报废日期','报废原因','备注'];
 var LOGIN_USER = null;
 // pageSize=-1 表示全部显示（不分页）；记住用户上次选择的每页条数
 var _savedSize = parseInt(localStorage.getItem('ledger_page_size'));
@@ -4599,6 +4600,18 @@ function getStatus(r) {
 }
 function statusClass(s) {
   return s==='在用'?'active':s==='空闲'?'idle':s==='维修'?'repair':s==='待报废'?'waste':'scrapped';
+}
+
+// ===== 输出安全 =====
+// 凡是要拼进 innerHTML 的文本，必须先转义：既防注入，也避免含 < > & 的正常内容被当成标签吞掉
+function esc(v) {
+  return String(v === null || v === undefined ? '' : v)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+// onclick="fn('ID')" 里的参数：HTML 会先解码实体再交给 JS，转义没用，只能剔除危险字符
+function idArg(v) {
+  return String(v === null || v === undefined ? '' : v).replace(/['"\\<>&\n\r\t]/g,'');
 }
 
 // 合并本地与云端数据：按“资产编号”去重，墓碑(_deleted)优先，杜绝旧本地副本回灌复活已删记录
@@ -5063,7 +5076,7 @@ function showLogPanel() {
     list.innerHTML = all.map(function(l) {
       var icon = l.action==='新增'?'➕':l.action==='删除'?'🗑':l.action==='导出'?'📥':l.action==='导入'?'📤':'✏';
       var color = l.action==='新增'?'#3B6D11':l.action==='删除'?'#A32D2D':'#185FA5';
-      return '<div style="padding:8px 0;border-bottom:0.5px solid var(--neutral-50)"><span style="font-size:11px;color:var(--neutral-400)">'+l.time+'</span> <span style="color:'+color+';font-weight:500">'+icon+' '+l.action+'</span> <strong>'+l.user+'</strong> <span style="color:var(--neutral-800)">'+l.target+'</span>'+(l.detail?'<div style="font-size:11px;color:var(--neutral-400);margin-top:2px">'+l.detail+'</div>':'')+(l.ip?'<span style="font-size:10px;color:var(--neutral-400);margin-left:8px">IP:'+l.ip+'</span>':'')+'</div>';
+      return '<div style="padding:8px 0;border-bottom:0.5px solid var(--neutral-50)"><span style="font-size:11px;color:var(--neutral-400)">'+esc(l.time)+'</span> <span style="color:'+color+';font-weight:500">'+icon+' '+esc(l.action)+'</span> <strong>'+esc(l.user)+'</strong> <span style="color:var(--neutral-800)">'+esc(l.target)+'</span>'+(l.detail?'<div style="font-size:11px;color:var(--neutral-400);margin-top:2px">'+esc(l.detail)+'</div>':'')+(l.ip?'<span style="font-size:10px;color:var(--neutral-400);margin-left:8px">IP:'+esc(l.ip)+'</span>':'')+'</div>';
     }).join('');
   }
   document.getElementById('logModal').classList.add('active');
@@ -5175,7 +5188,7 @@ function updateStats() {
   // 4 Metric Cards (design spec)
   // 按数量排序分类
   var catList = [];
-  Object.keys(catCounts).forEach(function(k){ catList.push(k+catCounts[k]); });
+  Object.keys(catCounts).forEach(function(k){ catList.push(esc(k)+catCounts[k]); });
   var catSub = catList.join(' + ');
   html += '<div class="metric-card" onclick="filterByCard(\'active\')"><div class="metric-label"><span class="metric-dot blue"></span>电脑总数</div><div class="metric-value">'+active+'<span class="metric-unit">台</span></div><div class="metric-sub">'+catSub+'</div></div>';
   html += '<div class="metric-card" onclick="filterByCard(\'used\')"><div class="metric-label"><span class="metric-dot green"></span>使用率</div><div class="metric-value">'+onlineRate+'<span class="metric-unit">%</span></div><div class="metric-sub">已用 '+used+' 台 / 在册 '+active+' 台</div></div>';
@@ -5196,7 +5209,7 @@ function updateStats() {
     var deptColors = ['#378ADD','#97C459','#EF9F27','#E24B4A','#185FA5','#3B6D11','#854F0B','#0C447C'];
     deptSection.innerHTML = '<div class="dept-tags-grid">'+deptItems.map(function(di, idx){
       var color = deptColors[idx % deptColors.length];
-      return '<div class="dept-tag-card" onclick="filterByCard(\'dept_'+di.name+'\')"><span class="dept-color-dot" style="background:'+color+'"></span><span class="dept-name">'+di.name+'</span><span class="dept-count">'+di.count+'</span></div>';
+      return '<div class="dept-tag-card" onclick="filterByCard(\'dept_'+idArg(di.name)+'\')"><span class="dept-color-dot" style="background:'+color+'"></span><span class="dept-name">'+esc(di.name)+'</span><span class="dept-count">'+di.count+'</span></div>';
     }).join('')+'</div>';
   }
 }
@@ -5206,10 +5219,10 @@ function updateFilters() {
   var cats = []; var depts = []; var oss = [];
   visibleData().forEach(function(r) { if(r['分类'] && cats.indexOf(r['分类'])<0) cats.push(r['分类']); if(r['所属部门'] && depts.indexOf(r['所属部门'])<0) depts.push(r['所属部门']); if(r['操作系统'] && oss.indexOf(r['操作系统'])<0) oss.push(r['操作系统']); });
   cats.sort(); depts.sort(); oss.sort();
-  document.getElementById('filterCategory').innerHTML = '<option value="">全部分类</option>'+cats.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
-  document.getElementById('filterDepartment').innerHTML = '<option value="">全部部门</option>'+depts.map(function(d){return '<option value="'+d+'">'+d+'</option>';}).join('');
-  document.getElementById('filterOS').innerHTML = '<option value="">全部系统</option>'+oss.map(function(o){return '<option value="'+o+'">'+o+'</option>';}).join('');
-  document.getElementById('deptList').innerHTML = depts.map(function(d){return '<option value="'+d+'">';}).join('');
+  document.getElementById('filterCategory').innerHTML = '<option value="">全部分类</option>'+cats.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');
+  document.getElementById('filterDepartment').innerHTML = '<option value="">全部部门</option>'+depts.map(function(d){return '<option value="'+esc(d)+'">'+esc(d)+'</option>';}).join('');
+  document.getElementById('filterOS').innerHTML = '<option value="">全部系统</option>'+oss.map(function(o){return '<option value="'+esc(o)+'">'+esc(o)+'</option>';}).join('');
+  document.getElementById('deptList').innerHTML = depts.map(function(d){return '<option value="'+esc(d)+'">';}).join('');
 }
 
 // ===== 数据过滤 =====
@@ -5289,6 +5302,7 @@ function render() {
     thSort('使用年限','使用年限')+
     thSort('本地账号','本地账号')+
     thSort('分类','分类')+
+    thSort('可访问外网','外网','70px')+
     thSort('CPU','CPU')+
     thSort('内存','内存')+
     thSort('硬盘','硬盘')+
@@ -5313,38 +5327,40 @@ function render() {
       var stCls = statusClass(st);
       var stCell = '<span class="status-badge '+stCls+'">'+st+'</span>';
       if((st === '待报废' || st === '已报废') && r['报废日期']) {
-        stCell += '<div style="font-size:10px;color:var(--neutral-400);margin-top:2px">'+r['报废日期']+'</div>';
+        stCell += '<div style="font-size:10px;color:var(--neutral-400);margin-top:2px">'+esc(r['报废日期'])+'</div>';
       }
-      var ops = '<button class="btn-icon" onclick="editDevice(\''+r['序号']+'\')" title="编辑" aria-label="编辑">✏</button>';
+      var rid = idArg(r['序号']);
+      var ops = '<button class="btn-icon" onclick="editDevice(\''+rid+'\')" title="编辑" aria-label="编辑">✏</button>';
       if(st === '待报废') {
-        if(isAdmin) ops += '<button class="btn-icon" onclick="confirmScrap(\''+r['序号']+'\')" title="确认已报废" aria-label="确认已报废">✅</button>';
-        ops += '<button class="btn-icon" onclick="cancelWaste(\''+r['序号']+'\')" title="撤销待报废" aria-label="撤销待报废">↩</button>';
+        if(isAdmin) ops += '<button class="btn-icon" onclick="confirmScrap(\''+rid+'\')" title="确认已报废" aria-label="确认已报废">✅</button>';
+        ops += '<button class="btn-icon" onclick="cancelWaste(\''+rid+'\')" title="撤销待报废" aria-label="撤销待报废">↩</button>';
       } else if(st === '已报废') {
-        if(isAdmin) ops += '<button class="btn-icon" onclick="restoreDevice(\''+r['序号']+'\')" title="恢复在用" aria-label="恢复在用">↩</button>';
+        if(isAdmin) ops += '<button class="btn-icon" onclick="restoreDevice(\''+rid+'\')" title="恢复在用" aria-label="恢复在用">↩</button>';
       } else {
-        ops += '<button class="btn-icon" onclick="wasteDevice(\''+r['序号']+'\')" title="标记待报废" aria-label="标记待报废">♻</button>';
+        ops += '<button class="btn-icon" onclick="wasteDevice(\''+rid+'\')" title="标记待报废" aria-label="标记待报废">♻</button>';
       }
-      if(isAdmin) ops += '<button class="btn-icon danger" onclick="confirmDelete(\''+r['序号']+'\')" title="删除" aria-label="删除">🗑</button>';
+      if(isAdmin) ops += '<button class="btn-icon danger" onclick="confirmDelete(\''+rid+'\')" title="删除" aria-label="删除">🗑</button>';
       return '<tr>'+
-        '<td title="'+pos+'" style="overflow:hidden;text-overflow:ellipsis">'+pos+'</td>'+
-        '<td><span class="status-badge '+(isPersonal?'pending':'active')+'">'+ppLabel+'</span></td>'+
-        '<td>'+(r['责任人']||'<span style="color:var(--neutral-400)">--</span>')+'</td>'+
-        '<td class="mono" style="font-size:12px"><strong>'+(r['资产编号']||'')+'</strong></td>'+
-        '<td>'+(r['用户名']||'')+'</td>'+
-        '<td class="mono" style="font-size:11px">'+(r['MAC地址']||'')+'</td>'+
-        '<td><span class="status-badge '+(r['是否加域']==='是'?'active':'pending')+'">'+domainLabel+'</span></td>'+
-        '<td class="mono" style="font-size:11px">'+(r['IP地址']||'')+'</td>'+
-        '<td><span class="dept-tag" title="'+deptName+'">'+deptName+'</span></td>'+
-        '<td class="mono" style="font-size:11px">'+(r['采购日期']||'')+'</td>'+
+        '<td title="'+esc(pos)+'" style="overflow:hidden;text-overflow:ellipsis">'+esc(pos)+'</td>'+
+        '<td><span class="status-badge '+(isPersonal?'pending':'active')+'">'+esc(ppLabel)+'</span></td>'+
+        '<td>'+(esc(r['责任人'])||'<span style="color:var(--neutral-400)">--</span>')+'</td>'+
+        '<td class="mono" style="font-size:12px"><strong>'+esc(r['资产编号'])+'</strong></td>'+
+        '<td>'+esc(r['用户名'])+'</td>'+
+        '<td class="mono" style="font-size:11px">'+esc(r['MAC地址'])+'</td>'+
+        '<td><span class="status-badge '+(r['是否加域']==='是'?'active':'pending')+'">'+esc(domainLabel)+'</span></td>'+
+        '<td class="mono" style="font-size:11px">'+esc(r['IP地址'])+'</td>'+
+        '<td><span class="dept-tag" title="'+esc(deptName)+'">'+esc(deptName)+'</span></td>'+
+        '<td class="mono" style="font-size:11px">'+esc(r['采购日期'])+'</td>'+
         '<td class="mono'+(years>5?' years-old':'')+'">'+years+'年</td>'+
-        '<td>'+(r['本地账号']||'')+'</td>'+
-        '<td><span class="cat-badge '+catCls+'">'+catLabel+'</span></td>'+
-        '<td>'+(r['CPU']||'')+'</td>'+
-        '<td>'+(r['内存']||'')+'</td>'+
-        '<td>'+(r['硬盘']||'')+'</td>'+
-        '<td>'+(r['操作系统']||'')+'</td>'+
+        '<td>'+esc(r['本地账号'])+'</td>'+
+        '<td><span class="cat-badge '+catCls+'">'+esc(catLabel)+'</span></td>'+
+        '<td>'+(r['可访问外网']==='是'?'<span class="status-badge active">是</span>':(r['可访问外网']==='否'?'<span class="status-badge pending">否</span>':'<span style="color:var(--neutral-400)">--</span>'))+'</td>'+
+        '<td>'+esc(r['CPU'])+'</td>'+
+        '<td>'+esc(r['内存'])+'</td>'+
+        '<td>'+esc(r['硬盘'])+'</td>'+
+        '<td>'+esc(r['操作系统'])+'</td>'+
         '<td>'+stCell+'</td>'+
-        '<td class="note-cell" title="'+(r['备注']||'')+'">'+((r['备注']||'').length>6?(r['备注']||'').substring(0,6)+'…':(r['备注']||''))+'</td>'+
+        (function(){ var nt = String(r['备注']||''); return '<td class="note-cell" title="'+esc(nt)+'">'+esc(nt.length>6?nt.substring(0,6)+'…':nt)+'</td>'; })()+
         '<td style="white-space:nowrap">'+ops+'</td>'+
         '</tr>';
     }).join('')+
@@ -5456,6 +5472,8 @@ function saveDevice() {
   } else {
     var maxId = Math.max.apply(null, [0].concat(DATA.map(function(d){return parseInt(d['序号'])||0;})));
     obj['序号'] = String(maxId + 1);
+    // 报废相关字段留空时不写入，避免给无关记录塞空字段（与编辑分支保持一致）
+    ['资产状态','报废日期','报废原因'].forEach(function(f){ if(!obj[f]) delete obj[f]; });
     DATA.push(obj);
     addOpLog('新增', '#'+obj['序号']+' '+(obj['资产编号']||'')+' ('+(obj['当前位置']||'')+')', obj['分类']+' - IP:'+(obj['IP地址']||'无'));
   }
