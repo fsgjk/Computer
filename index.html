@@ -244,7 +244,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926b</span></h1>
+<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926d</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -4572,6 +4572,8 @@ var GH_REPO = 'fsgjk/Computer';
 var OP_LOGS_SHA = null;
 var DATA = [];
 var DATA_SHA = null;
+// 本地有改动但尚未成功推送云端（例如上次推送失败）；用于定时同步时自动补推
+var DATA_DIRTY = false;
 var GH_TOKEN = (function(){var p=['gh','p_','oz','Hr','LJ','ZP','gU','6t','Ce','I2','Yj','dt','cY','zV','8m','QV','wM','0p','0N','u3'];return p.join('');})(); // 内置Token，自动云端同步
 var FIELDS = ['序号','当前位置','公用个人','责任人','资产编号','用户名','MAC地址','是否加域','IP地址','所属部门','采购日期','使用年限','本地账号','本地密码','分类','可访问外网','CPU','内存','硬盘','操作系统','资产状态','报废日期','报废原因','备注'];
 var LOGIN_USER = null;
@@ -4615,21 +4617,44 @@ function idArg(v) {
 }
 
 // 合并本地与云端数据：按“资产编号”去重，墓碑(_deleted)优先，杜绝旧本地副本回灌复活已删记录
+// ===== 最后修改时间戳：多端合并时判定谁更新 =====
+// 规则：每次本地改动都给记录打上 _mt（毫秒时间戳）；合并时 _mt 大的一方胜出。
+// 历史数据没有 _mt，视为 0；当本地改过(_mt>0)而云端没标时间时，本地胜出，避免改动被旧数据吃掉。
+function touchRec(r) {
+  if(r && typeof r === 'object') r._mt = Date.now();
+  DATA_DIRTY = true;
+  return r;
+}
+function mtOf(r) {
+  var t = r && r._mt;
+  return (typeof t === 'number' && isFinite(t)) ? t : 0;
+}
+
 function mergeData(cloud) {
   if(!cloud || !cloud.length) return DATA.slice();
-  var map = {};
-  // 以云端为基准
-  cloud.forEach(function(r){ map[r['资产编号'] || ('#'+r['序号'])] = r; });
-  // 叠加本地：本地独有的记录（如离线新增）保留；任一侧标记为删除则保持删除
-  DATA.forEach(function(r){
-    var k = r['资产编号'] || ('#'+r['序号']);
-    if(map[k]) {
-      map[k]._deleted = !!(map[k]._deleted || r._deleted);
-    } else {
-      map[k] = r;
-    }
+  var map = {};      // key -> 记录对象
+  var delMap = {};   // key -> 是否删除（墓碑独立记录，不受"谁更新"影响）
+  function recKey(r){ return r['资产编号'] || ('#'+r['序号']); }
+  // 先铺云端（云端内部若出现同编号重复，取最新的那条）
+  cloud.forEach(function(r){
+    var k = recKey(r);
+    if(!map[k] || mtOf(r) > mtOf(map[k])) { map[k] = r; }
+    delMap[k] = !!r._deleted;
   });
-  var arr = Object.keys(map).map(function(k){ return map[k]; });
+  // 再叠加本地：本地独有的记录（如离线新增）保留；任一侧标记为删除则保持删除
+  DATA.forEach(function(r){
+    var k = recKey(r);
+    if(!map[k]) { map[k] = r; delMap[k] = !!r._deleted; return; }
+    // 墓碑优先：删除状态不受时间戳影响，避免已删记录被另一侧的老数据复活
+    if(r._deleted || delMap[k]) { delMap[k] = true; return; }
+    // 关键修复：本地有更新的修改时以本地为准，不再无条件用云端覆盖
+    if(mtOf(r) > mtOf(map[k])) map[k] = r;
+  });
+  var arr = Object.keys(map).map(function(k){
+    var rec = map[k];
+    if(delMap[k] && !rec._deleted) rec._deleted = true;
+    return rec;
+  });
   arr.sort(function(a,b){ return (parseInt(a['序号'])||0) - (parseInt(b['序号'])||0); });
   return arr;
 }
@@ -4757,6 +4782,7 @@ function syncToGitHub(callback) {
   xhr.onload = function() {
     if(xhr.status === 200 || xhr.status === 201) {
       try { DATA_SHA = JSON.parse(xhr.responseText).content.sha; } catch(e) {}
+      DATA_DIRTY = false;
       if(callback) callback(true);
     } else {
       // SHA可能过期，重新获取SHA后重试一次
@@ -4786,6 +4812,7 @@ function syncToGitHub(callback) {
               retryXhr.onload = function() {
                 if(retryXhr.status === 200 || retryXhr.status === 201) {
                   try { DATA_SHA = JSON.parse(retryXhr.responseText).content.sha; } catch(e) {}
+                  DATA_DIRTY = false;
                   if(callback) callback(true);
                 } else { if(callback) callback(false); }
               };
@@ -4886,6 +4913,8 @@ function doAutoSync() {
           DATA_SHA = info.sha;
           try { localStorage.setItem('ledger_data_backup', JSON.stringify(DATA)); } catch(e) {}
           if(JSON.stringify(visibleData()) !== before) { updateStats(); updateFilters(); render(); }
+          // 上次推送失败时自动补推一次，避免本地改动长期卡在本机（例如网络抖动那一次）
+          if(DATA_DIRTY) saveDataToStorage();
         }
       } catch(e) {}
     }
@@ -5111,7 +5140,8 @@ function doLogin() {
     var user = USERS[u];
     if(!user || user.pwd !== hash) { err.textContent='用户名或密码错误'; return; }
     LOGIN_USER = {username:u, name:user.name, role:user.role};
-    localStorage.setItem(TOKEN_KEY, JSON.stringify({u:u, h:hash}));
+    // 安全：只记住用户名用于回填，不持久化任何密码/哈希，避免拿到本地存储即可登录
+    localStorage.setItem(TOKEN_KEY, JSON.stringify({u:u}));
     showApp(user);
   } catch(e) { err.textContent='登录出错，请重试'; }
 }
@@ -5142,16 +5172,15 @@ function doLogout() {
 document.getElementById('loginPass').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
-// 自动登录
+// 记住用户名（不自动登录）：仅回填账号输入框，密码仍需手动输入
 (function() {
   var saved = localStorage.getItem(TOKEN_KEY);
   if(!saved) return;
   try {
     var s = JSON.parse(saved);
-    var user = USERS[s.u];
-    if(user && user.pwd === s.h) {
-      LOGIN_USER = {username:s.u, name:user.name, role:user.role};
-      showApp(user);
+    if(s && s.u && USERS[s.u]) {
+      document.getElementById('loginUser').value = s.u;
+      document.getElementById('loginPass').focus();
     }
   } catch(e) {}
 })();
@@ -5256,7 +5285,7 @@ function getFilteredData() {
       var vb = (b[sortField] || '').toString();
       var na = parseFloat(va), nb = parseFloat(vb);
       if(!isNaN(na) && !isNaN(nb) && va === String(na) && vb === String(nb)) { return (na - nb) * sortDir; }
-      return va.localeCompare(vb, 'zh-CN') * sortDir;
+      return naturalCompare(va, vb) * sortDir;
     });
   }
   return filtered;
@@ -5466,6 +5495,7 @@ function saveDevice() {
       // 报废相关字段留空时不写入，避免给无关记录塞空字段
       ['资产状态','报废日期','报废原因'].forEach(function(f){ if(!obj[f]) delete merged[f]; });
       DATA[idx] = merged;
+      touchRec(DATA[idx]);   // 打时间戳：自动同步合并时保护本次修改不被云端旧数据覆盖
       var detail = changes.length > 0 ? changes.join('; ') : '无变更';
       addOpLog('编辑', '#'+editingId+' '+(obj['资产编号']||'')+' ('+(obj['当前位置']||'')+')', detail);
     }
@@ -5474,7 +5504,7 @@ function saveDevice() {
     obj['序号'] = String(maxId + 1);
     // 报废相关字段留空时不写入，避免给无关记录塞空字段（与编辑分支保持一致）
     ['资产状态','报废日期','报废原因'].forEach(function(f){ if(!obj[f]) delete obj[f]; });
-    DATA.push(obj);
+    DATA.push(touchRec(obj));
     addOpLog('新增', '#'+obj['序号']+' '+(obj['资产编号']||'')+' ('+(obj['当前位置']||'')+')', obj['分类']+' - IP:'+(obj['IP地址']||'无'));
   }
   closeModal();
@@ -5492,7 +5522,7 @@ function confirmDelete(id) {
   confirmCb = function() {
     var del = DATA.find(function(d){return d['序号']===id;});
     // 修复：软删除（打墓碑），保留在 DATA 中但标记为 _deleted，合并时墓碑优先，杜绝复活
-    if(del) { del._deleted = true; if(!del._delTime) del._delTime = new Date().toLocaleString(); }
+    if(del) { del._deleted = true; if(!del._delTime) del._delTime = new Date().toLocaleString(); touchRec(del); }
     addOpLog('删除', '#'+id+' '+(del?del['资产编号']:'')+' ('+(del?del['当前位置']:'')+')', 'IP:'+(del?del['IP地址']:'无')+' | '+del['分类']);
     updateStats();
     render();
@@ -5552,6 +5582,7 @@ function executeWaste() {
     addOpLog('待报废', '#'+r['序号']+' '+(r['资产编号']||'')+' ('+(r['当前位置']||'')+')', extra || '待管理员确认');
     showToast('已标记为待报废', 'success');
   }
+  touchRec(r);
   closeWasteModal();
   updateStats(); render(); saveDataToStorage();
 }
@@ -5561,6 +5592,7 @@ function cancelWaste(id) {
   var r = DATA.find(function(d){return d['序号']===id;});
   if(!r) return;
   delete r['资产状态']; delete r['报废日期']; delete r['报废原因'];
+  touchRec(r);
   addOpLog('撤销待报废', '#'+id+' '+(r['资产编号']||'')+' ('+(r['当前位置']||'')+')', '恢复为在用');
   updateStats(); render(); saveDataToStorage();
   showToast('已撤销待报废', 'success');
@@ -5571,6 +5603,7 @@ function restoreDevice(id) {
   var r = DATA.find(function(d){return d['序号']===id;});
   if(!r) return;
   delete r['资产状态']; delete r['报废日期']; delete r['报废原因'];
+  touchRec(r);
   addOpLog('恢复在用', '#'+id+' '+(r['资产编号']||'')+' ('+(r['当前位置']||'')+')', '已报废→在用');
   updateStats(); render(); saveDataToStorage();
   showToast('已恢复在用', 'success');
@@ -5593,6 +5626,41 @@ function exportCSV() {
   showToast('导出成功', 'success');
 }
 
+// ===== CSV 解析（兼容字段内的逗号/换行/引号，按 RFC4180 风格解析）=====
+function parseCSV(text) {
+  text = String(text || '').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  var rows = [], row = [], field = '', inQ = false, i = 0;
+  while(i < text.length) {
+    var c = text[i];
+    if(inQ) {
+      if(c === '"') {
+        if(text[i+1] === '"') { field += '"'; i += 2; continue; }
+        inQ = false; i++; continue;
+      }
+      field += c; i++; continue;
+    }
+    if(c === '"') { inQ = true; i++; continue; }
+    if(c === ',') { row.push(field); field = ''; i++; continue; }
+    if(c === '\n') { row.push(field); rows.push(row); row = []; field = ''; i++; continue; }
+    field += c; i++;
+  }
+  if(field !== '' || row.length > 0) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+// 自然排序：让 PC-9 < PC-10（而非字典序 PC-10 < PC-9）
+function naturalCompare(a, b) {
+  a = String(a == null ? '' : a); b = String(b == null ? '' : b);
+  var ra = /(\d+)/g, rb = /(\d+)/g, ma, mb;
+  while(true) {
+    ma = ra.exec(a); mb = rb.exec(b);
+    if(!ma && !mb) return a.localeCompare(b, 'zh-CN');
+    if(!ma) return -1;
+    if(!mb) return 1;
+    if(ma[1] !== mb[1]) return parseInt(ma[1], 10) - parseInt(mb[1], 10);
+  }
+}
+
 function importData(input) {
   if(!LOGIN_USER) { showToast('请先登录', 'error'); return; }
   var file = input.files[0];
@@ -5604,14 +5672,12 @@ function importData(input) {
       var imported;
       if(ext === 'json') { imported = JSON.parse(e.target.result); if(!Array.isArray(imported)) imported = imported.data || []; }
       else {
-        var lines = e.target.result.split('\n').filter(Boolean);
-        if(lines.length < 2) { showToast('文件格式错误', 'error'); return; }
-        var headers = lines[0].replace(/^\uFEFF/,'').split(',');
-        imported = lines.slice(1).map(function(line) {
-          var vals = [], inQ = false, cur = '';
-          for(var ci=0;ci<line.length;ci++) { var ch=line[ci]; if(ch==='"') inQ = !inQ; else if(ch===',' && !inQ) { vals.push(cur); cur = ''; } else cur += ch; }
-          vals.push(cur);
-          var obj = {}; headers.forEach(function(h,i){ obj[h.trim()] = (vals[i]||'').replace(/^"|"$/g,''); });
+        var raw = parseCSV(e.target.result);
+        if(raw.length < 2) { showToast('文件格式错误', 'error'); return; }
+        var headers = raw[0].map(function(h){ return h.trim(); });
+        imported = raw.slice(1).map(function(vals) {
+          var obj = {};
+          headers.forEach(function(h,i){ obj[h] = (vals[i] != null ? String(vals[i]) : '').replace(/^"|"$/g, ''); });
           return obj;
         });
       }
@@ -5622,10 +5688,13 @@ function importData(input) {
         // 修复：合并导入，按资产编号合并；本地已删记录(_deleted)不被旧导出文件覆盖复活
         var map = {};
         DATA.forEach(function(r){ map[r['资产编号'] || ('#'+r['序号'])] = r; });
+        var impIdx = 0;
         imported.forEach(function(r){
           var k = r['资产编号'] || ('#'+r['序号']);
+          // 缺主键（既无资产编号也无序号）的行用稳定唯一键，避免互相覆盖被丢
+          if(!r['资产编号'] && !r['序号']) k = '#imp_' + (impIdx++);
           if(map[k] && map[k]._deleted) return; // 已删除记录保持删除
-          map[k] = r;
+          map[k] = touchRec(r);
         });
         var mergedArr = Object.keys(map).map(function(k){return map[k];});
         mergedArr.sort(function(a,b){return (parseInt(a['序号'])||0)-(parseInt(b['序号'])||0);});
