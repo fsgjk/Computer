@@ -255,6 +255,26 @@ a:hover{color:var(--primary-600)}
   .sidebar{width:60px}
   .sidebar .nav-txt,.sidebar .sidebar-brand .txt,.sidebar .sidebar-foot{display:none}
 }
+
+/* ===== 侧边栏手动收缩 ===== */
+.sidebar-collapse-btn{margin-top:auto;border:none;background:rgba(255,255,255,.06);color:#cbd5e1;cursor:pointer;font-size:15px;padding:10px 12px;width:100%;border-radius:var(--radius-md);transition:background .15s,color .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.sidebar-collapse-btn:hover{background:rgba(255,255,255,.14);color:#fff}
+.sidebar.collapsed .sidebar-collapse-btn .label{display:none}
+.sidebar.collapsed .sidebar-collapse-btn{justify-content:center}
+.sidebar.collapsed .sidebar-foot{display:none}
+
+/* ===== 第三方系统账号管理 表格微调 ===== */
+.tp-table .cell-strong{font-weight:600}
+.tp-table td .mono{font-size:11px}
+.tp-tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:var(--neutral-100);color:var(--neutral-600);white-space:nowrap}
+.tp-tag.fam-qf{background:#eef2ff;color:#4338ca}
+.tp-tag.fam-his{background:#fef3c7;color:#92400e}
+.tp-tag.fam-dj{background:#dcfce7;color:#166534}
+.tp-tag.fam-pacs{background:#e0f2fe;color:#075985}
+.tp-tag.fam-jy{background:#fae8ff;color:#86198f}
+.tp-tag.fam-sr{background:#ffe4e6;color:#9f1239}
+.badge-expire{color:#b45309;font-weight:600}
+
 </style>
 </head>
 <body>
@@ -293,11 +313,13 @@ a:hover{color:var(--primary-600)}
   <div class="sidebar-brand"><span class="brand-ico">💻</span><span class="txt">电脑台账系统</span></div>
   <nav class="sidebar-nav">
     <a class="nav-item active" data-view="ledger" onclick="switchView('ledger')" title="设备台账"><span class="nav-ico">🖥️</span><span class="nav-txt">设备台账</span></a>
-    <a class="nav-item" data-view="thirdparty" onclick="switchView('thirdparty')" title="第三方系统管理"><span class="nav-ico">🔗</span><span class="nav-txt">第三方系统管理</span></a>
+    <a class="nav-item" data-view="thirdparty" onclick="switchView('thirdparty')" title="第三方系统账号管理"><span class="nav-ico">🔗</span><span class="nav-txt">第三方系统账号管理</span></a>
     <a class="nav-item" data-view="logs" onclick="showLogPanel()" title="操作日志"><span class="nav-ico">📋</span><span class="nav-txt">操作日志</span></a>
   </nav>
+  <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="收起/展开菜单"><span class="ico">«</span><span class="label">收起菜单</span></button>
   <div class="sidebar-foot">v20260926f</div>
 </aside>
+
 <div class="main-col">
 <div class="content-area" id="view-ledger">
 <!-- Metric Cards -->
@@ -339,39 +361,43 @@ a:hover{color:var(--primary-600)}
   <div class="toolbar-wrap">
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input type="text" id="tpSearch" placeholder="搜索系统名称、地址、说明..." oninput="tpDebounceSearch()" aria-label="搜索第三方系统">
+      <input type="text" id="tpSearch" placeholder="搜索姓名、工号、账号、子系统、科室..." oninput="tpDebounceSearch()" aria-label="搜索账号">
     </div>
-    <select id="tpFilterStatus" onchange="renderThirdParty()" aria-label="状态筛选"><option value="">全部状态</option><option value="已启用">已启用</option><option value="已停用">已停用</option></select>
-    <select id="tpFilterCat" onchange="renderThirdParty()" aria-label="分类筛选"><option value="">全部分类</option><option value="身份认证">身份认证</option><option value="监控告警">监控告警</option><option value="资产发现">资产发现</option><option value="工单流转">工单流转</option><option value="配置管理">配置管理</option><option value="其他">其他</option></select>
-    <button class="btn btn-primary" onclick="openTpModal()" aria-label="接入系统">+ 接入系统</button>
+    <select id="tpFilterStatus" onchange="renderTpAccounts()" aria-label="状态筛选"><option value="">全部状态</option><option value="启用">启用</option><option value="停用">停用</option></select>
+    <select id="tpFilterSub" onchange="renderTpAccounts()" aria-label="子系统筛选"><option value="">全部子系统</option></select>
+    <select id="tpFilterDept" onchange="renderTpAccounts()" aria-label="科室筛选"><option value="">全部科室</option></select>
+    <button class="btn btn-primary" onclick="openTpModal()" aria-label="新增账号">+ 新增账号</button>
     <button class="btn btn-ghost" onclick="exportTpCSV()" aria-label="导出CSV">📥 导出CSV</button>
   </div>
-  <div class="section-card" style="overflow:hidden">
-    <div class="table-wrapper" id="tpTableWrap">
-      <div style="text-align:center;padding:40px;color:var(--neutral-400)">请先登录</div>
-    </div>
+  <div class="section-card" style="overflow:auto">
+    <div class="table-wrapper" id="tpTableWrap"><div style="text-align:center;padding:40px;color:var(--neutral-400)">请先登录</div></div>
   </div>
 </div>
 
-<!-- Third-party edit modal -->
-<div class="modal-overlay" id="tpModal" role="dialog" aria-modal="true" aria-label="第三方系统">
+<!-- 新增/编辑 账号 弹窗 -->
+<div class="modal-overlay" id="tpModal" role="dialog" aria-modal="true" aria-label="账号">
   <div class="modal">
-    <div class="modal-header"><h3 id="tpModalTitle">接入第三方系统</h3><button class="modal-close" onclick="closeTpModal()" aria-label="关闭">✕</button></div>
+    <div class="modal-header"><h3 id="tpModalTitle">新增账号</h3><button class="modal-close" onclick="closeTpModal()" aria-label="关闭">✕</button></div>
     <div class="modal-body">
       <form class="form-grid" id="tpForm">
-        <div class="form-group"><label>系统名称 *</label><input name="name" placeholder="如 企业AD域控"></div>
-        <div class="form-group"><label>分类</label><select name="category"><option value="身份认证">身份认证</option><option value="监控告警">监控告警</option><option value="资产发现">资产发现</option><option value="工单流转">工单流转</option><option value="配置管理">配置管理</option><option value="其他">其他</option></select></div>
-        <div class="form-group"><label>接入地址</label><input name="endpoint" class="mono" placeholder="https:// 或 ldap://"></div>
-        <div class="form-group"><label>认证方式</label><select name="authType"><option value="API Key">API Key</option><option value="Token">Token</option><option value="OAuth">OAuth</option><option value="账号密码">账号密码</option><option value="无">无</option></select></div>
-        <div class="form-group"><label>状态</label><select name="status"><option value="已启用">已启用</option><option value="已停用">已停用</option></select></div>
-        <div class="form-group"><label>同步频率</label><select name="syncFreq"><option value="手动">手动</option><option value="每小时">每小时</option><option value="每5分钟">每5分钟</option><option value="每天">每天</option><option value="每周">每周</option></select></div>
-        <div class="form-group full"><label>认证配置（JSON，可选）</label><textarea name="authConfig" placeholder='如 {"api_key":"xxx"}'></textarea></div>
-        <div class="form-group full"><label>说明</label><textarea name="description" placeholder="用途、负责人、备注等"></textarea></div>
+        <div class="form-group"><label>姓名 *</label><input name="name" placeholder="账号使用人"></div>
+        <div class="form-group"><label>工号</label><input name="empId" placeholder="院内工号"></div>
+        <div class="form-group"><label>科室</label><input name="dept" placeholder="如 超声室"></div>
+        <div class="form-group"><label>岗位</label><input name="job" placeholder="如 B超医生"></div>
+        <div class="form-group"><label>职称</label><input name="title" placeholder="如 主治医师"></div>
+        <div class="form-group"><label>是否有照片</label><select name="hasPhoto"><option value="无">无</option><option value="有">有</option></select></div>
+        <div class="form-group"><label>子系统 *</label><select name="subsystem" id="tpSubSelect"></select></div>
+        <div class="form-group"><label>账号（取值）</label><input name="account" placeholder="如 FK1122 / WF1126"></div>
+        <div class="form-group"><label>账号状态</label><select name="status"><option value="启用">启用</option><option value="停用">停用</option></select></div>
+        <div class="form-group"><label>新增/修改日期</label><input type="date" name="openDate"></div>
+        <div class="form-group"><label>有效期止</label><input type="date" name="expireDate"></div>
+        <div class="form-group full"><label>备注</label><textarea name="remark" placeholder="用途、特殊处理等"></textarea></div>
       </form>
     </div>
-    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeTpModal()">取消</button><button class="btn btn-primary" onclick="saveTp()">保存</button></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeTpModal()">取消</button><button class="btn btn-primary" onclick="saveTpAccount()">保存</button></div>
   </div>
 </div>
+
 
 </div><!-- /main-col -->
 </div><!-- /app-body -->
@@ -4671,14 +4697,21 @@ var editingId = null, currentPage = 1, pageSize = isNaN(_savedSize) ? -1 : _save
 var opLogs = JSON.parse(localStorage.getItem('ledger_op_logs') || '[]');
 var clientIP = '';
 
-// ===== 第三方系统管理：全局状态 =====
-var thirdParty = [];
-try { thirdParty = JSON.parse(localStorage.getItem('ledger_thirdparty') || '[]'); } catch(e) { thirdParty = []; }
+// ===== 第三方系统账号管理：全局状态（对齐"外服门诊信息系统账号权限管理表"·第三方供应商系统 Sheet）=====
+// 每行 = 某人在某第三方子系统上的账号（人员 × 子系统权限矩阵展开为长表）
+var tpAccounts = [];
+try { tpAccounts = JSON.parse(localStorage.getItem('ledger_thirdparty') || '[]'); } catch(e) { tpAccounts = []; }
 var TP_SHA = null;        // 云端 thirdparty.json 的 blob SHA
 var TP_DIRTY = false;     // 本地有改动尚未推送云端
 var tpEditingId = null;
 var tpSearchTimer = null;
 var currentView = 'ledger';
+// 第三方供应商系统的 20 个子系统（对应 Excel 第 I~AB 列）
+var TP_SUBSYSTEMS = ['勤方分科','勤方分科-身高','勤方分科-视力','勤方分科-血压','勤方分科-肺功能','勤方采血签到','勤方登记','勤方主检','勤方总控','勤方主检排班','HIS门诊/体检','HIS收费','HIS物资','导检叫号','导检总控台','PACS登记','PACS报告','PACS审核','检验','深睿'];
+// 子系统 → 系统族（勤方/HIS/导检/PACS/检验/深睿）
+var TP_FAMILY = {'勤方分科':'勤方','勤方分科-身高':'勤方','勤方分科-视力':'勤方','勤方分科-血压':'勤方','勤方分科-肺功能':'勤方','勤方采血签到':'勤方','勤方登记':'勤方','勤方主检':'勤方','勤方总控':'勤方','勤方主检排班':'勤方','HIS门诊/体检':'HIS','HIS收费':'HIS','HIS物资':'HIS','导检叫号':'导检','导检总控台':'导检','PACS登记':'PACS','PACS报告':'PACS','PACS审核':'PACS','检验':'检验','深睿':'深睿'};
+function tpFamily(sub){ return TP_FAMILY[sub] || '其他'; }
+
 
 // ===== 删除修复：可见数据（排除软删除墓碑） =====
 function visibleData() {
@@ -5254,7 +5287,8 @@ function showApp(user) {
   render();
   // 诊断：渲染后检查
   refreshLogPanel();
-  loadThirdParty();   // 加载第三方系统（localStorage + 云端 thirdparty.json）
+  loadThirdParty();   // 加载第三方系统账号管理（localStorage + 云端 thirdparty.json）
+  applySidebarState();
   startAutoSync(); // 每30秒自动检查云端更新
 }
 
@@ -5846,7 +5880,7 @@ function switchView(view) {
   if(view === 'thirdparty') {
     if(ledger) ledger.style.display = 'none';
     if(tp) tp.style.display = 'block';
-    renderThirdParty();
+    renderTpAccounts();
   } else {
     if(tp) tp.style.display = 'none';
     if(ledger) ledger.style.display = 'block';
@@ -5856,72 +5890,115 @@ function switchView(view) {
 
 // 登录后加载：先读本地，再与云端 thirdparty.json 合并，最后渲染
 function loadThirdParty() {
-  try { thirdParty = JSON.parse(localStorage.getItem('ledger_thirdparty') || '[]'); } catch(e) { thirdParty = []; }
-  renderThirdParty();
+  try { tpAccounts = JSON.parse(localStorage.getItem('ledger_thirdparty') || '[]'); } catch(e) { tpAccounts = []; }
+  renderTpAccounts();
   if(GH_TOKEN) syncThirdPartyFromCloud();
 }
 
-function renderThirdParty() {
+// 填充子系统下拉、科室筛选（数据变化时增量补充）
+function populateTpFilters() {
+  var sub = document.getElementById('tpFilterSub');
+  if(sub && sub.options.length <= 1) {
+    TP_SUBSYSTEMS.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; sub.appendChild(o); });
+  }
+  var msel = document.getElementById('tpSubSelect');
+  if(msel && msel.options.length === 0) {
+    TP_SUBSYSTEMS.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; msel.appendChild(o); });
+  }
+  var dept = document.getElementById('tpFilterDept');
+  if(dept) {
+    var depts = {};
+    tpAccounts.forEach(function(a){ if(a.dept) depts[a.dept]=1; });
+    Object.keys(depts).sort().forEach(function(d){
+      var exists = false;
+      for(var i=0;i<dept.options.length;i++){ if(dept.options[i].value===d){ exists=true; break; } }
+      if(!exists){ var o=document.createElement('option'); o.value=d; o.textContent=d; dept.appendChild(o); }
+    });
+  }
+}
+
+function renderTpAccounts() {
   var wrap = document.getElementById('tpTableWrap');
   if(!wrap) return;
   if(!LOGIN_USER) { wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--neutral-400)">请先登录</div>'; return; }
-  var keyword = (document.getElementById('tpSearch').value || '').trim().toLowerCase();
-  var statusF = document.getElementById('tpFilterStatus').value;
-  var catF = document.getElementById('tpFilterCat').value;
-  var list = thirdParty.filter(function(t){
-    if(statusF && t.status !== statusF) return false;
-    if(catF && t.category !== catF) return false;
-    if(keyword) {
-      var hay = (t.name+' '+(t.endpoint||'')+' '+(t.description||'')+' '+(t.authType||'')+' '+(t.category||'')).toLowerCase();
-      if(hay.indexOf(keyword) < 0) return false;
+  populateTpFilters();
+  var kw = (document.getElementById('tpSearch').value || '').trim().toLowerCase();
+  var stF = document.getElementById('tpFilterStatus').value;
+  var subF = document.getElementById('tpFilterSub').value;
+  var deptF = document.getElementById('tpFilterDept').value;
+  var list = tpAccounts.filter(function(a){
+    if(stF && a.status !== stF) return false;
+    if(subF && a.subsystem !== subF) return false;
+    if(deptF && a.dept !== deptF) return false;
+    if(kw) {
+      var hay = [a.name,a.empId,a.account,a.subsystem,tpFamily(a.subsystem),a.dept,a.job,a.title,a.remark].join(' ').toLowerCase();
+      if(hay.indexOf(kw) < 0) return false;
     }
     return true;
   });
   renderTpStats();
   if(list.length === 0) {
-    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--neutral-400)">'+(thirdParty.length===0?'暂无第三方系统，点击「接入系统」添加':'没有匹配的记录')+'</div>';
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--neutral-400)">'+(tpAccounts.length===0?'暂无账号，点击「新增账号」添加':'没有匹配的记录')+'</div>';
     return;
   }
-  var rows = list.map(function(t){
-    var sid = idArg(t.id);
-    var stCls = t.status === '已启用' ? 'active' : 'idle';
-    var lastSync = t.last_sync ? fmtTime(t.last_sync) : '—';
+  var famCls = {'勤方':'fam-qf','HIS':'fam-his','导检':'fam-dj','PACS':'fam-pacs','检验':'fam-jy','深睿':'fam-sr'};
+  var rows = list.map(function(a){
+    var sid = idArg(a.id);
+    var stCls = a.status === '启用' ? 'active' : 'idle';
+    var fam = tpFamily(a.subsystem);
+    var famc = famCls[fam] || '';
+    var expire = a.expireDate ? a.expireDate : '—';
+    var expCls = '';
+    if(a.expireDate && a.status === '启用') {
+      var t = new Date(a.expireDate + 'T00:00:00').getTime();
+      if(!isNaN(t) && t - Date.now() <= 30*86400000) expCls = 'badge-expire';
+    }
     var ops = '<div class="row-actions">'
       + '<button class="btn-icon" onclick="openTpModal(\''+sid+'\')" title="编辑">✏</button>'
-      + '<button class="btn-icon" onclick="testTpConn(\''+sid+'\')" title="测试连接">🔌</button>'
-      + '<button class="btn-icon danger" onclick="deleteTp(\''+sid+'\')" title="删除">🗑</button>'
+      + '<button class="btn-icon danger" onclick="deleteTpAccount(\''+sid+'\')" title="删除">🗑</button>'
       + '</div>';
     return '<tr>'
-      + '<td><strong>'+esc(t.name)+'</strong></td>'
-      + '<td>'+esc(t.category||'')+'</td>'
-      + '<td class="mono" style="white-space:normal;word-break:break-all;max-width:240px">'+esc(t.endpoint||'')+'</td>'
-      + '<td>'+esc(t.authType||'')+'</td>'
-      + '<td><span class="status-badge '+stCls+'">'+esc(t.status||'')+'</span></td>'
-      + '<td>'+esc(t.syncFreq||'')+'</td>'
-      + '<td style="font-size:12px;color:var(--neutral-500)">'+lastSync+'</td>'
+      + '<td><span class="tp-tag '+famc+'">'+esc(fam)+'</span></td>'
+      + '<td class="cell-strong">'+esc(a.subsystem||'')+'</td>'
+      + '<td>'+esc(a.dept||'')+'</td>'
+      + '<td>'+esc(a.job||'')+'</td>'
+      + '<td class="cell-strong">'+esc(a.name||'')+'</td>'
+      + '<td class="mono">'+esc(a.empId||'')+'</td>'
+      + '<td>'+esc(a.title||'')+'</td>'
+      + '<td>'+esc(a.hasPhoto||'无')+'</td>'
+      + '<td class="mono">'+esc(a.account||'')+'</td>'
+      + '<td><span class="status-badge '+stCls+'">'+esc(a.status||'')+'</span></td>'
+      + '<td>'+esc(a.openDate||'')+'</td>'
+      + '<td class="'+expCls+'">'+expire+'</td>'
+      + '<td style="color:var(--neutral-500);font-size:12px">'+esc(a.remark||'')+'</td>'
       + '<td>'+ops+'</td>'
       + '</tr>';
   }).join('');
   wrap.innerHTML = '<table class="tp-table"><thead><tr>'
-    + '<th>系统名称</th><th>分类</th><th>接入地址</th><th>认证方式</th><th>状态</th><th>同步频率</th><th>最近同步</th><th>操作</th>'
+    + '<th>系统</th><th>子系统</th><th>科室</th><th>岗位</th><th>姓名</th><th>工号</th><th>职称</th><th>照片</th><th>账号</th><th>状态</th><th>新增/修改日期</th><th>有效期止</th><th>备注</th><th>操作</th>'
     + '</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 function renderTpStats() {
-  var total = thirdParty.length;
-  var enabled = thirdParty.filter(function(t){ return t.status === '已启用'; }).length;
+  var total = tpAccounts.length;
+  var enabled = tpAccounts.filter(function(a){ return a.status === '启用'; }).length;
   var disabled = total - enabled;
-  var recent = thirdParty.filter(function(t){ return t.last_sync && (Date.now() - t.last_sync) < 86400000; }).length;
+  var soon = 0;
+  tpAccounts.forEach(function(a){
+    if(a.expireDate && a.status === '启用') {
+      var t = new Date(a.expireDate + 'T00:00:00').getTime();
+      if(!isNaN(t) && t - Date.now() >= 0 && t - Date.now() <= 30*86400000) soon++;
+    }
+  });
   document.getElementById('tpStatRow').innerHTML =
-    tpStatCard('接入系统总数', total, 'var(--accent)')
-    + tpStatCard('已启用', enabled, '#3B6D11')
-    + tpStatCard('已停用', disabled, 'var(--neutral-400)')
-    + tpStatCard('24h内同步', recent, 'var(--primary)');
+    tpStatCard('账号总数', total, 'var(--accent)')
+    + tpStatCard('启用', enabled, '#3B6D11')
+    + tpStatCard('停用', disabled, 'var(--neutral-400)')
+    + tpStatCard('30天内到期', soon, '#b45309');
 }
 function tpStatCard(label, val, color) {
   return '<div class="metric-card"><div class="metric-label">'+label+'</div><div class="metric-value" style="color:'+color+'">'+val+'</div></div>';
 }
-
 function fmtTime(ts) {
   if(!ts) return '—';
   var d = new Date(ts);
@@ -5929,144 +6006,149 @@ function fmtTime(ts) {
   return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
 }
 
-function tpFieldVal(n) { var el = document.querySelector('#tpForm [name="'+n+'"]'); return el ? el.value : ''; }
-function tpFieldSet(n, v) { var el = document.querySelector('#tpForm [name="'+n+'"]'); if(el) el.value = v; }
+function tpFieldVal(n){ var el=document.querySelector('#tpForm [name="'+n+'"]'); return el?el.value:''; }
+function tpFieldSet(n,v){ var el=document.querySelector('#tpForm [name="'+n+'"]'); if(el) el.value=v||''; }
 
 function openTpModal(id) {
-  if(!LOGIN_USER) { showToast('请先登录', 'error'); return; }
-  if(LOGIN_USER.role !== 'admin') { showToast('仅管理员可管理第三方系统', 'error'); return; }
+  if(!LOGIN_USER){ showToast('请先登录','error'); return; }
+  if(LOGIN_USER.role!=='admin'){ showToast('仅管理员可管理账号','error'); return; }
+  populateTpFilters();
   tpEditingId = id || null;
-  document.getElementById('tpModalTitle').textContent = id ? '编辑第三方系统' : '接入第三方系统';
+  document.getElementById('tpModalTitle').textContent = id ? '编辑账号' : '新增账号';
   document.getElementById('tpForm').reset();
   if(id) {
-    var t = thirdParty.find(function(x){ return x.id === id; });
-    if(t) {
-      tpFieldSet('name', t.name || '');
-      tpFieldSet('category', t.category || '其他');
-      tpFieldSet('endpoint', t.endpoint || '');
-      tpFieldSet('authType', t.authType || 'API Key');
-      tpFieldSet('status', t.status || '已启用');
-      tpFieldSet('syncFreq', t.syncFreq || '手动');
-      tpFieldSet('authConfig', t.authConfig || '');
-      tpFieldSet('description', t.description || '');
+    var a = tpAccounts.find(function(x){ return x.id===id; });
+    if(a) {
+      tpFieldSet('name', a.name||'');
+      tpFieldSet('empId', a.empId||'');
+      tpFieldSet('dept', a.dept||'');
+      tpFieldSet('job', a.job||'');
+      tpFieldSet('title', a.title||'');
+      tpFieldSet('hasPhoto', a.hasPhoto||'无');
+      tpFieldSet('subsystem', a.subsystem||'');
+      tpFieldSet('account', a.account||'');
+      tpFieldSet('status', a.status||'启用');
+      tpFieldSet('openDate', a.openDate||'');
+      tpFieldSet('expireDate', a.expireDate||'');
+      tpFieldSet('remark', a.remark||'');
     }
   }
   document.getElementById('tpModal').classList.add('active');
 }
-function closeTpModal() { document.getElementById('tpModal').classList.remove('active'); }
+function closeTpModal(){ document.getElementById('tpModal').classList.remove('active'); }
 
-function saveTp() {
-  if(!LOGIN_USER || LOGIN_USER.role !== 'admin') { showToast('仅管理员可修改', 'error'); closeTpModal(); return; }
+function saveTpAccount() {
+  if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); closeTpModal(); return; }
   var name = tpFieldVal('name').trim();
-  if(!name) { showToast('请填写系统名称', 'error'); return; }
-  var authConfig = tpFieldVal('authConfig').trim();
-  if(authConfig) {
-    try { JSON.parse(authConfig); } catch(e) { showToast('认证配置不是合法 JSON', 'error'); return; }
-  }
+  var subsystem = tpFieldVal('subsystem');
+  if(!name){ showToast('请填写姓名','error'); return; }
+  if(!subsystem){ showToast('请选择子系统','error'); return; }
   var editing = !!tpEditingId;
-  var prev = editing ? (thirdParty.find(function(x){ return x.id === tpEditingId; }) || {}) : {};
   var rec = {
-    id: tpEditingId || (Date.now().toString(36) + Math.random().toString(36).slice(2,8)),
+    id: tpEditingId || (Date.now().toString(36)+Math.random().toString(36).slice(2,8)),
     name: name,
-    category: tpFieldVal('category'),
-    endpoint: tpFieldVal('endpoint').trim(),
-    authType: tpFieldVal('authType'),
+    empId: tpFieldVal('empId').trim(),
+    dept: tpFieldVal('dept').trim(),
+    job: tpFieldVal('job').trim(),
+    title: tpFieldVal('title').trim(),
+    hasPhoto: tpFieldVal('hasPhoto'),
+    subsystem: subsystem,
+    account: tpFieldVal('account').trim(),
     status: tpFieldVal('status'),
-    syncFreq: tpFieldVal('syncFreq'),
-    authConfig: authConfig,
-    description: tpFieldVal('description').trim(),
-    _mt: Date.now(),
-    last_sync: prev.last_sync || null
+    openDate: tpFieldVal('openDate'),
+    expireDate: tpFieldVal('expireDate'),
+    remark: tpFieldVal('remark').trim(),
+    _mt: Date.now()
   };
   if(editing) {
-    var idx = thirdParty.findIndex(function(x){ return x.id === tpEditingId; });
-    if(idx >= 0) thirdParty[idx] = rec;
-    addOpLog('编辑', '第三方系统「'+name+'」', '分类:'+rec.category);
+    var idx = tpAccounts.findIndex(function(x){ return x.id===tpEditingId; });
+    if(idx>=0) tpAccounts[idx]=rec;
+    addOpLog('编辑','第三方账号「'+name+'·'+subsystem+'」','状态:'+rec.status);
   } else {
-    thirdParty.push(rec);
-    addOpLog('新增', '第三方系统「'+name+'」', '分类:'+rec.category);
+    tpAccounts.push(rec);
+    addOpLog('新增','第三方账号「'+name+'·'+subsystem+'」','状态:'+rec.status);
   }
   TP_DIRTY = true;
   saveThirdPartyToStorage();
   closeTpModal();
-  renderThirdParty();
-  showToast(editing ? '已保存' : '已接入', 'success');
+  renderTpAccounts();
+  showToast(editing?'已保存':'已新增','success');
 }
 
-function deleteTp(id) {
-  if(!LOGIN_USER || LOGIN_USER.role !== 'admin') { showToast('仅管理员可删除', 'error'); return; }
-  var t = thirdParty.find(function(x){ return x.id === id; });
-  if(!t) return;
-  document.getElementById('confirmMsg').textContent = '确认删除第三方系统「'+(t.name||'')+'」？此操作不可撤销。';
+function deleteTpAccount(id) {
+  if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可删除','error'); return; }
+  var a = tpAccounts.find(function(x){ return x.id===id; });
+  if(!a) return;
+  document.getElementById('confirmMsg').textContent = '确认删除账号「'+(a.name||'')+' · '+(a.subsystem||'')+'」？此操作不可撤销。';
   document.getElementById('confirmDialog').classList.add('active');
   confirmCb = function() {
-    thirdParty = thirdParty.filter(function(x){ return x.id !== id; });
+    tpAccounts = tpAccounts.filter(function(x){ return x.id!==id; });
     TP_DIRTY = true;
     saveThirdPartyToStorage();
-    addOpLog('删除', '第三方系统「'+(t.name||'')+'」', '分类:'+(t.category||''));
-    renderThirdParty();
-    showToast('已删除', 'success');
+    addOpLog('删除','第三方账号「'+(a.name||'')+' · '+(a.subsystem||'')+'」','');
+    renderTpAccounts();
+    showToast('已删除','success');
   };
 }
 
-// 演示级连接测试：校验地址格式并记录最近同步时间（真实探活可在此对接实际请求）
-function testTpConn(id) {
-  if(!LOGIN_USER) { showToast('请先登录', 'error'); return; }
-  if(LOGIN_USER.role !== 'admin') { showToast('仅管理员可测试连接', 'error'); return; }
-  var t = thirdParty.find(function(x){ return x.id === id; });
-  if(!t) return;
-  if(t.status === '已停用') { showToast('系统已停用，请先启用再测试', 'error'); return; }
-  if(!t.endpoint || !/^https?:\/\/|^ldap:\/\/|^ftp:\/\//i.test(t.endpoint)) {
-    showToast('接入地址格式不正确，无法测试', 'error'); return;
-  }
-  t.last_sync = Date.now();
-  t._mt = Date.now();
-  TP_DIRTY = true;
-  saveThirdPartyToStorage();
-  addOpLog('测试连接', '第三方系统「'+(t.name||'')+'」', '地址:'+(t.endpoint||''));
-  renderThirdParty();
-  showToast('连接测试成功（演示）', 'success');
-}
-
 function exportTpCSV() {
-  if(thirdParty.length === 0) { showToast('暂无数据可导出', 'error'); return; }
-  var headers = ['系统名称','分类','接入地址','认证方式','状态','同步频率','认证配置','最近同步','说明'];
+  if(tpAccounts.length === 0){ showToast('暂无数据可导出','error'); return; }
+  var headers = ['系统','子系统','科室','岗位','姓名','工号','职称','是否有照片','账号','状态','新增/修改日期','有效期止','备注'];
   var csv = '﻿' + headers.join(',') + '\n';
-  thirdParty.forEach(function(t){
-    var row = [t.name||'', t.category||'', t.endpoint||'', t.authType||'', t.status||'', t.syncFreq||'', t.authConfig||'', t.last_sync?fmtTime(t.last_sync):'', t.description||''];
-    csv += row.map(function(v){ v = String(v); if(v.indexOf(',')>=0 || v.indexOf('"')>=0 || v.indexOf('\n')>=0) v = '"'+v.replace(/"/g,'""')+'"'; return v; }).join(',') + '\n';
+  tpAccounts.forEach(function(a){
+    var row = [tpFamily(a.subsystem), a.subsystem||'', a.dept||'', a.job||'', a.name||'', a.empId||'', a.title||'', a.hasPhoto||'无', a.account||'', a.status||'', a.openDate||'', a.expireDate||'', a.remark||''];
+    csv += row.map(function(v){ v=String(v); if(v.indexOf(',')>=0||v.indexOf('"')>=0||v.indexOf('\n')>=0) v='"'+v.replace(/"/g,'""')+'"'; return v; }).join(',') + '\n';
   });
   var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = '第三方系统_'+new Date().toISOString().slice(0,10)+'.csv';
-  a.click();
-  showToast('已导出CSV', 'success');
+  var aEl = document.createElement('a');
+  aEl.href = URL.createObjectURL(blob);
+  aEl.download = '第三方系统账号_'+new Date().toISOString().slice(0,10)+'.csv';
+  aEl.click();
+  showToast('已导出CSV','success');
 }
 
 function tpDebounceSearch() {
   if(tpSearchTimer) clearTimeout(tpSearchTimer);
-  tpSearchTimer = setTimeout(renderThirdParty, 250);
+  tpSearchTimer = setTimeout(renderTpAccounts, 250);
 }
 
-// ---- 持久化与云端同步（thirdparty.json，复用 GH_TOKEN） ----
+// ---- 侧边栏手动收缩（状态持久化到 localStorage）----
+function toggleSidebar() {
+  var sb = document.getElementById('sidebar');
+  if(!sb) return;
+  var collapsed = sb.classList.toggle('collapsed');
+  try { localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0'); } catch(e) {}
+  var btn = document.querySelector('.sidebar-collapse-btn');
+  if(btn) btn.querySelector('.ico').textContent = collapsed ? '»' : '«';
+}
+function applySidebarState() {
+  var collapsed = false;
+  try { collapsed = localStorage.getItem('sidebar_collapsed') === '1'; } catch(e) {}
+  var sb = document.getElementById('sidebar');
+  if(!sb) return;
+  sb.classList.toggle('collapsed', collapsed);
+  var btn = document.querySelector('.sidebar-collapse-btn');
+  if(btn) btn.querySelector('.ico').textContent = collapsed ? '»' : '«';
+}
+
+// ---- 持久化与云端同步（thirdparty.json，复用 GH_TOKEN）----
 function saveThirdPartyToStorage() {
-  try { localStorage.setItem('ledger_thirdparty', JSON.stringify(thirdParty)); } catch(e) {}
+  try { localStorage.setItem('ledger_thirdparty', JSON.stringify(tpAccounts)); } catch(e) {}
   if(GH_TOKEN) syncThirdPartyToGitHub();
 }
 
 // 按 id 合并本地与云端，_mt 大的一方胜出（多端一致）
 function mergeThirdParty(cloud) {
-  if(!cloud || !cloud.length) return thirdParty.slice();
+  if(!cloud || !cloud.length) return tpAccounts.slice();
   var map = {};
-  thirdParty.forEach(function(t){ if(t && t.id) map[t.id] = t; });
-  cloud.forEach(function(t){
-    if(!t || !t.id) return;
-    var cur = map[t.id];
-    if(!cur) { map[t.id] = t; return; }
+  tpAccounts.forEach(function(a){ if(a && a.id) map[a.id] = a; });
+  cloud.forEach(function(a){
+    if(!a || !a.id || !a.subsystem) return; // 忽略旧版"系统"格式记录（无 subsystem 字段）
+    var cur = map[a.id];
+    if(!cur) { map[a.id] = a; return; }
     var cm = (typeof cur._mt === 'number') ? cur._mt : 0;
-    var tm = (typeof t._mt === 'number') ? t._mt : 0;
-    if(tm >= cm) map[t.id] = t;
+    var tm = (typeof a._mt === 'number') ? a._mt : 0;
+    if(tm >= cm) map[a.id] = a;
   });
   return Object.keys(map).map(function(k){ return map[k]; });
 }
@@ -6084,11 +6166,12 @@ function syncThirdPartyFromCloud() {
         var info = JSON.parse(xhr.responseText);
         TP_SHA = info.sha;
         var cloud = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
+        cloud = (cloud||[]).filter(function(x){ return x && x.subsystem; }); // 迁移守卫：丢弃旧版系统格式
         if(cloud && cloud.length) {
-          var before = JSON.stringify(thirdParty);
-          thirdParty = mergeThirdParty(cloud);
-          try { localStorage.setItem('ledger_thirdparty', JSON.stringify(thirdParty)); } catch(e) {}
-          if(JSON.stringify(thirdParty) !== before && currentView === 'thirdparty') renderThirdParty();
+          var before = JSON.stringify(tpAccounts);
+          tpAccounts = mergeThirdParty(cloud);
+          try { localStorage.setItem('ledger_thirdparty', JSON.stringify(tpAccounts)); } catch(e) {}
+          if(JSON.stringify(tpAccounts) !== before && currentView === 'thirdparty') renderTpAccounts();
           if(TP_DIRTY) syncThirdPartyToGitHub();
         }
       } catch(e) {}
@@ -6098,9 +6181,9 @@ function syncThirdPartyFromCloud() {
 }
 
 function syncThirdPartyToGitHub(callback) {
-  if(!GH_TOKEN) { if(callback) callback(false); return; }
+  if(!GH_TOKEN){ if(callback) callback(false); return; }
   var b64;
-  try { b64 = utf8ToBase64(JSON.stringify(thirdParty, null, 2)); } catch(e) { if(callback) callback(false); return; }
+  try { b64 = utf8ToBase64(JSON.stringify(tpAccounts, null, 2)); } catch(e) { if(callback) callback(false); return; }
   var payload = {message: 'update thirdparty.json', content: b64};
   if(TP_SHA) payload.sha = TP_SHA;
   var xhr = new XMLHttpRequest();
@@ -6127,8 +6210,8 @@ function syncThirdPartyToGitHub(callback) {
             TP_SHA = info.sha;
             try {
               var cloud = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
-              if(cloud && cloud.length) thirdParty = mergeThirdParty(cloud);
-              payload.content = utf8ToBase64(JSON.stringify(thirdParty, null, 2));
+              if(cloud && cloud.length) tpAccounts = mergeThirdParty(cloud);
+              payload.content = utf8ToBase64(JSON.stringify(tpAccounts, null, 2));
             } catch(e) {}
             payload.sha = TP_SHA;
             var retry = new XMLHttpRequest();
@@ -6155,6 +6238,7 @@ function syncThirdPartyToGitHub(callback) {
   xhr.onerror = function(){ if(callback) callback(false); };
   xhr.send(JSON.stringify(payload));
 }
+
 
 </script>
 
