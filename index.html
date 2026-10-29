@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>上海外服门诊部电脑台账系统</title>
+<title>上海外服门诊部运管系统</title>
 <style>
 /* ===== Design System: CSS Variables ===== */
 :root {
@@ -275,6 +275,20 @@ a:hover{color:var(--primary-600)}
 .tp-tag.fam-sr{background:#ffe4e6;color:#9f1239}
 .badge-expire{color:#b45309;font-weight:600}
 
+/* ===== 第三方：一人一行（账号 1 对多，点开查看明细） ===== */
+.tp-person-row{cursor:pointer}
+.tp-person-row:hover{background:var(--neutral-50)}
+.tp-chev{width:32px;text-align:center;color:var(--neutral-400);font-size:12px;user-select:none}
+.tp-count{display:inline-block;min-width:22px;padding:1px 8px;background:var(--neutral-100);border-radius:10px;font-size:12px;text-align:center;color:var(--neutral-600)}
+.status-badge.mixed{background:#fef3c7;color:#92400e}
+.tp-detail-row>td{padding:0 !important;background:var(--neutral-50);border-bottom:1px solid var(--neutral-100)}
+.tp-detail{padding:14px 18px 18px 52px}
+.tp-subtable{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border:1px solid var(--neutral-100);border-radius:var(--radius-md);overflow:hidden}
+.tp-subtable th{background:var(--neutral-50);color:var(--neutral-500);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--neutral-100);white-space:nowrap}
+.tp-subtable td{padding:8px 10px;border-bottom:0.5px solid var(--neutral-50);vertical-align:top}
+.tp-subtable tr:last-child td{border-bottom:none}
+.tp-empty{padding:18px 4px;color:var(--neutral-400);font-size:13px}
+
 </style>
 </head>
 <body>
@@ -282,7 +296,7 @@ a:hover{color:var(--primary-600)}
 <!-- Login -->
 <div class="login-wrap" id="loginWrap">
 <div class="login-box">
-<h2>上海外服门诊部电脑台账系统</h2>
+<h2>上海外服门诊部运管系统</h2>
 <div class="sub">请登录后使用</div>
 <div class="field"><label>用户名</label><input type="text" id="loginUser" placeholder="请输入用户名" autocomplete="username"></div>
 <div class="field"><label>密码</label><input type="password" id="loginPass" placeholder="请输入密码" autocomplete="current-password"></div>
@@ -296,7 +310,7 @@ a:hover{color:var(--primary-600)}
 <div class="app-wrap" id="appWrap">
 <!-- Header -->
 <header class="header">
-<h1>上海外服门诊部电脑台账系统 <span style="font-size:10px;opacity:0.6">v20260926f</span></h1>
+<h1>上海外服门诊部运管系统 <span style="font-size:10px;opacity:0.6">v20260926f</span></h1>
 <div class="header-spacer"></div>
 <span id="syncStatus" style="font-size:11px;opacity:0.85;margin-right:12px"></span>
 <div class="header-user">
@@ -310,7 +324,7 @@ a:hover{color:var(--primary-600)}
 
 <div class="app-body">
 <aside class="sidebar collapsed" id="sidebar">
-  <div class="sidebar-brand"><span class="brand-ico">💻</span><span class="txt">电脑台账系统</span></div>
+  <div class="sidebar-brand"><span class="brand-ico">💻</span><span class="txt">运管系统</span></div>
   <nav class="sidebar-nav">
     <a class="nav-item active" data-view="ledger" onclick="switchView('ledger')" title="设备台账"><span class="nav-ico">🖥️</span><span class="nav-txt">设备台账</span></a>
     <a class="nav-item" data-view="thirdparty" onclick="switchView('thirdparty')" title="第三方系统账号管理"><span class="nav-ico">🔗</span><span class="nav-txt">第三方系统账号管理</span></a>
@@ -472,7 +486,7 @@ a:hover{color:var(--primary-600)}
 </div>
 </div>
 
-<h2 class="sr-only">上海外服门诊部电脑台账系统资产总览</h2>
+<h2 class="sr-only">上海外服门诊部运管系统资产总览</h2>
 
 <script type="application/json" <script type="application/json" id="ledger-data">
 [
@@ -4705,6 +4719,7 @@ var TP_SHA = null;        // 云端 thirdparty.json 的 blob SHA
 var TP_DIRTY = false;     // 本地有改动尚未推送云端
 var tpEditingId = null;
 var tpSearchTimer = null;
+var tpExpanded = {};     // 已展开的人员 key（empId 或 "n:姓名"），用于一人一行下的账号明细
 var currentView = 'ledger';
 // 第三方供应商系统的 20 个子系统（对应 Excel 第 I~AB 列）
 var TP_SUBSYSTEMS = ['勤方分科','勤方分科-身高','勤方分科-视力','勤方分科-血压','勤方分科-肺功能','勤方采血签到','勤方登记','勤方主检','勤方总控','勤方主检排班','HIS门诊/体检','HIS收费','HIS物资','导检叫号','导检总控台','PACS登记','PACS报告','PACS审核','检验','深睿'];
@@ -5936,6 +5951,22 @@ function populateTpFilters() {
   }
 }
 
+function groupTpPersons() {
+  var map = {};
+  for(var i=0;i<tpAccounts.length;i++){
+    var a = tpAccounts[i];
+    var key = (a.empId && String(a.empId).trim()) ? String(a.empId).trim() : ('n:'+(a.name||'匿名'));
+    if(!map[key]) map[key] = {key:key, empId:a.empId, name:a.name, dept:a.dept, job:a.job, title:a.title, hasPhoto:a.hasPhoto, accounts:[]};
+    map[key].accounts.push(a);
+  }
+  return Object.keys(map).map(function(k){ return map[k]; });
+}
+
+function toggleTpPerson(pid) {
+  if(tpExpanded[pid]) delete tpExpanded[pid]; else tpExpanded[pid] = 1;
+  renderTpAccounts();
+}
+
 function renderTpAccounts() {
   var wrap = document.getElementById('tpTableWrap');
   if(!wrap) return;
@@ -5945,46 +5976,82 @@ function renderTpAccounts() {
   var stF = document.getElementById('tpFilterStatus').value;
   var subF = document.getElementById('tpFilterSub').value;
   var deptF = document.getElementById('tpFilterDept').value;
-  var list = tpAccounts.filter(function(a){
-    if(stF && a.status !== stF) return false;
-    if(subF && a.subsystem !== subF) return false;
-    if(deptF && a.dept !== deptF) return false;
+  // 按人员聚合：一人一行，账号为 1 对多
+  var persons = groupTpPersons();
+  var list = persons.filter(function(p){
+    if(stF && !p.accounts.some(function(a){ return a.status===stF; })) return false;
+    if(subF && !p.accounts.some(function(a){ return a.subsystem===subF; })) return false;
+    if(deptF && !p.accounts.some(function(a){ return a.dept===deptF; })) return false;
     if(kw) {
-      var hay = [a.name,a.empId,a.account,a.subsystem,tpFamily(a.subsystem),a.dept,a.job,a.title,a.remark].join(' ').toLowerCase();
+      var hay = [p.name,p.empId,p.dept,p.job,p.title].concat(p.accounts.map(function(a){
+        return [a.subsystem,a.account,a.status,a.remark,tpFamily(a.subsystem)].join(' ');
+      })).join(' ').toLowerCase();
       if(hay.indexOf(kw) < 0) return false;
     }
     return true;
   });
+  list.sort(function(a,b){ return String(a.empId||'').localeCompare(String(b.empId||'')) || String(a.name||'').localeCompare(String(b.name||'')); });
   renderTpStats();
   if(list.length === 0) {
     wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--neutral-400)">'+(tpAccounts.length===0?'暂无账号，点击「新增账号」添加':'没有匹配的记录')+'</div>';
     return;
   }
+  var rowsHtml = list.map(function(p){ return tpPersonRowHtml(p); }).join('');
+  wrap.innerHTML = '<table class="tp-table"><thead><tr>'
+    + '<th class="tp-chev"></th><th>姓名</th><th>工号</th><th>科室</th><th>岗位</th><th>职称</th><th>照片</th><th>账号数</th><th>状态</th><th>操作</th>'
+    + '</tr></thead><tbody>'+rowsHtml+'</tbody></table>';
+}
+
+function tpPersonRowHtml(p) {
+  var pid = idArg(p.key);
+  var expanded = !!tpExpanded[p.key];
+  var n = p.accounts.length;
+  var en = p.accounts.filter(function(a){ return a.status==='启用'; }).length;
+  var dis = n - en;
+  var statusHtml;
+  if(n===0) statusHtml = '—';
+  else if(dis===0) statusHtml = '<span class="status-badge active">全部启用</span>';
+  else if(en===0) statusHtml = '<span class="status-badge idle">全部停用</span>';
+  else statusHtml = '<span class="status-badge mixed">启用'+en+'/停用'+dis+'</span>';
+  var row = '<tr class="tp-person-row" onclick="toggleTpPerson(\''+pid+'\')">'
+    + '<td class="tp-chev">'+(expanded?'▾':'▸')+'</td>'
+    + '<td class="cell-strong">'+esc(p.name||'')+'</td>'
+    + '<td class="mono">'+esc(p.empId||'')+'</td>'
+    + '<td>'+esc(p.dept||'')+'</td>'
+    + '<td>'+esc(p.job||'')+'</td>'
+    + '<td>'+esc(p.title||'')+'</td>'
+    + '<td>'+esc(p.hasPhoto||'无')+'</td>'
+    + '<td><span class="tp-count">'+n+'</span></td>'
+    + '<td>'+statusHtml+'</td>'
+    + '<td><button class="btn-icon" title="新增该人员账号" onclick="event.stopPropagation();openTpModal(null,\''+pid+'\')">＋</button></td>'
+    + '</tr>';
+  if(expanded) {
+    row += '<tr class="tp-detail-row"><td colspan="10"><div class="tp-detail">'+tpPersonDetailHtml(p)+'</div></td></tr>';
+  }
+  return row;
+}
+
+function tpPersonDetailHtml(p) {
+  if(p.accounts.length===0) return '<div class="tp-empty">该人员暂无账号</div>';
   var famCls = {'勤方':'fam-qf','HIS':'fam-his','导检':'fam-dj','PACS':'fam-pacs','检验':'fam-jy','深睿':'fam-sr'};
-  var rows = list.map(function(a){
+  var rows = p.accounts.map(function(a){
     var sid = idArg(a.id);
-    var stCls = a.status === '启用' ? 'active' : 'idle';
+    var stCls = a.status==='启用' ? 'active' : 'idle';
     var fam = tpFamily(a.subsystem);
     var famc = famCls[fam] || '';
     var expire = a.expireDate ? a.expireDate : '—';
     var expCls = '';
-    if(a.expireDate && a.status === '启用') {
+    if(a.expireDate && a.status==='启用') {
       var t = new Date(a.expireDate + 'T00:00:00').getTime();
       if(!isNaN(t) && t - Date.now() <= 30*86400000) expCls = 'badge-expire';
     }
     var ops = '<div class="row-actions">'
-      + '<button class="btn-icon" onclick="openTpModal(\''+sid+'\')" title="编辑">✏</button>'
-      + '<button class="btn-icon danger" onclick="deleteTpAccount(\''+sid+'\')" title="删除">🗑</button>'
+      + '<button class="btn-icon" onclick="event.stopPropagation();openTpModal(\''+sid+'\')" title="编辑">✏</button>'
+      + '<button class="btn-icon danger" onclick="event.stopPropagation();deleteTpAccount(\''+sid+'\')" title="删除">🗑</button>'
       + '</div>';
     return '<tr>'
       + '<td><span class="tp-tag '+famc+'">'+esc(fam)+'</span></td>'
       + '<td class="cell-strong">'+esc(a.subsystem||'')+'</td>'
-      + '<td>'+esc(a.dept||'')+'</td>'
-      + '<td>'+esc(a.job||'')+'</td>'
-      + '<td class="cell-strong">'+esc(a.name||'')+'</td>'
-      + '<td class="mono">'+esc(a.empId||'')+'</td>'
-      + '<td>'+esc(a.title||'')+'</td>'
-      + '<td>'+esc(a.hasPhoto||'无')+'</td>'
       + '<td class="mono">'+esc(a.account||'')+'</td>'
       + '<td><span class="status-badge '+stCls+'">'+esc(a.status||'')+'</span></td>'
       + '<td>'+esc(a.openDate||'')+'</td>'
@@ -5993,12 +6060,13 @@ function renderTpAccounts() {
       + '<td>'+ops+'</td>'
       + '</tr>';
   }).join('');
-  wrap.innerHTML = '<table class="tp-table"><thead><tr>'
-    + '<th>系统</th><th>子系统</th><th>科室</th><th>岗位</th><th>姓名</th><th>工号</th><th>职称</th><th>照片</th><th>账号</th><th>状态</th><th>新增/修改日期</th><th>有效期止</th><th>备注</th><th>操作</th>'
+  return '<table class="tp-subtable"><thead><tr>'
+    + '<th>系统</th><th>子系统</th><th>账号</th><th>状态</th><th>新增/修改日期</th><th>有效期止</th><th>备注</th><th>操作</th>'
     + '</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 function renderTpStats() {
+  var people = groupTpPersons().length;
   var total = tpAccounts.length;
   var enabled = tpAccounts.filter(function(a){ return a.status === '启用'; }).length;
   var disabled = total - enabled;
@@ -6010,7 +6078,8 @@ function renderTpStats() {
     }
   });
   document.getElementById('tpStatRow').innerHTML =
-    tpStatCard('账号总数', total, 'var(--accent)')
+    tpStatCard('人员数', people, 'var(--accent)')
+    + tpStatCard('账号总数', total, '#3B6D11')
     + tpStatCard('启用', enabled, '#3B6D11')
     + tpStatCard('停用', disabled, 'var(--neutral-400)')
     + tpStatCard('30天内到期', soon, '#b45309');
@@ -6028,7 +6097,7 @@ function fmtTime(ts) {
 function tpFieldVal(n){ var el=document.querySelector('#tpForm [name="'+n+'"]'); return el?el.value:''; }
 function tpFieldSet(n,v){ var el=document.querySelector('#tpForm [name="'+n+'"]'); if(el) el.value=v||''; }
 
-function openTpModal(id) {
+function openTpModal(id, empId) {
   if(!LOGIN_USER){ showToast('请先登录','error'); return; }
   if(LOGIN_USER.role!=='admin'){ showToast('仅管理员可管理账号','error'); return; }
   populateTpFilters();
@@ -6050,6 +6119,17 @@ function openTpModal(id) {
       tpFieldSet('openDate', a.openDate||'');
       tpFieldSet('expireDate', a.expireDate||'');
       tpFieldSet('remark', a.remark||'');
+    }
+  } else if(empId) {
+    // 新增某人员账号：带入其姓名/工号/科室等公共信息
+    var p = tpAccounts.find(function(x){ return x.empId===empId; });
+    if(p) {
+      tpFieldSet('name', p.name||'');
+      tpFieldSet('empId', p.empId||'');
+      tpFieldSet('dept', p.dept||'');
+      tpFieldSet('job', p.job||'');
+      tpFieldSet('title', p.title||'');
+      tpFieldSet('hasPhoto', p.hasPhoto||'无');
     }
   }
   document.getElementById('tpModal').classList.add('active');
