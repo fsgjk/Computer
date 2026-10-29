@@ -27795,17 +27795,17 @@
     "id": "tp_527_18",
     "name": "梁丹怡",
     "empId": "6016",
-    "dept": "业务",
+    "dept": "",
     "job": "报表",
     "title": "",
-    "hasPhoto": "",
+    "hasPhoto": "无",
     "subsystem": "HIS门诊/体检",
     "account": "WF6016",
     "status": "启用",
     "openDate": "2024-03-15",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793251198511
   },
   {
     "id": "tp_528_18",
