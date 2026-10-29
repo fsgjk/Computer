@@ -28686,5 +28686,21 @@
     "expireDate": "",
     "remark": "",
     "_mt": 1793241940260
+  },
+  {
+    "id": "mvt2vp39hbcnjh",
+    "name": "缪虹",
+    "empId": "1050",
+    "dept": "放射科",
+    "job": "DR医生",
+    "title": "",
+    "hasPhoto": "有",
+    "subsystem": "勤方分科",
+    "account": "",
+    "status": "启用",
+    "openDate": "",
+    "expireDate": "",
+    "remark": "",
+    "_mt": 1793250219717
   }
 ]
