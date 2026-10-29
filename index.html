@@ -291,6 +291,7 @@ a:hover{color:var(--primary-600)}
 .tp-stat-clickable{cursor:pointer;transition:transform .1s,box-shadow .15s;user-select:none}
 .tp-stat-clickable:hover{transform:translateY(-1px);box-shadow:0 2px 10px rgba(15,23,42,.12)}
 .tp-stat-clickable.active{outline:2px solid var(--primary-400);outline-offset:-2px}
+.tp-person-hint{margin-top:12px;padding:10px 12px;background:var(--neutral-50);border:1px solid var(--neutral-100);border-radius:var(--radius-md);font-size:12px;color:var(--neutral-500);line-height:1.6}
 
 </style>
 </head>
@@ -412,6 +413,25 @@ a:hover{color:var(--primary-600)}
       </form>
     </div>
     <div class="modal-footer"><button class="btn btn-secondary" onclick="closeTpModal()">取消</button><button class="btn btn-primary" onclick="saveTpAccount()">保存</button></div>
+  </div>
+</div>
+
+<!-- 编辑人员基本信息 弹窗（仅基本信息，不含子系统/账号/状态） -->
+<div class="modal-overlay" id="tpPersonModal" role="dialog" aria-modal="true" aria-label="编辑人员基本信息">
+  <div class="modal">
+    <div class="modal-header"><h3 id="tpPersonModalTitle">编辑人员基本信息</h3><button class="modal-close" onclick="closeTpPersonModal()" aria-label="关闭">✕</button></div>
+    <div class="modal-body">
+      <form class="form-grid" id="tpPersonForm">
+        <div class="form-group"><label>姓名 *</label><input name="name" placeholder="账号使用人"></div>
+        <div class="form-group"><label>工号</label><input name="empId" placeholder="院内工号"></div>
+        <div class="form-group"><label>科室</label><input name="dept" placeholder="如 超声室"></div>
+        <div class="form-group"><label>岗位</label><input name="job" placeholder="如 B超医生"></div>
+        <div class="form-group"><label>职称</label><input name="title" placeholder="如 主治医师"></div>
+        <div class="form-group"><label>是否有照片</label><select name="hasPhoto"><option value="无">无</option><option value="有">有</option></select></div>
+      </form>
+      <div class="tp-person-hint">仅修改该人员的基本信息，将同步到其名下全部账号；子系统 / 账号 / 账号状态请在展开后的账号明细中单独修改。</div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeTpPersonModal()">取消</button><button class="btn btn-primary" onclick="saveTpPerson()">保存</button></div>
   </div>
 </div>
 
@@ -4724,6 +4744,7 @@ var tpEditingId = null;
 var tpSearchTimer = null;
 var tpExpanded = {};     // 已展开的人员 key（empId 或 "n:姓名"），用于一人一行下的账号明细
 var tpExpireSoon = false; // 是否按"30天内到期"筛选（顶部统计卡片点击触发）
+var tpPersonEditId = null; // 当前正在编辑基本信息的人员 empId
 var currentView = 'ledger';
 // 第三方供应商系统的 20 个子系统（对应 Excel 第 I~AB 列）
 var TP_SUBSYSTEMS = ['勤方分科','勤方分科-身高','勤方分科-视力','勤方分科-血压','勤方分科-肺功能','勤方采血签到','勤方登记','勤方主检','勤方总控','勤方主检排班','HIS门诊/体检','HIS收费','HIS物资','导检叫号','导检总控台','PACS登记','PACS报告','PACS审核','检验','深睿'];
@@ -6049,7 +6070,8 @@ function tpPersonRowHtml(p) {
     + '<td>'+esc(p.hasPhoto||'无')+'</td>'
     + '<td><span class="tp-count">'+n+'</span></td>'
     + '<td>'+statusHtml+'</td>'
-    + '<td><button class="btn-icon" title="新增该人员账号" onclick="event.stopPropagation();openTpModal(null,\''+pid+'\')">＋</button></td>'
+    + '<td><button class="btn-icon" title="编辑人员基本信息" onclick="event.stopPropagation();openTpPersonModal(\''+pid+'\')">✎</button>'
+    + '<button class="btn-icon" title="新增该人员账号" onclick="event.stopPropagation();openTpModal(null,\''+pid+'\')">＋</button></td>'
     + '</tr>';
   if(expanded) {
     row += '<tr class="tp-detail-row"><td colspan="10"><div class="tp-detail">'+tpPersonDetailHtml(p)+'</div></td></tr>';
@@ -6163,6 +6185,48 @@ function openTpModal(id, empId) {
   document.getElementById('tpModal').classList.add('active');
 }
 function closeTpModal(){ document.getElementById('tpModal').classList.remove('active'); }
+
+// ===== 编辑人员基本信息（仅姓名/工号/科室/岗位/职称/照片，不含子系统/账号/状态）=====
+function tpFieldValP(n){ var el=document.querySelector('#tpPersonForm [name="'+n+'"]'); return el?el.value:''; }
+function tpFieldSetP(n,v){ var el=document.querySelector('#tpPersonForm [name="'+n+'"]'); if(el) el.value=v||''; }
+function openTpPersonModal(empId) {
+  if(!LOGIN_USER){ showToast('请先登录','error'); return; }
+  if(LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); return; }
+  var p = tpAccounts.find(function(a){ return a.empId===empId; });
+  if(!p) return;
+  tpPersonEditId = empId;
+  document.getElementById('tpPersonModalTitle').textContent = '编辑人员基本信息 · ' + (p.name||'');
+  document.getElementById('tpPersonForm').reset();
+  tpFieldSetP('name', p.name||'');
+  tpFieldSetP('empId', p.empId||'');
+  tpFieldSetP('dept', p.dept||'');
+  tpFieldSetP('job', p.job||'');
+  tpFieldSetP('title', p.title||'');
+  tpFieldSetP('hasPhoto', p.hasPhoto||'无');
+  document.getElementById('tpPersonModal').classList.add('active');
+}
+function closeTpPersonModal(){ document.getElementById('tpPersonModal').classList.remove('active'); }
+function saveTpPerson() {
+  if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); closeTpPersonModal(); return; }
+  var name = tpFieldValP('name').trim();
+  if(!name){ showToast('请填写姓名','error'); return; }
+  var empId = tpFieldValP('empId').trim();
+  var dept = tpFieldValP('dept').trim();
+  var job = tpFieldValP('job').trim();
+  var title = tpFieldValP('title').trim();
+  var hasPhoto = tpFieldValP('hasPhoto');
+  var oldId = tpPersonEditId, changed = 0, mt = Date.now();
+  tpAccounts.forEach(function(a){
+    if(a.empId === oldId){
+      a.name = name; a.empId = empId; a.dept = dept; a.job = job; a.title = title; a.hasPhoto = hasPhoto;
+      a._mt = mt; changed++;
+    }
+  });
+  if(changed > 0){ TP_DIRTY = true; saveThirdPartyToStorage(); addOpLog('编辑','人员基本信息「'+name+'」','影响账号 '+changed+' 条'); }
+  closeTpPersonModal();
+  renderTpAccounts();
+  showToast('已保存人员基本信息','success');
+}
 
 function saveTpAccount() {
   if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); closeTpModal(); return; }
