@@ -6156,29 +6156,23 @@ function mergeThirdParty(cloud) {
 
 function syncThirdPartyFromCloud() {
   if(!GH_TOKEN) return;
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json?ref=main&t='+Date.now(), true);
-  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-  xhr.timeout = 8000;
-  xhr.onload = function() {
-    if(xhr.status === 200) {
-      try {
-        var info = JSON.parse(xhr.responseText);
-        TP_SHA = info.sha;
-        var cloud = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
-        cloud = (cloud||[]).filter(function(x){ return x && x.subsystem; }); // 迁移守卫：丢弃旧版系统格式
-        if(cloud && cloud.length) {
-          var before = JSON.stringify(tpAccounts);
-          tpAccounts = mergeThirdParty(cloud);
-          try { localStorage.setItem('ledger_thirdparty', JSON.stringify(tpAccounts)); } catch(e) {}
-          if(JSON.stringify(tpAccounts) !== before && currentView === 'thirdparty') renderTpAccounts();
-          if(TP_DIRTY) syncThirdPartyToGitHub();
-        }
-      } catch(e) {}
+  fetch('https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json?ref=main&t='+Date.now(), {
+    headers: {'Authorization':'token '+GH_TOKEN, 'Accept':'application/vnd.github.v3+json'}
+  })
+  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(function(info){
+    TP_SHA = info.sha;
+    var cloud = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
+    cloud = (cloud||[]).filter(function(x){ return x && x.subsystem; }); // 迁移守卫：丢弃旧版系统格式
+    if(cloud && cloud.length) {
+      var before = JSON.stringify(tpAccounts);
+      tpAccounts = mergeThirdParty(cloud);
+      try { localStorage.setItem('ledger_thirdparty', JSON.stringify(tpAccounts)); } catch(e) {}
+      if(JSON.stringify(tpAccounts) !== before && currentView === 'thirdparty') renderTpAccounts();
+      if(TP_DIRTY) syncThirdPartyToGitHub();
     }
-  };
-  xhr.send();
+  })
+  .catch(function(e){ /* 网络失败静默 */ });
 }
 
 function syncThirdPartyToGitHub(callback) {
@@ -6187,57 +6181,38 @@ function syncThirdPartyToGitHub(callback) {
   try { b64 = utf8ToBase64(JSON.stringify(tpAccounts, null, 2)); } catch(e) { if(callback) callback(false); return; }
   var payload = {message: 'update thirdparty.json', content: b64};
   if(TP_SHA) payload.sha = TP_SHA;
-  var xhr = new XMLHttpRequest();
-  xhr.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json', true);
-  xhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.timeout = 10000;
-  xhr.onload = function() {
-    if(xhr.status === 200 || xhr.status === 201) {
-      try { TP_SHA = JSON.parse(xhr.responseText).content.sha; } catch(e) {}
-      TP_DIRTY = false;
-      if(callback) callback(true);
-    } else if(xhr.status === 422) {
-      var getXhr = new XMLHttpRequest();
-      getXhr.open('GET', 'https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json?ref=main', true);
-      getXhr.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-      getXhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-      getXhr.timeout = 8000;
-      getXhr.onload = function() {
-        if(getXhr.status === 200) {
-          try {
-            var info = JSON.parse(getXhr.responseText);
-            TP_SHA = info.sha;
-            try {
-              var cloud = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
-              if(cloud && cloud.length) tpAccounts = mergeThirdParty(cloud);
-              payload.content = utf8ToBase64(JSON.stringify(tpAccounts, null, 2));
-            } catch(e) {}
-            payload.sha = TP_SHA;
-            var retry = new XMLHttpRequest();
-            retry.open('PUT', 'https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json', true);
-            retry.setRequestHeader('Authorization', 'token '+GH_TOKEN);
-            retry.setRequestHeader('Accept', 'application/vnd.github.v3+json');
-            retry.setRequestHeader('Content-Type', 'application/json');
-            retry.onload = function() {
-              if(retry.status === 200 || retry.status === 201) {
-                try { TP_SHA = JSON.parse(retry.responseText).content.sha; } catch(e) {}
-                TP_DIRTY = false;
-                if(callback) callback(true);
-              } else { if(callback) callback(false); }
-            };
-            retry.onerror = function(){ if(callback) callback(false); };
-            retry.send(JSON.stringify(payload));
-          } catch(e) { if(callback) callback(false); }
-        } else { if(callback) callback(false); }
-      };
-      getXhr.onerror = function(){ if(callback) callback(false); };
-      getXhr.send();
-    } else { if(callback) callback(false); }
-  };
-  xhr.onerror = function(){ if(callback) callback(false); };
-  xhr.send(JSON.stringify(payload));
+  function doPut(){
+    return fetch('https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json', {
+      method:'PUT',
+      headers: {'Authorization':'token '+GH_TOKEN, 'Accept':'application/vnd.github.v3+json', 'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    }).then(function(r){
+      if(r.status === 200 || r.status === 201) return r.json();
+      if(r.status === 422){ var e = new Error('conflict'); e.conflict = true; throw e; }
+      throw new Error('HTTP '+r.status);
+    });
+  }
+  doPut()
+    .then(function(j){ try{ TP_SHA = j.content.sha; }catch(e){} TP_DIRTY = false; if(callback) callback(true); })
+    .catch(function(err){
+      if(err && err.conflict){
+        fetch('https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json?ref=main', {
+          headers: {'Authorization':'token '+GH_TOKEN, 'Accept':'application/vnd.github.v3+json'}
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(info){
+          TP_SHA = info.sha;
+          try { var cloud = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,''))); if(cloud && cloud.length) tpAccounts = mergeThirdParty(cloud); } catch(e){}
+          payload.content = utf8ToBase64(JSON.stringify(tpAccounts, null, 2));
+          payload.sha = TP_SHA;
+          return doPut();
+        })
+        .then(function(j){ try{ TP_SHA = j.content.sha; }catch(e){} TP_DIRTY = false; if(callback) callback(true); })
+        .catch(function(){ if(callback) callback(false); });
+      } else {
+        if(callback) callback(false);
+      }
+    });
 }
 
 
