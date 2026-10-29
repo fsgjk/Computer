@@ -1,0 +1,15 @@
+[
+  {
+    "id": "mvsvuqyd39r82c",
+    "name": "企业AD域控",
+    "category": "身份认证",
+    "endpoint": "https://ad.example.com",
+    "authType": "Token",
+    "status": "已启用",
+    "syncFreq": "每天",
+    "authConfig": "{\"token\":\"abc123\"}",
+    "description": "域账号同步",
+    "_mt": 1793238418165,
+    "last_sync": null
+  }
+]
