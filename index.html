@@ -5892,7 +5892,26 @@ function switchView(view) {
 function loadThirdParty() {
   try { tpAccounts = JSON.parse(localStorage.getItem('ledger_thirdparty') || '[]'); } catch(e) { tpAccounts = []; }
   renderTpAccounts();
+  // 优先从同域 thirdparty.json 加载（始终可达，无需依赖 api.github.com 可达性与限流）
+  loadThirdPartyFromOrigin();
+  // 尝试从 API 获取文件 SHA，供后续写回云端（失败不影响读取）
   if(GH_TOKEN) syncThirdPartyFromCloud();
+}
+
+// 从同域静态文件加载第三方账号（最可靠：随页面同源托管，无需 token、无速率限制）
+function loadThirdPartyFromOrigin() {
+  fetch('./thirdparty.json?t='+Date.now())
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(cloud){
+      cloud = (cloud||[]).filter(function(x){ return x && x.subsystem; }); // 迁移守卫：丢弃旧版系统格式
+      if(cloud && cloud.length) {
+        var before = JSON.stringify(tpAccounts);
+        tpAccounts = mergeThirdParty(cloud);
+        try { localStorage.setItem('ledger_thirdparty', JSON.stringify(tpAccounts)); } catch(e){}
+        if(currentView === 'thirdparty') renderTpAccounts();
+      }
+    })
+    .catch(function(e){ /* 同域读取失败静默，回退到已缓存的 localStorage */ });
 }
 
 // 填充子系统下拉、科室筛选（数据变化时增量补充）
@@ -6154,25 +6173,15 @@ function mergeThirdParty(cloud) {
   return Object.keys(map).map(function(k){ return map[k]; });
 }
 
+// 仅从 API 获取文件 SHA，供后续写回云端使用（读取已由 loadThirdPartyFromOrigin 走同域文件完成）
 function syncThirdPartyFromCloud() {
   if(!GH_TOKEN) return;
   fetch('https://api.github.com/repos/'+GH_REPO+'/contents/thirdparty.json?ref=main&t='+Date.now(), {
     headers: {'Authorization':'token '+GH_TOKEN, 'Accept':'application/vnd.github.v3+json'}
   })
   .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-  .then(function(info){
-    TP_SHA = info.sha;
-    var cloud = JSON.parse(base64ToUtf8(info.content.replace(/\s/g,'')));
-    cloud = (cloud||[]).filter(function(x){ return x && x.subsystem; }); // 迁移守卫：丢弃旧版系统格式
-    if(cloud && cloud.length) {
-      var before = JSON.stringify(tpAccounts);
-      tpAccounts = mergeThirdParty(cloud);
-      try { localStorage.setItem('ledger_thirdparty', JSON.stringify(tpAccounts)); } catch(e) {}
-      if(JSON.stringify(tpAccounts) !== before && currentView === 'thirdparty') renderTpAccounts();
-      if(TP_DIRTY) syncThirdPartyToGitHub();
-    }
-  })
-  .catch(function(e){ /* 网络失败静默 */ });
+  .then(function(info){ TP_SHA = info.sha; })
+  .catch(function(e){ /* 网络失败静默，写回时会以 422 冲突重试 */ });
 }
 
 function syncThirdPartyToGitHub(callback) {
