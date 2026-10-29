@@ -287,6 +287,10 @@ a:hover{color:var(--primary-600)}
 .tp-subtable th{background:var(--neutral-50);color:var(--neutral-500);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--neutral-100);white-space:nowrap}
 .tp-subtable td{padding:8px 10px;border-bottom:0.5px solid var(--neutral-50);vertical-align:top}
 .tp-subtable tr:last-child td{border-bottom:none}
+.tp-status-select{font-size:12px;padding:3px 6px;border-radius:var(--radius-sm);border:1px solid var(--neutral-200);background:#fff;cursor:pointer;outline:none}
+.tp-status-select.active{color:var(--success-600);border-color:var(--success-200);background:var(--success-50)}
+.tp-status-select.idle{color:var(--primary-600);border-color:var(--primary-200);background:var(--primary-50)}
+.tp-status-select:disabled{cursor:not-allowed;opacity:.85}
 .tp-empty{padding:18px 4px;color:var(--neutral-400);font-size:13px}
 .tp-stat-clickable{cursor:pointer;transition:transform .1s,box-shadow .15s;user-select:none}
 .tp-stat-clickable:hover{transform:translateY(-1px);box-shadow:0 2px 10px rgba(15,23,42,.12)}
@@ -6094,6 +6098,13 @@ function tpPersonDetailHtml(p) {
       var t = new Date(a.expireDate + 'T00:00:00').getTime();
       if(!isNaN(t) && t - Date.now() <= 30*86400000) expCls = 'badge-expire';
     }
+    var selEn = a.status==='启用' ? ' selected' : '';
+    var selDis = a.status==='停用' ? ' selected' : '';
+    var ro = (LOGIN_USER && LOGIN_USER.role==='admin') ? '' : ' disabled';
+    var statusCell = '<select class="tp-status-select '+stCls+'" onchange="setTpAccountStatus(\''+sid+'\',this.value)"'+ro+'>'
+      + '<option value="启用"'+selEn+'>启用</option>'
+      + '<option value="停用"'+selDis+'>停用</option>'
+      + '</select>';
     var ops = '<div class="row-actions">'
       + '<button class="btn-icon" onclick="event.stopPropagation();openTpModal(\''+sid+'\')" title="编辑">✏</button>'
       + '<button class="btn-icon danger" onclick="event.stopPropagation();deleteTpAccount(\''+sid+'\')" title="删除">🗑</button>'
@@ -6102,7 +6113,7 @@ function tpPersonDetailHtml(p) {
       + '<td><span class="tp-tag '+famc+'">'+esc(fam)+'</span></td>'
       + '<td class="cell-strong">'+esc(a.subsystem||'')+'</td>'
       + '<td class="mono">'+esc(a.account||'')+'</td>'
-      + '<td><span class="status-badge '+stCls+'">'+esc(a.status||'')+'</span></td>'
+      + '<td>'+statusCell+'</td>'
       + '<td>'+esc(a.openDate||'')+'</td>'
       + '<td class="'+expCls+'">'+expire+'</td>'
       + '<td style="color:var(--neutral-500);font-size:12px">'+esc(a.remark||'')+'</td>'
@@ -6112,6 +6123,21 @@ function tpPersonDetailHtml(p) {
   return '<table class="tp-subtable"><thead><tr>'
     + '<th>系统</th><th>子系统</th><th>账号</th><th>状态</th><th>新增/修改日期</th><th>有效期止</th><th>备注</th><th>操作</th>'
     + '</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+// 行内下拉直接切换账号启用/停用（免进编辑弹窗）
+function setTpAccountStatus(id, status) {
+  if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改状态','error'); return; }
+  var idx = tpAccounts.findIndex(function(x){ return x.id===id; });
+  if(idx<0) return;
+  if(tpAccounts[idx].status === status) return;
+  tpAccounts[idx].status = status;
+  tpAccounts[idx]._mt = Date.now();
+  TP_DIRTY = true;
+  saveThirdPartyToStorage();
+  addOpLog('修改状态','第三方账号「'+tpAccounts[idx].name+'·'+tpAccounts[idx].subsystem+'」','→ '+status);
+  renderTpAccounts();
+  showToast('已设为'+status,'success');
 }
 
 function renderTpStats() {
