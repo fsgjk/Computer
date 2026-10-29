@@ -392,7 +392,7 @@ a:hover{color:var(--primary-600)}
     <select id="tpFilterStatus" onchange="renderTpAccounts()" aria-label="状态筛选"><option value="">全部状态</option><option value="启用">启用</option><option value="停用">停用</option></select>
     <select id="tpFilterSub" onchange="renderTpAccounts()" aria-label="子系统筛选"><option value="">全部子系统</option></select>
     <select id="tpFilterDept" onchange="renderTpAccounts()" aria-label="科室筛选"><option value="">全部科室</option></select>
-    <button class="btn btn-primary" onclick="openTpModal()" aria-label="新增账号">+ 新增账号</button>
+    <button class="btn btn-primary" onclick="openTpAddPerson()" aria-label="新增账号">+ 新增账号</button>
     <button class="btn btn-ghost" onclick="exportTpCSV()" aria-label="导出CSV">📥 导出CSV</button>
   </div>
   <div class="section-card" style="overflow:auto">
@@ -415,6 +415,7 @@ a:hover{color:var(--primary-600)}
         <div class="form-group full"><label>备注</label><textarea name="remark" placeholder="用途、特殊处理等"></textarea></div>
       </form>
       <div class="tp-person-hint">姓名、工号、科室、岗位、职称、照片等<b>基本信息不可在此修改</b>，请在列表行「✎ 编辑人员基本信息」中调整。</div>
+      <div class="tp-person-hint" id="tpModalHint" style="display:none;background:#E8F1E3;color:#3B6D11;border-color:#C9E0BC"></div>
     </div>
     <div class="modal-footer"><button class="btn btn-secondary" onclick="closeTpModal()">取消</button><button class="btn btn-primary" onclick="saveTpAccount()">保存</button></div>
   </div>
@@ -433,7 +434,7 @@ a:hover{color:var(--primary-600)}
         <div class="form-group"><label>职称</label><input name="title" placeholder="如 主治医师"></div>
         <div class="form-group"><label>是否有照片</label><select name="hasPhoto"><option value="无">无</option><option value="有">有</option></select></div>
       </form>
-      <div class="tp-person-hint">仅修改该人员的基本信息，将同步到其名下全部账号；子系统 / 账号 / 账号状态请在展开后的账号明细中单独修改。</div>
+      <div class="tp-person-hint" id="tpPersonHint">仅修改该人员的基本信息，将同步到其名下全部账号；子系统 / 账号 / 账号状态请在展开后的账号明细中单独修改。</div>
     </div>
     <div class="modal-footer"><button class="btn btn-secondary" onclick="closeTpPersonModal()">取消</button><button class="btn btn-primary" onclick="saveTpPerson()">保存</button></div>
   </div>
@@ -4749,7 +4750,9 @@ var tpModalEmpId = null;    // 新增账号时所属人员 empId（用于携带�
 var tpSearchTimer = null;
 var tpExpanded = {};     // 已展开的人员 key（empId 或 "n:姓名"），用于一人一行下的账号明细
 var tpExpireSoon = false; // 是否按"30天内到期"筛选（顶部统计卡片点击触发）
-var tpPersonEditId = null; // 当前正在编辑基本信息的人员 empId
+var tpPersonEditId = null; // 当前正在编辑基本信息的人员 empId（null 表示「新增人员」向导）
+var tpModalBasic = null;   // 账号弹窗打开时携带的人员基本信息（新增向导第二步依赖它）
+var tpNewBasic = null;     // 新增向导第一步暂存的人员基本信息，待第二步生成首条账号
 var currentView = 'ledger';
 // 第三方供应商系统的 20 个子系统（对应 Excel 第 I~AB 列）
 var TP_SUBSYSTEMS = ['勤方分科','勤方分科-身高','勤方分科-视力','勤方分科-血压','勤方分科-肺功能','勤方采血签到','勤方登记','勤方主检','勤方总控','勤方主检排班','HIS门诊/体检','HIS收费','HIS物资','导检叫号','导检总控台','PACS登记','PACS报告','PACS审核','检验','深睿'];
@@ -6202,15 +6205,15 @@ function tpRenderBasicInfo(b) {
     + '<span class="tp-bi-item"><i>照片</i>'+(esc(b.hasPhoto||'—'))+'</span>'
     + '</div>';
 }
-function openTpModal(id, empId) {
+function openTpModal(id, empId, basicArg) {
   if(!LOGIN_USER){ showToast('请先登录','error'); return; }
   if(LOGIN_USER.role!=='admin'){ showToast('仅管理员可管理账号','error'); return; }
   populateTpFilters();
   tpEditingId = id || null;
   tpModalEmpId = empId || null;
-  document.getElementById('tpModalTitle').textContent = id ? '编辑账号' : '新增账号';
+  document.getElementById('tpModalTitle').textContent = id ? '编辑账号' : '新增子系统账号（第 2 步 / 共 2 步）';
   document.getElementById('tpForm').reset();
-  // 基本信息不可在账号弹窗内编辑，仅展示（来源：被编辑账号或所属人员）
+  // 基本信息不可在账号弹窗内编辑，仅展示（来源：被编辑账号 / 向导暂存 / 所属人员）
   var basic = null;
   if(id) {
     var a = tpAccounts.find(function(x){ return x.id===id; });
@@ -6223,18 +6226,46 @@ function openTpModal(id, empId) {
       tpFieldSet('expireDate', a.expireDate||'');
       tpFieldSet('remark', a.remark||'');
     }
-  } else if(empId) {
+  }
+  if(!basic && basicArg) { basic = basicArg; }            // 新增向导：直接携带第 1 步基本信息
+  else if(!basic && empId) {
     var p = tpAccounts.find(function(x){ return x.empId===empId; });
     if(p) basic = p;
   }
+  tpModalBasic = basic;
   tpRenderBasicInfo(basic);
+  // 向导新增：提示正在为某人员添加首个子系统账号
+  var hintEl = document.getElementById('tpModalHint');
+  if(hintEl){
+    hintEl.style.display = (tpNewBasic && !id) ? 'block' : 'none';
+    hintEl.innerHTML = (tpNewBasic && !id) ? ('正在为 <b>'+esc(tpNewBasic.name||'')+'</b> 添加第一个子系统账号，保存后可在列表中继续「＋」添加更多账号。') : '';
+  }
   document.getElementById('tpModal').classList.add('active');
 }
-function closeTpModal(){ document.getElementById('tpModal').classList.remove('active'); }
+function closeTpModal(){
+  document.getElementById('tpModal').classList.remove('active');
+  tpModalBasic = null; tpNewBasic = null;  // 关闭即清空向导暂存
+}
 
-// ===== 编辑人员基本信息（仅姓名/工号/科室/岗位/职称/照片，不含子系统/账号/状态）=====
+// ===== 编辑/新增 人员基本信息（仅姓名/工号/科室/岗位/职称/照片，不含子系统/账号/状态）=====
 function tpFieldValP(n){ var el=document.querySelector('#tpPersonForm [name="'+n+'"]'); return el?el.value:''; }
 function tpFieldSetP(n,v){ var el=document.querySelector('#tpPersonForm [name="'+n+'"]'); if(el) el.value=v||''; }
+// 新增账号向导第 1 步：先录入人员基本信息
+function openTpAddPerson() {
+  if(!LOGIN_USER){ showToast('请先登录','error'); return; }
+  if(LOGIN_USER.role!=='admin'){ showToast('仅管理员可管理账号','error'); return; }
+  tpPersonEditId = null;            // null 表示「新增」而非「编辑」
+  tpNewBasic = null;
+  document.getElementById('tpPersonModalTitle').textContent = '新增人员基本信息（第 1 步 / 共 2 步）';
+  document.getElementById('tpPersonForm').reset();
+  tpFieldSetP('hasPhoto', '无');
+  var hint = document.getElementById('tpPersonHint');
+  if(hint) hint.innerHTML = '先填写该人员的基本信息，<b>保存后将进入第 2 步</b>，为其添加第一个子系统账号。';
+  var saveBtn = document.querySelector('#tpPersonModal .modal-footer .btn-primary');
+  if(saveBtn) saveBtn.textContent = '下一步：添加子系统账号';
+  document.getElementById('tpPersonModal').classList.add('active');
+}
+// 编辑已有人员基本信息（行内「✎」触发）
 function openTpPersonModal(empId) {
   if(!LOGIN_USER){ showToast('请先登录','error'); return; }
   if(LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); return; }
@@ -6249,43 +6280,61 @@ function openTpPersonModal(empId) {
   tpFieldSetP('job', p.job||'');
   tpFieldSetP('title', p.title||'');
   tpFieldSetP('hasPhoto', p.hasPhoto||'无');
+  var hint = document.getElementById('tpPersonHint');
+  if(hint) hint.innerHTML = '仅修改该人员的基本信息，将同步到其名下全部账号；子系统 / 账号 / 账号状态请在展开后的账号明细中单独修改。';
+  var saveBtn = document.querySelector('#tpPersonModal .modal-footer .btn-primary');
+  if(saveBtn) saveBtn.textContent = '保存';
   document.getElementById('tpPersonModal').classList.add('active');
 }
-function closeTpPersonModal(){ document.getElementById('tpPersonModal').classList.remove('active'); }
+function closeTpPersonModal(){
+  document.getElementById('tpPersonModal').classList.remove('active');
+  tpNewBasic = null;               // 取消则丢弃暂存的向导数据
+}
 function saveTpPerson() {
   if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); closeTpPersonModal(); return; }
   var name = tpFieldValP('name').trim();
   if(!name){ showToast('请填写姓名','error'); return; }
   var empId = tpFieldValP('empId').trim();
+  if(!empId) empId = 'NEW' + Date.now().toString(36).toUpperCase();  // 未填工号则自动生成
   var dept = tpFieldValP('dept').trim();
   var job = tpFieldValP('job').trim();
   var title = tpFieldValP('title').trim();
   var hasPhoto = tpFieldValP('hasPhoto');
-  var oldId = tpPersonEditId, changed = 0, mt = Date.now();
-  tpAccounts.forEach(function(a){
-    if(a.empId === oldId){
-      a.name = name; a.empId = empId; a.dept = dept; a.job = job; a.title = title; a.hasPhoto = hasPhoto;
-      a._mt = mt; changed++;
-    }
-  });
-  if(changed > 0){ TP_DIRTY = true; saveThirdPartyToStorage(); addOpLog('编辑','人员基本信息「'+name+'」','影响账号 '+changed+' 条'); }
-  closeTpPersonModal();
-  renderTpAccounts();
-  showToast('已保存人员基本信息','success');
+
+  if(tpPersonEditId) {
+    // 编辑已有人员：同步到其名下全部账号
+    var oldId = tpPersonEditId, changed = 0, mt = Date.now();
+    tpAccounts.forEach(function(a){
+      if(a.empId === oldId){
+        a.name = name; a.empId = empId; a.dept = dept; a.job = job; a.title = title; a.hasPhoto = hasPhoto;
+        a._mt = mt; changed++;
+      }
+    });
+    if(changed > 0){ TP_DIRTY = true; saveThirdPartyToStorage(); addOpLog('编辑','人员基本信息「'+name+'」','影响账号 '+changed+' 条'); }
+    closeTpPersonModal();
+    renderTpAccounts();
+    showToast('已保存人员基本信息','success');
+  } else {
+    // 新增向导第 1 步完成 → 暂存基本信息，直接进入第 2 步（注意：此处不能走 closeTpPersonModal，否则会清空暂存）
+    tpNewBasic = {name:name, empId:empId, dept:dept, job:job, title:title, hasPhoto:hasPhoto};
+    document.getElementById('tpPersonModal').classList.remove('active');
+    openTpModal(null, empId, tpNewBasic);  // 第 2 步：添加子系统账号
+  }
 }
 
 function saveTpAccount() {
   if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); closeTpModal(); return; }
   var subsystem = tpFieldVal('subsystem');
   if(!subsystem){ showToast('请选择子系统','error'); return; }
-  // 基本信息只能从列表「编辑人员基本信息」修改，此处不可改，按来源携带
-  var basic = null;
-  if(tpEditingId){ basic = tpAccounts.find(function(x){ return x.id===tpEditingId; }); }
-  else if(tpModalEmpId){ basic = tpAccounts.find(function(x){ return x.empId===tpModalEmpId; }); }
+  // 基本信息按来源携带：编辑取账号本身，新增向导取第 1 步暂存；均不可在账号弹窗内修改
+  var basic = tpModalBasic
+    || (tpEditingId ? tpAccounts.find(function(x){ return x.id===tpEditingId; }) : null)
+    || (tpModalEmpId ? tpAccounts.find(function(x){ return x.empId===tpModalEmpId; }) : null);
   if(!basic || !(basic.name && basic.name.trim())){
     showToast('缺少人员基本信息，请先在列表「✎ 编辑人员基本信息」中补全','error'); closeTpModal(); return;
   }
   var editing = !!tpEditingId;
+  var isNewPerson = !!(tpNewBasic && !tpEditingId);
   var rec = {
     id: tpEditingId || (Date.now().toString(36)+Math.random().toString(36).slice(2,8)),
     name: basic.name||'',
@@ -6313,8 +6362,9 @@ function saveTpAccount() {
   TP_DIRTY = true;
   saveThirdPartyToStorage();
   closeTpModal();
+  tpNewBasic = null; tpModalBasic = null;   // 清空向导暂存
   renderTpAccounts();
-  showToast(editing?'已保存':'已新增','success');
+  showToast(editing ? '已保存' : (isNewPerson ? '已新增人员及首个账号' : '已新增'), 'success');
 }
 
 function deleteTpAccount(id) {
