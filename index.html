@@ -309,7 +309,7 @@ a:hover{color:var(--primary-600)}
 </header>
 
 <div class="app-body">
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar collapsed" id="sidebar">
   <div class="sidebar-brand"><span class="brand-ico">💻</span><span class="txt">电脑台账系统</span></div>
   <nav class="sidebar-nav">
     <a class="nav-item active" data-view="ledger" onclick="switchView('ledger')" title="设备台账"><span class="nav-ico">🖥️</span><span class="nav-txt">设备台账</span></a>
@@ -6122,8 +6122,9 @@ function toggleSidebar() {
   if(btn) btn.querySelector('.ico').textContent = collapsed ? '»' : '«';
 }
 function applySidebarState() {
-  var collapsed = false;
-  try { collapsed = localStorage.getItem('sidebar_collapsed') === '1'; } catch(e) {}
+  // 默认收起：无记录或值为 '1' 时收起，仅显式 '0' 才展开
+  var collapsed = true;
+  try { collapsed = localStorage.getItem('sidebar_collapsed') !== '0'; } catch(e) {}
   var sb = document.getElementById('sidebar');
   if(!sb) return;
   sb.classList.toggle('collapsed', collapsed);
