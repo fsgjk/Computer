@@ -10,10 +10,10 @@
     "subsystem": "导检叫号",
     "account": "WF1001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_1_23",
@@ -26,10 +26,10 @@
     "subsystem": "PACS登记",
     "account": "WF1001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_1_24",
@@ -42,10 +42,10 @@
     "subsystem": "PACS报告",
     "account": "WF1001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_1_25",
@@ -58,10 +58,10 @@
     "subsystem": "PACS审核",
     "account": "WF1001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_2_21",
@@ -74,10 +74,10 @@
     "subsystem": "导检叫号",
     "account": "WF1002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_2_23",
@@ -90,10 +90,10 @@
     "subsystem": "PACS登记",
     "account": "WF1002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_2_24",
@@ -106,10 +106,10 @@
     "subsystem": "PACS报告",
     "account": "WF1002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_2_25",
@@ -122,10 +122,10 @@
     "subsystem": "PACS审核",
     "account": "WF1002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_3_21",
@@ -138,10 +138,10 @@
     "subsystem": "导检叫号",
     "account": "WF1003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_3_23",
@@ -154,10 +154,10 @@
     "subsystem": "PACS登记",
     "account": "WF1003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_3_24",
@@ -170,10 +170,10 @@
     "subsystem": "PACS报告",
     "account": "WF1003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_3_25",
@@ -186,10 +186,10 @@
     "subsystem": "PACS审核",
     "account": "WF1003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_4_21",
@@ -202,10 +202,10 @@
     "subsystem": "导检叫号",
     "account": "WF1004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_4_23",
@@ -218,10 +218,10 @@
     "subsystem": "PACS登记",
     "account": "WF1004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_4_24",
@@ -234,10 +234,10 @@
     "subsystem": "PACS报告",
     "account": "WF1004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_5_21",
@@ -250,10 +250,10 @@
     "subsystem": "导检叫号",
     "account": "WF1005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_5_23",
@@ -266,10 +266,10 @@
     "subsystem": "PACS登记",
     "account": "WF1005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_5_24",
@@ -282,10 +282,10 @@
     "subsystem": "PACS报告",
     "account": "WF1005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_5_25",
@@ -298,10 +298,10 @@
     "subsystem": "PACS审核",
     "account": "WF1005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_6_21",
@@ -378,10 +378,10 @@
     "subsystem": "导检叫号",
     "account": "WF1007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_7_23",
@@ -394,10 +394,10 @@
     "subsystem": "PACS登记",
     "account": "WF1007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_7_24",
@@ -410,10 +410,10 @@
     "subsystem": "PACS报告",
     "account": "WF1007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_8_21",
@@ -426,10 +426,10 @@
     "subsystem": "导检叫号",
     "account": "WF1008",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_8_23",
@@ -442,10 +442,10 @@
     "subsystem": "PACS登记",
     "account": "WF1008",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_8_24",
@@ -458,10 +458,10 @@
     "subsystem": "PACS报告",
     "account": "WF1008",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_8_25",
@@ -474,10 +474,10 @@
     "subsystem": "PACS审核",
     "account": "WF1008",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_9_21",
@@ -490,10 +490,10 @@
     "subsystem": "导检叫号",
     "account": "WF1009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_9_23",
@@ -506,10 +506,10 @@
     "subsystem": "PACS登记",
     "account": "WF1009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_9_24",
@@ -522,10 +522,10 @@
     "subsystem": "PACS报告",
     "account": "WF1009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_9_25",
@@ -538,10 +538,10 @@
     "subsystem": "PACS审核",
     "account": "WF1009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_10_21",
@@ -554,10 +554,10 @@
     "subsystem": "导检叫号",
     "account": "WF1010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_10_23",
@@ -570,10 +570,10 @@
     "subsystem": "PACS登记",
     "account": "WF1010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_10_24",
@@ -586,10 +586,10 @@
     "subsystem": "PACS报告",
     "account": "WF1010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_10_25",
@@ -602,10 +602,10 @@
     "subsystem": "PACS审核",
     "account": "WF1010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_11_21",
@@ -618,10 +618,10 @@
     "subsystem": "导检叫号",
     "account": "WF1011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_11_23",
@@ -634,10 +634,10 @@
     "subsystem": "PACS登记",
     "account": "WF1011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_11_24",
@@ -650,10 +650,10 @@
     "subsystem": "PACS报告",
     "account": "WF1011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_11_25",
@@ -666,10 +666,10 @@
     "subsystem": "PACS审核",
     "account": "WF1011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_12_21",
@@ -682,10 +682,10 @@
     "subsystem": "导检叫号",
     "account": "WF1012",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_12_23",
@@ -698,10 +698,10 @@
     "subsystem": "PACS登记",
     "account": "WF1012",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_12_24",
@@ -714,10 +714,10 @@
     "subsystem": "PACS报告",
     "account": "WF1012",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_12_25",
@@ -730,10 +730,10 @@
     "subsystem": "PACS审核",
     "account": "WF1012",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_13_21",
@@ -746,10 +746,10 @@
     "subsystem": "导检叫号",
     "account": "WF1013",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_13_23",
@@ -762,10 +762,10 @@
     "subsystem": "PACS登记",
     "account": "WF1013",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_13_24",
@@ -778,10 +778,10 @@
     "subsystem": "PACS报告",
     "account": "WF1013",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_13_25",
@@ -794,10 +794,10 @@
     "subsystem": "PACS审核",
     "account": "WF1013",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_14_21",
@@ -874,10 +874,10 @@
     "subsystem": "导检叫号",
     "account": "WF1015",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_15_23",
@@ -890,10 +890,10 @@
     "subsystem": "PACS登记",
     "account": "WF1015",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_15_24",
@@ -906,10 +906,10 @@
     "subsystem": "PACS报告",
     "account": "WF1015",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_15_25",
@@ -922,10 +922,10 @@
     "subsystem": "PACS审核",
     "account": "WF1015",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_16_21",
@@ -938,10 +938,10 @@
     "subsystem": "导检叫号",
     "account": "WF1016",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_16_23",
@@ -954,10 +954,10 @@
     "subsystem": "PACS登记",
     "account": "WF1016",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_17_21",
@@ -970,10 +970,10 @@
     "subsystem": "导检叫号",
     "account": "WF1017",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_17_23",
@@ -986,10 +986,10 @@
     "subsystem": "PACS登记",
     "account": "WF1017",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_17_24",
@@ -1002,10 +1002,10 @@
     "subsystem": "PACS报告",
     "account": "WF1017",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_17_25",
@@ -1018,10 +1018,10 @@
     "subsystem": "PACS审核",
     "account": "WF1017",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_18_14",
@@ -1082,10 +1082,10 @@
     "subsystem": "勤方分科",
     "account": "FK1019",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_19_21",
@@ -1098,10 +1098,10 @@
     "subsystem": "导检叫号",
     "account": "WF1019",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_20_8",
@@ -1146,10 +1146,10 @@
     "subsystem": "勤方分科",
     "account": "FK1021",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_21_21",
@@ -1162,10 +1162,10 @@
     "subsystem": "导检叫号",
     "account": "WF1021",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_22_8",
@@ -1178,10 +1178,10 @@
     "subsystem": "勤方分科",
     "account": "FK1022",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_22_21",
@@ -1194,10 +1194,10 @@
     "subsystem": "导检叫号",
     "account": "WF1022",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_23_21",
@@ -1210,10 +1210,10 @@
     "subsystem": "导检叫号",
     "account": "WF1023",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_24_21",
@@ -1258,10 +1258,10 @@
     "subsystem": "勤方分科",
     "account": "FK1026",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_26_21",
@@ -1274,10 +1274,10 @@
     "subsystem": "导检叫号",
     "account": "WF1026",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_27_8",
@@ -1290,10 +1290,10 @@
     "subsystem": "勤方分科",
     "account": "FK1027",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_27_11",
@@ -1306,10 +1306,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK1027XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_27_21",
@@ -1322,10 +1322,10 @@
     "subsystem": "导检叫号",
     "account": "WF1027",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_28_8",
@@ -1338,10 +1338,10 @@
     "subsystem": "勤方分科",
     "account": "FK1028",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_28_11",
@@ -1354,10 +1354,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK1028XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_28_21",
@@ -1370,10 +1370,10 @@
     "subsystem": "导检叫号",
     "account": "WF1028",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_29_8",
@@ -1386,10 +1386,10 @@
     "subsystem": "勤方分科",
     "account": "FK1029",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_29_11",
@@ -1402,10 +1402,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK1029XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_29_21",
@@ -1418,10 +1418,10 @@
     "subsystem": "导检叫号",
     "account": "WF1029",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_30_8",
@@ -1434,10 +1434,10 @@
     "subsystem": "勤方分科",
     "account": "FK1030",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_30_21",
@@ -1450,10 +1450,10 @@
     "subsystem": "导检叫号",
     "account": "WF1030",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_31_8",
@@ -1466,10 +1466,10 @@
     "subsystem": "勤方分科",
     "account": "FK1031",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_31_21",
@@ -1482,10 +1482,10 @@
     "subsystem": "导检叫号",
     "account": "WF1031",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_32_8",
@@ -1498,10 +1498,10 @@
     "subsystem": "勤方分科",
     "account": "FK1032",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_32_21",
@@ -1514,10 +1514,10 @@
     "subsystem": "导检叫号",
     "account": "WF1032",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_33_8",
@@ -1530,10 +1530,10 @@
     "subsystem": "勤方分科",
     "account": "FK1033",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_33_21",
@@ -1546,10 +1546,10 @@
     "subsystem": "导检叫号",
     "account": "WF1033",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_34_8",
@@ -1626,10 +1626,10 @@
     "subsystem": "勤方分科",
     "account": "FK1036",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_36_21",
@@ -1642,10 +1642,10 @@
     "subsystem": "导检叫号",
     "account": "WF1036",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_37_8",
@@ -1658,10 +1658,10 @@
     "subsystem": "勤方分科",
     "account": "FK1037",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_37_21",
@@ -1674,10 +1674,10 @@
     "subsystem": "导检叫号",
     "account": "WF1037",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_38_8",
@@ -1690,10 +1690,10 @@
     "subsystem": "勤方分科",
     "account": "FK1038",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_38_15",
@@ -1706,10 +1706,10 @@
     "subsystem": "勤方主检",
     "account": "ZJ1038",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_38_21",
@@ -1722,10 +1722,10 @@
     "subsystem": "导检叫号",
     "account": "WF1038",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_39_8",
@@ -1738,10 +1738,10 @@
     "subsystem": "勤方分科",
     "account": "FK1039",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_39_21",
@@ -1754,10 +1754,10 @@
     "subsystem": "导检叫号",
     "account": "WF1039",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_40_21",
@@ -1770,10 +1770,10 @@
     "subsystem": "导检叫号",
     "account": "WF1040",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_41_21",
@@ -1786,10 +1786,10 @@
     "subsystem": "导检叫号",
     "account": "WF1041",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_42_21",
@@ -1818,10 +1818,10 @@
     "subsystem": "勤方分科",
     "account": "FK1043",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_43_21",
@@ -1834,10 +1834,10 @@
     "subsystem": "导检叫号",
     "account": "WF1043",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_43_23",
@@ -1850,10 +1850,10 @@
     "subsystem": "PACS登记",
     "account": "WF1043",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_44_8",
@@ -1866,10 +1866,10 @@
     "subsystem": "勤方分科",
     "account": "FK1045",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_44_21",
@@ -1882,10 +1882,10 @@
     "subsystem": "导检叫号",
     "account": "WF1045",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_44_23",
@@ -1898,10 +1898,10 @@
     "subsystem": "PACS登记",
     "account": "WF1045",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_45_8",
@@ -1914,10 +1914,10 @@
     "subsystem": "勤方分科",
     "account": "FK1046",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_45_21",
@@ -1930,10 +1930,10 @@
     "subsystem": "导检叫号",
     "account": "WF1046",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_45_23",
@@ -1946,10 +1946,10 @@
     "subsystem": "PACS登记",
     "account": "WF1046",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_46_21",
@@ -1994,10 +1994,10 @@
     "subsystem": "勤方分科",
     "account": "FK1048",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_47_21",
@@ -2010,10 +2010,10 @@
     "subsystem": "导检叫号",
     "account": "WF1048",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_47_23",
@@ -2026,10 +2026,10 @@
     "subsystem": "PACS登记",
     "account": "WF1048",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_48_21",
@@ -2074,10 +2074,10 @@
     "subsystem": "导检叫号",
     "account": "WF1050",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_49_23",
@@ -2090,10 +2090,10 @@
     "subsystem": "PACS登记",
     "account": "WF1050",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_49_24",
@@ -2106,10 +2106,10 @@
     "subsystem": "PACS报告",
     "account": "WF1050",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_49_25",
@@ -2122,10 +2122,10 @@
     "subsystem": "PACS审核",
     "account": "WF1050",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_55_21",
@@ -2138,10 +2138,10 @@
     "subsystem": "导检叫号",
     "account": "WF1057",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_56_8",
@@ -2154,10 +2154,10 @@
     "subsystem": "勤方分科",
     "account": "FK1058",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_56_21",
@@ -2170,10 +2170,10 @@
     "subsystem": "导检叫号",
     "account": "WF1058",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_57_8",
@@ -2186,10 +2186,10 @@
     "subsystem": "勤方分科",
     "account": "FK1059",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_57_21",
@@ -2202,10 +2202,10 @@
     "subsystem": "导检叫号",
     "account": "WF1059",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_8",
@@ -2218,10 +2218,10 @@
     "subsystem": "勤方分科",
     "account": "FK1060",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_9",
@@ -2234,10 +2234,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK1060SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_10",
@@ -2250,10 +2250,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK1060SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_12",
@@ -2266,10 +2266,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK1060F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_18",
@@ -2282,10 +2282,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF1060",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_21",
@@ -2298,10 +2298,10 @@
     "subsystem": "导检叫号",
     "account": "WF1060",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_23",
@@ -2314,10 +2314,10 @@
     "subsystem": "PACS登记",
     "account": "WF1060",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_58_24",
@@ -2330,10 +2330,10 @@
     "subsystem": "PACS报告",
     "account": "WF1060",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_59_8",
@@ -2442,10 +2442,10 @@
     "subsystem": "勤方分科",
     "account": "FK1062",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2026-11-11",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_60_18",
@@ -2458,10 +2458,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF1062",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2026-11-11",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_60_21",
@@ -2474,10 +2474,10 @@
     "subsystem": "导检叫号",
     "account": "WF1062",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2026-11-11",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_60_23",
@@ -2490,10 +2490,10 @@
     "subsystem": "PACS登记",
     "account": "WF1062",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2026-11-11",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_60_24",
@@ -2506,10 +2506,10 @@
     "subsystem": "PACS报告",
     "account": "WF1062",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2026-11-11",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_61_18",
@@ -2714,10 +2714,10 @@
     "subsystem": "导检叫号",
     "account": "WF1070",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_67_23",
@@ -2730,10 +2730,10 @@
     "subsystem": "PACS登记",
     "account": "WF1070",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_67_24",
@@ -2746,10 +2746,10 @@
     "subsystem": "PACS报告",
     "account": "WF1070",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_67_25",
@@ -2762,10 +2762,10 @@
     "subsystem": "PACS审核",
     "account": "WF1070",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_68_21",
@@ -2778,10 +2778,10 @@
     "subsystem": "导检叫号",
     "account": "WF1071",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_68_23",
@@ -2794,10 +2794,10 @@
     "subsystem": "PACS登记",
     "account": "WF1071",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_68_24",
@@ -2810,10 +2810,10 @@
     "subsystem": "PACS报告",
     "account": "WF1071",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_68_25",
@@ -2826,10 +2826,10 @@
     "subsystem": "PACS审核",
     "account": "WF1071",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_69_21",
@@ -2842,10 +2842,10 @@
     "subsystem": "导检叫号",
     "account": "WF1072",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_69_23",
@@ -2858,10 +2858,10 @@
     "subsystem": "PACS登记",
     "account": "WF1072",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_69_24",
@@ -2874,10 +2874,10 @@
     "subsystem": "PACS报告",
     "account": "WF1072",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_69_25",
@@ -2890,10 +2890,10 @@
     "subsystem": "PACS审核",
     "account": "WF1072",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_70_21",
@@ -2970,10 +2970,10 @@
     "subsystem": "导检叫号",
     "account": "WF1074",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_71_23",
@@ -2986,10 +2986,10 @@
     "subsystem": "PACS登记",
     "account": "WF1074",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_71_24",
@@ -3002,10 +3002,10 @@
     "subsystem": "PACS报告",
     "account": "WF1074",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_71_25",
@@ -3018,10 +3018,10 @@
     "subsystem": "PACS审核",
     "account": "WF1074",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_72_21",
@@ -3034,10 +3034,10 @@
     "subsystem": "导检叫号",
     "account": "WF1075",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_72_23",
@@ -3050,10 +3050,10 @@
     "subsystem": "PACS登记",
     "account": "WF1075",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_72_24",
@@ -3066,10 +3066,10 @@
     "subsystem": "PACS报告",
     "account": "WF1075",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_72_25",
@@ -3082,10 +3082,10 @@
     "subsystem": "PACS审核",
     "account": "WF1075",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_73_21",
@@ -3146,10 +3146,10 @@
     "subsystem": "导检叫号",
     "account": "WF1077",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_74_23",
@@ -3162,10 +3162,10 @@
     "subsystem": "PACS登记",
     "account": "WF1077",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_74_24",
@@ -3178,10 +3178,10 @@
     "subsystem": "PACS报告",
     "account": "WF1077",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_74_25",
@@ -3194,10 +3194,10 @@
     "subsystem": "PACS审核",
     "account": "WF1077",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_74_27",
@@ -3210,10 +3210,10 @@
     "subsystem": "深睿",
     "account": "18918168598",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_75_21",
@@ -3226,10 +3226,10 @@
     "subsystem": "导检叫号",
     "account": "WF1078",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_75_23",
@@ -3242,10 +3242,10 @@
     "subsystem": "PACS登记",
     "account": "WF1078",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_76_21",
@@ -3258,10 +3258,10 @@
     "subsystem": "导检叫号",
     "account": "WF1079",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_76_23",
@@ -3274,10 +3274,10 @@
     "subsystem": "PACS登记",
     "account": "WF1079",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_77_21",
@@ -3322,10 +3322,10 @@
     "subsystem": "导检叫号",
     "account": "WF1081",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_78_23",
@@ -3338,10 +3338,10 @@
     "subsystem": "PACS登记",
     "account": "WF1081",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_79_21",
@@ -3418,10 +3418,10 @@
     "subsystem": "导检叫号",
     "account": "WF1083",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_80_23",
@@ -3434,10 +3434,10 @@
     "subsystem": "PACS登记",
     "account": "WF1083",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_80_24",
@@ -3450,10 +3450,10 @@
     "subsystem": "PACS报告",
     "account": "WF1083",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_80_25",
@@ -3466,10 +3466,10 @@
     "subsystem": "PACS审核",
     "account": "WF1083",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_80_27",
@@ -3482,10 +3482,10 @@
     "subsystem": "深睿",
     "account": "18918168593",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_81_21",
@@ -3498,10 +3498,10 @@
     "subsystem": "导检叫号",
     "account": "WF1084",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_81_23",
@@ -3514,10 +3514,10 @@
     "subsystem": "PACS登记",
     "account": "WF1084",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_81_24",
@@ -3530,10 +3530,10 @@
     "subsystem": "PACS报告",
     "account": "WF1084",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_81_25",
@@ -3546,10 +3546,10 @@
     "subsystem": "PACS审核",
     "account": "WF1084",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_81_27",
@@ -3562,10 +3562,10 @@
     "subsystem": "深睿",
     "account": "18930862735",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_82_21",
@@ -3578,10 +3578,10 @@
     "subsystem": "导检叫号",
     "account": "WF1085",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_82_23",
@@ -3594,10 +3594,10 @@
     "subsystem": "PACS登记",
     "account": "WF1085",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_82_24",
@@ -3610,10 +3610,10 @@
     "subsystem": "PACS报告",
     "account": "WF1085",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_82_25",
@@ -3626,10 +3626,10 @@
     "subsystem": "PACS审核",
     "account": "WF1085",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_83_21",
@@ -3642,10 +3642,10 @@
     "subsystem": "导检叫号",
     "account": "WF1086",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_83_23",
@@ -3658,10 +3658,10 @@
     "subsystem": "PACS登记",
     "account": "WF1086",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_83_24",
@@ -3674,10 +3674,10 @@
     "subsystem": "PACS报告",
     "account": "WF1086",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_83_25",
@@ -3690,10 +3690,10 @@
     "subsystem": "PACS审核",
     "account": "WF1086",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_84_8",
@@ -3802,10 +3802,10 @@
     "subsystem": "导检叫号",
     "account": "WF1090",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_88_8",
@@ -3818,10 +3818,10 @@
     "subsystem": "勤方分科",
     "account": "FK1091",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_88_21",
@@ -3834,10 +3834,10 @@
     "subsystem": "导检叫号",
     "account": "WF1091",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_89_8",
@@ -3914,10 +3914,10 @@
     "subsystem": "勤方分科",
     "account": "FK1094",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_91_18",
@@ -3930,10 +3930,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF1094",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_91_21",
@@ -3946,10 +3946,10 @@
     "subsystem": "导检叫号",
     "account": "WF1094",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_92_18",
@@ -4042,10 +4042,10 @@
     "subsystem": "导检叫号",
     "account": "WF1097",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_94_23",
@@ -4058,10 +4058,10 @@
     "subsystem": "PACS登记",
     "account": "WF1097",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_94_24",
@@ -4074,10 +4074,10 @@
     "subsystem": "PACS报告",
     "account": "WF1097",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_94_25",
@@ -4090,10 +4090,10 @@
     "subsystem": "PACS审核",
     "account": "WF1097",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_95_21",
@@ -4106,10 +4106,10 @@
     "subsystem": "导检叫号",
     "account": "WF1098",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_95_23",
@@ -4122,10 +4122,10 @@
     "subsystem": "PACS登记",
     "account": "WF1098",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_95_24",
@@ -4138,10 +4138,10 @@
     "subsystem": "PACS报告",
     "account": "WF1098",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_95_25",
@@ -4154,10 +4154,10 @@
     "subsystem": "PACS审核",
     "account": "WF1098",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_96_21",
@@ -4170,10 +4170,10 @@
     "subsystem": "导检叫号",
     "account": "WF1099",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_96_23",
@@ -4186,10 +4186,10 @@
     "subsystem": "PACS登记",
     "account": "WF1099",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_96_24",
@@ -4202,10 +4202,10 @@
     "subsystem": "PACS报告",
     "account": "WF1099",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_96_25",
@@ -4218,10 +4218,10 @@
     "subsystem": "PACS审核",
     "account": "WF1099",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_97_21",
@@ -4234,10 +4234,10 @@
     "subsystem": "导检叫号",
     "account": "WF1100",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_97_23",
@@ -4250,10 +4250,10 @@
     "subsystem": "PACS登记",
     "account": "WF1100",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_97_24",
@@ -4266,10 +4266,10 @@
     "subsystem": "PACS报告",
     "account": "WF1100",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_97_25",
@@ -4282,10 +4282,10 @@
     "subsystem": "PACS审核",
     "account": "WF1100",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_98_21",
@@ -4298,10 +4298,10 @@
     "subsystem": "导检叫号",
     "account": "WF1101",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_98_23",
@@ -4314,10 +4314,10 @@
     "subsystem": "PACS登记",
     "account": "WF1101",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_98_24",
@@ -4330,10 +4330,10 @@
     "subsystem": "PACS报告",
     "account": "WF1101",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_98_25",
@@ -4346,10 +4346,10 @@
     "subsystem": "PACS审核",
     "account": "WF1101",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_99_21",
@@ -4362,10 +4362,10 @@
     "subsystem": "导检叫号",
     "account": "WF1102",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_99_23",
@@ -4378,10 +4378,10 @@
     "subsystem": "PACS登记",
     "account": "WF1102",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_99_24",
@@ -4394,10 +4394,10 @@
     "subsystem": "PACS报告",
     "account": "WF1102",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_99_25",
@@ -4410,10 +4410,10 @@
     "subsystem": "PACS审核",
     "account": "WF1102",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_100_21",
@@ -4426,10 +4426,10 @@
     "subsystem": "导检叫号",
     "account": "WF1103",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_100_23",
@@ -4442,10 +4442,10 @@
     "subsystem": "PACS登记",
     "account": "WF1103",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_100_24",
@@ -4458,10 +4458,10 @@
     "subsystem": "PACS报告",
     "account": "WF1103",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_100_25",
@@ -4474,10 +4474,10 @@
     "subsystem": "PACS审核",
     "account": "WF1103",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_101_21",
@@ -4490,10 +4490,10 @@
     "subsystem": "导检叫号",
     "account": "WF1104",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_101_23",
@@ -4506,10 +4506,10 @@
     "subsystem": "PACS登记",
     "account": "WF1104",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_101_24",
@@ -4522,10 +4522,10 @@
     "subsystem": "PACS报告",
     "account": "WF1104",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_101_25",
@@ -4538,10 +4538,10 @@
     "subsystem": "PACS审核",
     "account": "WF1104",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_102_21",
@@ -4554,10 +4554,10 @@
     "subsystem": "导检叫号",
     "account": "WF1105",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_102_23",
@@ -4570,10 +4570,10 @@
     "subsystem": "PACS登记",
     "account": "WF1105",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_102_24",
@@ -4586,10 +4586,10 @@
     "subsystem": "PACS报告",
     "account": "WF1105",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_102_25",
@@ -4602,10 +4602,10 @@
     "subsystem": "PACS审核",
     "account": "WF1105",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_103_21",
@@ -4618,10 +4618,10 @@
     "subsystem": "导检叫号",
     "account": "WF1106",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_103_23",
@@ -4634,10 +4634,10 @@
     "subsystem": "PACS登记",
     "account": "WF1106",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_103_24",
@@ -4650,10 +4650,10 @@
     "subsystem": "PACS报告",
     "account": "WF1106",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_103_25",
@@ -4666,10 +4666,10 @@
     "subsystem": "PACS审核",
     "account": "WF1106",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_104_21",
@@ -4682,10 +4682,10 @@
     "subsystem": "导检叫号",
     "account": "WF1107",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_104_23",
@@ -4698,10 +4698,10 @@
     "subsystem": "PACS登记",
     "account": "WF1107",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_104_24",
@@ -4714,10 +4714,10 @@
     "subsystem": "PACS报告",
     "account": "WF1107",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_104_25",
@@ -4730,10 +4730,10 @@
     "subsystem": "PACS审核",
     "account": "WF1107",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_105_21",
@@ -4746,10 +4746,10 @@
     "subsystem": "导检叫号",
     "account": "WF1108",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_105_23",
@@ -4762,10 +4762,10 @@
     "subsystem": "PACS登记",
     "account": "WF1108",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_105_24",
@@ -4778,10 +4778,10 @@
     "subsystem": "PACS报告",
     "account": "WF1108",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_105_25",
@@ -4794,10 +4794,10 @@
     "subsystem": "PACS审核",
     "account": "WF1108",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_106_21",
@@ -4810,10 +4810,10 @@
     "subsystem": "导检叫号",
     "account": "WF1109",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_106_23",
@@ -4826,10 +4826,10 @@
     "subsystem": "PACS登记",
     "account": "WF1109",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_106_24",
@@ -4842,10 +4842,10 @@
     "subsystem": "PACS报告",
     "account": "WF1109",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_106_25",
@@ -4858,10 +4858,10 @@
     "subsystem": "PACS审核",
     "account": "WF1109",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_107_21",
@@ -4874,10 +4874,10 @@
     "subsystem": "导检叫号",
     "account": "WF1110",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_107_23",
@@ -4890,10 +4890,10 @@
     "subsystem": "PACS登记",
     "account": "WF1110",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_107_24",
@@ -4906,10 +4906,10 @@
     "subsystem": "PACS报告",
     "account": "WF1110",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_107_25",
@@ -4922,10 +4922,10 @@
     "subsystem": "PACS审核",
     "account": "WF1110",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_108_21",
@@ -4938,10 +4938,10 @@
     "subsystem": "导检叫号",
     "account": "WF1111",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_108_23",
@@ -4954,10 +4954,10 @@
     "subsystem": "PACS登记",
     "account": "WF1111",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_108_24",
@@ -4970,10 +4970,10 @@
     "subsystem": "PACS报告",
     "account": "WF1111",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_108_25",
@@ -4986,10 +4986,10 @@
     "subsystem": "PACS审核",
     "account": "WF1111",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_109_21",
@@ -5002,10 +5002,10 @@
     "subsystem": "导检叫号",
     "account": "WF1112",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_109_23",
@@ -5018,10 +5018,10 @@
     "subsystem": "PACS登记",
     "account": "WF1112",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_109_24",
@@ -5034,10 +5034,10 @@
     "subsystem": "PACS报告",
     "account": "WF1112",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_109_25",
@@ -5050,10 +5050,10 @@
     "subsystem": "PACS审核",
     "account": "WF1112",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_110_21",
@@ -5066,10 +5066,10 @@
     "subsystem": "导检叫号",
     "account": "WF1113",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_110_23",
@@ -5082,10 +5082,10 @@
     "subsystem": "PACS登记",
     "account": "WF1113",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_110_24",
@@ -5098,10 +5098,10 @@
     "subsystem": "PACS报告",
     "account": "WF1113",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_110_25",
@@ -5114,10 +5114,10 @@
     "subsystem": "PACS审核",
     "account": "WF1113",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_111_21",
@@ -5194,10 +5194,10 @@
     "subsystem": "导检叫号",
     "account": "WF1115",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_112_23",
@@ -5210,10 +5210,10 @@
     "subsystem": "PACS登记",
     "account": "WF1115",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_112_24",
@@ -5226,10 +5226,10 @@
     "subsystem": "PACS报告",
     "account": "WF1115",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_112_25",
@@ -5242,10 +5242,10 @@
     "subsystem": "PACS审核",
     "account": "WF1115",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_113_21",
@@ -5258,10 +5258,10 @@
     "subsystem": "导检叫号",
     "account": "WF1116",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_113_23",
@@ -5274,10 +5274,10 @@
     "subsystem": "PACS登记",
     "account": "WF1116",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_113_24",
@@ -5290,10 +5290,10 @@
     "subsystem": "PACS报告",
     "account": "WF1116",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_113_25",
@@ -5306,10 +5306,10 @@
     "subsystem": "PACS审核",
     "account": "WF1116",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_114_21",
@@ -5322,10 +5322,10 @@
     "subsystem": "导检叫号",
     "account": "WF1117",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_114_23",
@@ -5338,10 +5338,10 @@
     "subsystem": "PACS登记",
     "account": "WF1117",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_114_24",
@@ -5354,10 +5354,10 @@
     "subsystem": "PACS报告",
     "account": "WF1117",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_114_25",
@@ -5370,10 +5370,10 @@
     "subsystem": "PACS审核",
     "account": "WF1117",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_115_21",
@@ -5386,10 +5386,10 @@
     "subsystem": "导检叫号",
     "account": "WF1118",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_115_23",
@@ -5402,10 +5402,10 @@
     "subsystem": "PACS登记",
     "account": "WF1118",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_115_24",
@@ -5418,10 +5418,10 @@
     "subsystem": "PACS报告",
     "account": "WF1118",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_115_25",
@@ -5434,10 +5434,10 @@
     "subsystem": "PACS审核",
     "account": "WF1118",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_116_21",
@@ -5450,10 +5450,10 @@
     "subsystem": "导检叫号",
     "account": "WF1119",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_116_23",
@@ -5466,10 +5466,10 @@
     "subsystem": "PACS登记",
     "account": "WF1119",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_116_24",
@@ -5482,10 +5482,10 @@
     "subsystem": "PACS报告",
     "account": "WF1119",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_116_25",
@@ -5498,10 +5498,10 @@
     "subsystem": "PACS审核",
     "account": "WF1119",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_117_21",
@@ -5514,10 +5514,10 @@
     "subsystem": "导检叫号",
     "account": "WF1120",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_117_23",
@@ -5530,10 +5530,10 @@
     "subsystem": "PACS登记",
     "account": "WF1120",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_117_24",
@@ -5546,10 +5546,10 @@
     "subsystem": "PACS报告",
     "account": "WF1120",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_117_25",
@@ -5562,10 +5562,10 @@
     "subsystem": "PACS审核",
     "account": "WF1120",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_118_15",
@@ -11338,10 +11338,10 @@
     "subsystem": "勤方分科",
     "account": "FK1255",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2025-09-15",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_252_21",
@@ -11354,10 +11354,10 @@
     "subsystem": "导检叫号",
     "account": "WF1255",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2025-09-15",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_253_21",
@@ -14346,10 +14346,10 @@
     "subsystem": "勤方分科",
     "account": "FK1329",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_326_21",
@@ -14362,10 +14362,10 @@
     "subsystem": "导检叫号",
     "account": "WF1329",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_327_8",
@@ -15258,10 +15258,10 @@
     "subsystem": "勤方分科",
     "account": "FK1352",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_349_21",
@@ -15274,10 +15274,10 @@
     "subsystem": "导检叫号",
     "account": "WF1352",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_350_8",
@@ -16490,10 +16490,10 @@
     "subsystem": "导检叫号",
     "account": "WF2002",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "离职",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_378_22",
@@ -16506,10 +16506,10 @@
     "subsystem": "导检总控台",
     "account": "WF2002",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "离职",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_378_23",
@@ -16522,10 +16522,10 @@
     "subsystem": "PACS登记",
     "account": "WF2002",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "离职",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_379_21",
@@ -16538,10 +16538,10 @@
     "subsystem": "导检叫号",
     "account": "WF2003",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "离职",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_379_22",
@@ -16554,10 +16554,10 @@
     "subsystem": "导检总控台",
     "account": "WF2003",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "离职",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_379_23",
@@ -16570,10 +16570,10 @@
     "subsystem": "PACS登记",
     "account": "WF2003",
     "status": "停用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "离职",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_380_9",
@@ -16586,10 +16586,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK2004SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_380_10",
@@ -16602,10 +16602,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK2004SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_380_11",
@@ -16618,10 +16618,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK2004XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_380_12",
@@ -16634,10 +16634,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK2004F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_380_21",
@@ -16650,10 +16650,10 @@
     "subsystem": "导检叫号",
     "account": "WF2004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_380_22",
@@ -16666,10 +16666,10 @@
     "subsystem": "导检总控台",
     "account": "WF2004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_380_23",
@@ -16682,10 +16682,10 @@
     "subsystem": "PACS登记",
     "account": "WF2004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_381_9",
@@ -16698,10 +16698,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK2005SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_381_10",
@@ -16714,10 +16714,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK2005SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_381_11",
@@ -16730,10 +16730,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK2005XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_381_12",
@@ -16746,10 +16746,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK2005F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_381_21",
@@ -16762,10 +16762,10 @@
     "subsystem": "导检叫号",
     "account": "WF2005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_381_22",
@@ -16778,10 +16778,10 @@
     "subsystem": "导检总控台",
     "account": "WF2005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_381_23",
@@ -16794,10 +16794,10 @@
     "subsystem": "PACS登记",
     "account": "WF2005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_382_21",
@@ -16810,10 +16810,10 @@
     "subsystem": "导检叫号",
     "account": "WF2006",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_382_22",
@@ -16826,10 +16826,10 @@
     "subsystem": "导检总控台",
     "account": "WF2006",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_382_23",
@@ -16842,10 +16842,10 @@
     "subsystem": "PACS登记",
     "account": "WF2006",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_383_9",
@@ -17226,10 +17226,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK2010SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_386_10",
@@ -17242,10 +17242,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK2010SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_386_11",
@@ -17258,10 +17258,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK2010XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_386_12",
@@ -17274,10 +17274,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK2010F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_386_21",
@@ -17290,10 +17290,10 @@
     "subsystem": "导检叫号",
     "account": "WF2010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_386_22",
@@ -17306,10 +17306,10 @@
     "subsystem": "导检总控台",
     "account": "WF2010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_386_23",
@@ -17322,10 +17322,10 @@
     "subsystem": "PACS登记",
     "account": "WF2010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_387_9",
@@ -22266,10 +22266,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK3001SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_10",
@@ -22282,10 +22282,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK3001SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_11",
@@ -22298,10 +22298,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK3001XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_12",
@@ -22314,10 +22314,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK3001F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_14",
@@ -22330,10 +22330,10 @@
     "subsystem": "勤方登记",
     "account": "DJ3001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_16",
@@ -22346,10 +22346,10 @@
     "subsystem": "勤方总控",
     "account": "ZK3001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_18",
@@ -22362,10 +22362,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF3001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_21",
@@ -22378,10 +22378,10 @@
     "subsystem": "导检叫号",
     "account": "WF3001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_22",
@@ -22394,10 +22394,10 @@
     "subsystem": "导检总控台",
     "account": "WF3001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_434_23",
@@ -22410,10 +22410,10 @@
     "subsystem": "PACS登记",
     "account": "WF3001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_435_21",
@@ -22426,10 +22426,10 @@
     "subsystem": "导检叫号",
     "account": "WF3002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_435_22",
@@ -22442,10 +22442,10 @@
     "subsystem": "导检总控台",
     "account": "WF3002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_435_23",
@@ -22458,10 +22458,10 @@
     "subsystem": "PACS登记",
     "account": "WF3002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_436_9",
@@ -23098,10 +23098,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK3007SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_10",
@@ -23114,10 +23114,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK3007SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_11",
@@ -23130,10 +23130,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK3007XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_12",
@@ -23146,10 +23146,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK3007F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_14",
@@ -23162,10 +23162,10 @@
     "subsystem": "勤方登记",
     "account": "DJ3007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_16",
@@ -23178,10 +23178,10 @@
     "subsystem": "勤方总控",
     "account": "ZK3007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_21",
@@ -23194,10 +23194,10 @@
     "subsystem": "导检叫号",
     "account": "WF3007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_22",
@@ -23210,10 +23210,10 @@
     "subsystem": "导检总控台",
     "account": "WF3007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_440_23",
@@ -23226,10 +23226,10 @@
     "subsystem": "PACS登记",
     "account": "WF3007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_441_9",
@@ -23402,10 +23402,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF3009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_442_21",
@@ -23418,10 +23418,10 @@
     "subsystem": "导检叫号",
     "account": "WF3009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_442_22",
@@ -23434,10 +23434,10 @@
     "subsystem": "导检总控台",
     "account": "WF3009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_9",
@@ -23450,10 +23450,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK3010SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_10",
@@ -23466,10 +23466,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK3010SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_11",
@@ -23482,10 +23482,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK3010XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_12",
@@ -23498,10 +23498,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK3010F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_14",
@@ -23514,10 +23514,10 @@
     "subsystem": "勤方登记",
     "account": "DJ3010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_16",
@@ -23530,10 +23530,10 @@
     "subsystem": "勤方总控",
     "account": "ZK3010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_21",
@@ -23546,10 +23546,10 @@
     "subsystem": "导检叫号",
     "account": "WF3010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_22",
@@ -23562,10 +23562,10 @@
     "subsystem": "导检总控台",
     "account": "WF3010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_443_23",
@@ -23578,10 +23578,10 @@
     "subsystem": "PACS登记",
     "account": "WF3010",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_9",
@@ -23594,10 +23594,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK3011SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_10",
@@ -23610,10 +23610,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK3011SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_11",
@@ -23626,10 +23626,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK3011XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_12",
@@ -23642,10 +23642,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK3011F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_14",
@@ -23658,10 +23658,10 @@
     "subsystem": "勤方登记",
     "account": "DJ3011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_16",
@@ -23674,10 +23674,10 @@
     "subsystem": "勤方总控",
     "account": "ZK3011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_21",
@@ -23690,10 +23690,10 @@
     "subsystem": "导检叫号",
     "account": "WF3011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_22",
@@ -23706,10 +23706,10 @@
     "subsystem": "导检总控台",
     "account": "WF3011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_444_23",
@@ -23722,10 +23722,10 @@
     "subsystem": "PACS登记",
     "account": "WF3011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_445_22",
@@ -23738,10 +23738,10 @@
     "subsystem": "导检总控台",
     "account": "WF3012",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_446_9",
@@ -24250,10 +24250,10 @@
     "subsystem": "勤方登记",
     "account": "DJ3018",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_451_16",
@@ -24266,10 +24266,10 @@
     "subsystem": "勤方总控",
     "account": "ZK3018",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_451_19",
@@ -24282,10 +24282,10 @@
     "subsystem": "HIS收费",
     "account": "WF3018",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_451_22",
@@ -24298,10 +24298,10 @@
     "subsystem": "导检总控台",
     "account": "WF3018",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_452_14",
@@ -24506,10 +24506,10 @@
     "subsystem": "勤方分科",
     "account": "FK3022",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_455_9",
@@ -24522,10 +24522,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK3022SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_455_14",
@@ -24538,10 +24538,10 @@
     "subsystem": "勤方登记",
     "account": "DJ3022",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_455_16",
@@ -24554,10 +24554,10 @@
     "subsystem": "勤方总控",
     "account": "ZK3022",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_455_19",
@@ -24570,10 +24570,10 @@
     "subsystem": "HIS收费",
     "account": "WF3022",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_455_22",
@@ -24586,10 +24586,10 @@
     "subsystem": "导检总控台",
     "account": "WF3022",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_456_14",
@@ -24970,10 +24970,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK4001SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_462_10",
@@ -24986,10 +24986,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK4001SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_462_11",
@@ -25002,10 +25002,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK4001XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_462_12",
@@ -25018,10 +25018,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK4001F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_462_14",
@@ -25034,10 +25034,10 @@
     "subsystem": "勤方登记",
     "account": "DJ4001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_462_16",
@@ -25050,10 +25050,10 @@
     "subsystem": "勤方总控",
     "account": "ZK4001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_462_21",
@@ -25066,10 +25066,10 @@
     "subsystem": "导检叫号",
     "account": "WF4001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_462_22",
@@ -25082,10 +25082,10 @@
     "subsystem": "导检总控台",
     "account": "WF4001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_463_9",
@@ -25098,10 +25098,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK4002SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_463_10",
@@ -25114,10 +25114,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK4002SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_463_11",
@@ -25130,10 +25130,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK4002XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_463_12",
@@ -25146,10 +25146,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK4002F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_463_21",
@@ -25162,10 +25162,10 @@
     "subsystem": "导检叫号",
     "account": "WF4002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_463_22",
@@ -25178,10 +25178,10 @@
     "subsystem": "导检总控台",
     "account": "WF4002",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_464_9",
@@ -25194,10 +25194,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK4003SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_464_10",
@@ -25210,10 +25210,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK4003SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_464_11",
@@ -25226,10 +25226,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK4003XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_464_12",
@@ -25242,10 +25242,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK4003F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_464_21",
@@ -25258,10 +25258,10 @@
     "subsystem": "导检叫号",
     "account": "WF4003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_464_22",
@@ -25274,10 +25274,10 @@
     "subsystem": "导检总控台",
     "account": "WF4003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_465_9",
@@ -25402,10 +25402,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK4005SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_466_10",
@@ -25418,10 +25418,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK4005SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_466_11",
@@ -25434,10 +25434,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK4005XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_466_12",
@@ -25450,10 +25450,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK4005F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_466_21",
@@ -25466,10 +25466,10 @@
     "subsystem": "导检叫号",
     "account": "WF4005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_466_22",
@@ -25482,10 +25482,10 @@
     "subsystem": "导检总控台",
     "account": "WF4005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_466_23",
@@ -25498,10 +25498,10 @@
     "subsystem": "PACS登记",
     "account": "WF4005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_467_9",
@@ -25626,10 +25626,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK4007SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_468_10",
@@ -25642,10 +25642,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK4007SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_468_11",
@@ -25658,10 +25658,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK4007XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_468_12",
@@ -25674,10 +25674,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK4007F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_468_21",
@@ -25690,10 +25690,10 @@
     "subsystem": "导检叫号",
     "account": "WF4007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_468_22",
@@ -25706,10 +25706,10 @@
     "subsystem": "导检总控台",
     "account": "WF4007",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_469_9",
@@ -25722,10 +25722,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK4008SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_469_10",
@@ -25738,10 +25738,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK4008SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_469_11",
@@ -25754,10 +25754,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK4008XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_469_12",
@@ -25770,10 +25770,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK4008F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_469_21",
@@ -25786,10 +25786,10 @@
     "subsystem": "导检叫号",
     "account": "WF4008",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_469_22",
@@ -25802,10 +25802,10 @@
     "subsystem": "导检总控台",
     "account": "WF4008",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_470_21",
@@ -25818,10 +25818,10 @@
     "subsystem": "导检叫号",
     "account": "WF4009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_470_22",
@@ -25834,10 +25834,10 @@
     "subsystem": "导检总控台",
     "account": "WF4009",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_471_21",
@@ -25866,10 +25866,10 @@
     "subsystem": "导检叫号",
     "account": "WF4011",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_473_21",
@@ -25882,10 +25882,10 @@
     "subsystem": "导检叫号",
     "account": "WF4012",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_474_19",
@@ -25898,10 +25898,10 @@
     "subsystem": "HIS收费",
     "account": "WF4013",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_475_18",
@@ -26330,10 +26330,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK5001SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_10",
@@ -26346,10 +26346,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK5001SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_11",
@@ -26362,10 +26362,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK5001XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_12",
@@ -26378,10 +26378,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK5001F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_13",
@@ -26394,10 +26394,10 @@
     "subsystem": "勤方采血签到",
     "account": "CS5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_14",
@@ -26410,10 +26410,10 @@
     "subsystem": "勤方登记",
     "account": "DJ5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_15",
@@ -26426,10 +26426,10 @@
     "subsystem": "勤方主检",
     "account": "ZJ5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_16",
@@ -26442,10 +26442,10 @@
     "subsystem": "勤方总控",
     "account": "ZK5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_18",
@@ -26458,10 +26458,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_21",
@@ -26474,10 +26474,10 @@
     "subsystem": "导检叫号",
     "account": "WF5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_22",
@@ -26490,10 +26490,10 @@
     "subsystem": "导检总控台",
     "account": "WF5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_492_23",
@@ -26506,10 +26506,10 @@
     "subsystem": "PACS登记",
     "account": "WF5001",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_493_9",
@@ -26682,10 +26682,10 @@
     "subsystem": "导检叫号",
     "account": "WF5003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_494_22",
@@ -26698,10 +26698,10 @@
     "subsystem": "导检总控台",
     "account": "WF5003",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_9",
@@ -26714,10 +26714,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK5004SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_10",
@@ -26730,10 +26730,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK5004SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_11",
@@ -26746,10 +26746,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK5004XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_12",
@@ -26762,10 +26762,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK5004F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_14",
@@ -26778,10 +26778,10 @@
     "subsystem": "勤方登记",
     "account": "DJ5004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_15",
@@ -26794,10 +26794,10 @@
     "subsystem": "勤方主检",
     "account": "ZJ5004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_16",
@@ -26810,10 +26810,10 @@
     "subsystem": "勤方总控",
     "account": "ZK5004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_21",
@@ -26826,10 +26826,10 @@
     "subsystem": "导检叫号",
     "account": "WF5004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_22",
@@ -26842,10 +26842,10 @@
     "subsystem": "导检总控台",
     "account": "WF5004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_495_23",
@@ -26858,10 +26858,10 @@
     "subsystem": "PACS登记",
     "account": "WF5004",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_9",
@@ -26874,10 +26874,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK5005SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_10",
@@ -26890,10 +26890,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK5005SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_11",
@@ -26906,10 +26906,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK5005XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_12",
@@ -26922,10 +26922,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK5005F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_14",
@@ -26938,10 +26938,10 @@
     "subsystem": "勤方登记",
     "account": "DJ5005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_15",
@@ -26954,10 +26954,10 @@
     "subsystem": "勤方主检",
     "account": "ZJ5005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_16",
@@ -26970,10 +26970,10 @@
     "subsystem": "勤方总控",
     "account": "ZK5005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_18",
@@ -26986,10 +26986,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF5005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_496_22",
@@ -27002,10 +27002,10 @@
     "subsystem": "导检总控台",
     "account": "WF5005",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_9",
@@ -27018,10 +27018,10 @@
     "subsystem": "勤方分科-身高",
     "account": "FK5006SG",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_10",
@@ -27034,10 +27034,10 @@
     "subsystem": "勤方分科-视力",
     "account": "FK5006SL",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_11",
@@ -27050,10 +27050,10 @@
     "subsystem": "勤方分科-血压",
     "account": "FK5006XY",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_12",
@@ -27066,10 +27066,10 @@
     "subsystem": "勤方分科-肺功能",
     "account": "FK5006F",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_14",
@@ -27082,10 +27082,10 @@
     "subsystem": "勤方登记",
     "account": "DJ5006",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_15",
@@ -27098,10 +27098,10 @@
     "subsystem": "勤方主检",
     "account": "ZJ5006",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_16",
@@ -27114,10 +27114,10 @@
     "subsystem": "勤方总控",
     "account": "ZK5006",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_497_22",
@@ -27130,10 +27130,10 @@
     "subsystem": "导检总控台",
     "account": "WF5006",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_498_16",
@@ -27898,10 +27898,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF6020",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2024-08-13",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_532_18",
@@ -27946,10 +27946,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF6023",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2024-08-13",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_535_18",
@@ -27978,10 +27978,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF6025",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2024-08-13",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_537_18",
@@ -27994,10 +27994,10 @@
     "subsystem": "HIS门诊/体检",
     "account": "WF6026",
     "status": "启用",
-    "openDate": "",
+    "openDate": "2019-08-08",
     "expireDate": "2024-08-13",
     "remark": "",
-    "_mt": 1793241940260
+    "_mt": 1793244292784
   },
   {
     "id": "tp_538_18",
