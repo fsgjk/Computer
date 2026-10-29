@@ -292,6 +292,11 @@ a:hover{color:var(--primary-600)}
 .tp-stat-clickable:hover{transform:translateY(-1px);box-shadow:0 2px 10px rgba(15,23,42,.12)}
 .tp-stat-clickable.active{outline:2px solid var(--primary-400);outline-offset:-2px}
 .tp-person-hint{margin-top:12px;padding:10px 12px;background:var(--neutral-50);border:1px solid var(--neutral-100);border-radius:var(--radius-md);font-size:12px;color:var(--neutral-500);line-height:1.6}
+.tp-basic-readonly{background:var(--neutral-50);border:1px solid var(--neutral-100);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:12px}
+.tp-bi-row{display:flex;flex-wrap:wrap;gap:6px 18px}
+.tp-bi-item{font-size:13px;color:var(--neutral-700)}
+.tp-bi-item i{display:inline-block;min-width:34px;font-style:normal;color:var(--neutral-400);margin-right:6px}
+.tp-bi-item b,.tp-basic-readonly b{color:var(--neutral-800);font-weight:600}
 
 </style>
 </head>
@@ -397,13 +402,8 @@ a:hover{color:var(--primary-600)}
   <div class="modal">
     <div class="modal-header"><h3 id="tpModalTitle">新增账号</h3><button class="modal-close" onclick="closeTpModal()" aria-label="关闭">✕</button></div>
     <div class="modal-body">
+      <div class="tp-basic-readonly" id="tpModalBasicInfo"></div>
       <form class="form-grid" id="tpForm">
-        <div class="form-group"><label>姓名 *</label><input name="name" placeholder="账号使用人"></div>
-        <div class="form-group"><label>工号</label><input name="empId" placeholder="院内工号"></div>
-        <div class="form-group"><label>科室</label><input name="dept" placeholder="如 超声室"></div>
-        <div class="form-group"><label>岗位</label><input name="job" placeholder="如 B超医生"></div>
-        <div class="form-group"><label>职称</label><input name="title" placeholder="如 主治医师"></div>
-        <div class="form-group"><label>是否有照片</label><select name="hasPhoto"><option value="无">无</option><option value="有">有</option></select></div>
         <div class="form-group"><label>子系统 *</label><select name="subsystem" id="tpSubSelect"></select></div>
         <div class="form-group"><label>账号（取值）</label><input name="account" placeholder="如 FK1122 / WF1126"></div>
         <div class="form-group"><label>账号状态</label><select name="status"><option value="启用">启用</option><option value="停用">停用</option></select></div>
@@ -411,6 +411,7 @@ a:hover{color:var(--primary-600)}
         <div class="form-group"><label>有效期止</label><input type="date" name="expireDate"></div>
         <div class="form-group full"><label>备注</label><textarea name="remark" placeholder="用途、特殊处理等"></textarea></div>
       </form>
+      <div class="tp-person-hint">姓名、工号、科室、岗位、职称、照片等<b>基本信息不可在此修改</b>，请在列表行「✎ 编辑人员基本信息」中调整。</div>
     </div>
     <div class="modal-footer"><button class="btn btn-secondary" onclick="closeTpModal()">取消</button><button class="btn btn-primary" onclick="saveTpAccount()">保存</button></div>
   </div>
@@ -4740,7 +4741,8 @@ var tpAccounts = [];
 try { tpAccounts = JSON.parse(localStorage.getItem('ledger_thirdparty') || '[]'); } catch(e) { tpAccounts = []; }
 var TP_SHA = null;        // 云端 thirdparty.json 的 blob SHA
 var TP_DIRTY = false;     // 本地有改动尚未推送云端
-var tpEditingId = null;
+var tpEditingId = null;     // 正在编辑的账号记录 id（新增时为 null）
+var tpModalEmpId = null;    // 新增账号时所属人员 empId（用于携带基本信息）
 var tpSearchTimer = null;
 var tpExpanded = {};     // 已展开的人员 key（empId 或 "n:姓名"），用于一人一行下的账号明细
 var tpExpireSoon = false; // 是否按"30天内到期"筛选（顶部统计卡片点击触发）
@@ -6147,22 +6149,33 @@ function fmtTime(ts) {
 function tpFieldVal(n){ var el=document.querySelector('#tpForm [name="'+n+'"]'); return el?el.value:''; }
 function tpFieldSet(n,v){ var el=document.querySelector('#tpForm [name="'+n+'"]'); if(el) el.value=v||''; }
 
+function tpRenderBasicInfo(b) {
+  var el = document.getElementById('tpModalBasicInfo');
+  if(!el) return;
+  if(!b) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="tp-bi-row">'
+    + '<span class="tp-bi-item"><i>姓名</i>'+(esc(b.name||'—'))+'</span>'
+    + '<span class="tp-bi-item"><i>工号</i>'+(esc(b.empId||'—'))+'</span>'
+    + '<span class="tp-bi-item"><i>科室</i>'+(esc(b.dept||'—'))+'</span>'
+    + '<span class="tp-bi-item"><i>岗位</i>'+(esc(b.job||'—'))+'</span>'
+    + '<span class="tp-bi-item"><i>职称</i>'+(esc(b.title||'—'))+'</span>'
+    + '<span class="tp-bi-item"><i>照片</i>'+(esc(b.hasPhoto||'—'))+'</span>'
+    + '</div>';
+}
 function openTpModal(id, empId) {
   if(!LOGIN_USER){ showToast('请先登录','error'); return; }
   if(LOGIN_USER.role!=='admin'){ showToast('仅管理员可管理账号','error'); return; }
   populateTpFilters();
   tpEditingId = id || null;
+  tpModalEmpId = empId || null;
   document.getElementById('tpModalTitle').textContent = id ? '编辑账号' : '新增账号';
   document.getElementById('tpForm').reset();
+  // 基本信息不可在账号弹窗内编辑，仅展示（来源：被编辑账号或所属人员）
+  var basic = null;
   if(id) {
     var a = tpAccounts.find(function(x){ return x.id===id; });
     if(a) {
-      tpFieldSet('name', a.name||'');
-      tpFieldSet('empId', a.empId||'');
-      tpFieldSet('dept', a.dept||'');
-      tpFieldSet('job', a.job||'');
-      tpFieldSet('title', a.title||'');
-      tpFieldSet('hasPhoto', a.hasPhoto||'无');
+      basic = a;
       tpFieldSet('subsystem', a.subsystem||'');
       tpFieldSet('account', a.account||'');
       tpFieldSet('status', a.status||'启用');
@@ -6171,17 +6184,10 @@ function openTpModal(id, empId) {
       tpFieldSet('remark', a.remark||'');
     }
   } else if(empId) {
-    // 新增某人员账号：带入其姓名/工号/科室等公共信息
     var p = tpAccounts.find(function(x){ return x.empId===empId; });
-    if(p) {
-      tpFieldSet('name', p.name||'');
-      tpFieldSet('empId', p.empId||'');
-      tpFieldSet('dept', p.dept||'');
-      tpFieldSet('job', p.job||'');
-      tpFieldSet('title', p.title||'');
-      tpFieldSet('hasPhoto', p.hasPhoto||'无');
-    }
+    if(p) basic = p;
   }
+  tpRenderBasicInfo(basic);
   document.getElementById('tpModal').classList.add('active');
 }
 function closeTpModal(){ document.getElementById('tpModal').classList.remove('active'); }
@@ -6230,19 +6236,24 @@ function saveTpPerson() {
 
 function saveTpAccount() {
   if(!LOGIN_USER || LOGIN_USER.role!=='admin'){ showToast('仅管理员可修改','error'); closeTpModal(); return; }
-  var name = tpFieldVal('name').trim();
   var subsystem = tpFieldVal('subsystem');
-  if(!name){ showToast('请填写姓名','error'); return; }
   if(!subsystem){ showToast('请选择子系统','error'); return; }
+  // 基本信息只能从列表「编辑人员基本信息」修改，此处不可改，按来源携带
+  var basic = null;
+  if(tpEditingId){ basic = tpAccounts.find(function(x){ return x.id===tpEditingId; }); }
+  else if(tpModalEmpId){ basic = tpAccounts.find(function(x){ return x.empId===tpModalEmpId; }); }
+  if(!basic || !(basic.name && basic.name.trim())){
+    showToast('缺少人员基本信息，请先在列表「✎ 编辑人员基本信息」中补全','error'); closeTpModal(); return;
+  }
   var editing = !!tpEditingId;
   var rec = {
     id: tpEditingId || (Date.now().toString(36)+Math.random().toString(36).slice(2,8)),
-    name: name,
-    empId: tpFieldVal('empId').trim(),
-    dept: tpFieldVal('dept').trim(),
-    job: tpFieldVal('job').trim(),
-    title: tpFieldVal('title').trim(),
-    hasPhoto: tpFieldVal('hasPhoto'),
+    name: basic.name||'',
+    empId: basic.empId||'',
+    dept: basic.dept||'',
+    job: basic.job||'',
+    title: basic.title||'',
+    hasPhoto: basic.hasPhoto||'无',
     subsystem: subsystem,
     account: tpFieldVal('account').trim(),
     status: tpFieldVal('status'),
@@ -6254,10 +6265,10 @@ function saveTpAccount() {
   if(editing) {
     var idx = tpAccounts.findIndex(function(x){ return x.id===tpEditingId; });
     if(idx>=0) tpAccounts[idx]=rec;
-    addOpLog('编辑','第三方账号「'+name+'·'+subsystem+'」','状态:'+rec.status);
+    addOpLog('编辑','第三方账号「'+basic.name+'·'+subsystem+'」','状态:'+rec.status);
   } else {
     tpAccounts.push(rec);
-    addOpLog('新增','第三方账号「'+name+'·'+subsystem+'」','状态:'+rec.status);
+    addOpLog('新增','第三方账号「'+basic.name+'·'+subsystem+'」','状态:'+rec.status);
   }
   TP_DIRTY = true;
   saveThirdPartyToStorage();
