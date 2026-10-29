@@ -288,6 +288,9 @@ a:hover{color:var(--primary-600)}
 .tp-subtable td{padding:8px 10px;border-bottom:0.5px solid var(--neutral-50);vertical-align:top}
 .tp-subtable tr:last-child td{border-bottom:none}
 .tp-empty{padding:18px 4px;color:var(--neutral-400);font-size:13px}
+.tp-stat-clickable{cursor:pointer;transition:transform .1s,box-shadow .15s;user-select:none}
+.tp-stat-clickable:hover{transform:translateY(-1px);box-shadow:0 2px 10px rgba(15,23,42,.12)}
+.tp-stat-clickable.active{outline:2px solid var(--primary-400);outline-offset:-2px}
 
 </style>
 </head>
@@ -4720,6 +4723,7 @@ var TP_DIRTY = false;     // 本地有改动尚未推送云端
 var tpEditingId = null;
 var tpSearchTimer = null;
 var tpExpanded = {};     // 已展开的人员 key（empId 或 "n:姓名"），用于一人一行下的账号明细
+var tpExpireSoon = false; // 是否按"30天内到期"筛选（顶部统计卡片点击触发）
 var currentView = 'ledger';
 // 第三方供应商系统的 20 个子系统（对应 Excel 第 I~AB 列）
 var TP_SUBSYSTEMS = ['勤方分科','勤方分科-身高','勤方分科-视力','勤方分科-血压','勤方分科-肺功能','勤方采血签到','勤方登记','勤方主检','勤方总控','勤方主检排班','HIS门诊/体检','HIS收费','HIS物资','导检叫号','导检总控台','PACS登记','PACS报告','PACS审核','检验','深睿'];
@@ -5967,6 +5971,23 @@ function toggleTpPerson(pid) {
   renderTpAccounts();
 }
 
+// 点击顶部统计卡片进行筛选：启用/停用 设置状态筛选；30天内到期 设置到期筛选；人员数/账号总数 重置
+function filterTpByStat(label) {
+  var sf = document.getElementById('tpFilterStatus');
+  var sub = document.getElementById('tpFilterSub');
+  var dept = document.getElementById('tpFilterDept');
+  var kw = document.getElementById('tpSearch');
+  if(label === '启用') { if(sf) sf.value = '启用'; tpExpireSoon = false; }
+  else if(label === '停用') { if(sf) sf.value = '停用'; tpExpireSoon = false; }
+  else if(label === '30天内到期') { if(sf) sf.value = ''; tpExpireSoon = true; }
+  else { if(sf) sf.value = ''; tpExpireSoon = false; } // 人员数 / 账号总数 -> 全部
+  if(sub) sub.value = '';
+  if(dept) dept.value = '';
+  if(kw) kw.value = '';
+  renderTpStats();
+  renderTpAccounts();
+}
+
 function renderTpAccounts() {
   var wrap = document.getElementById('tpTableWrap');
   if(!wrap) return;
@@ -5982,6 +6003,11 @@ function renderTpAccounts() {
     if(stF && !p.accounts.some(function(a){ return a.status===stF; })) return false;
     if(subF && !p.accounts.some(function(a){ return a.subsystem===subF; })) return false;
     if(deptF && !p.accounts.some(function(a){ return a.dept===deptF; })) return false;
+    if(tpExpireSoon && !p.accounts.some(function(a){
+      if(a.status!=='启用' || !a.expireDate) return false;
+      var t = new Date(a.expireDate + 'T00:00:00').getTime();
+      return !isNaN(t) && t - Date.now() >= 0 && t - Date.now() <= 30*86400000;
+    })) return false;
     if(kw) {
       var hay = [p.name,p.empId,p.dept,p.job,p.title].concat(p.accounts.map(function(a){
         return [a.subsystem,a.account,a.status,a.remark,tpFamily(a.subsystem)].join(' ');
@@ -6077,15 +6103,17 @@ function renderTpStats() {
       if(!isNaN(t) && t - Date.now() >= 0 && t - Date.now() <= 30*86400000) soon++;
     }
   });
+  var sf = (document.getElementById('tpFilterStatus')||{}).value || '';
   document.getElementById('tpStatRow').innerHTML =
-    tpStatCard('人员数', people, 'var(--accent)')
-    + tpStatCard('账号总数', total, '#3B6D11')
-    + tpStatCard('启用', enabled, '#3B6D11')
-    + tpStatCard('停用', disabled, 'var(--neutral-400)')
-    + tpStatCard('30天内到期', soon, '#b45309');
+    tpStatCard('人员数', people, 'var(--accent)', false)
+    + tpStatCard('账号总数', total, '#3B6D11', false)
+    + tpStatCard('启用', enabled, '#3B6D11', sf==='启用')
+    + tpStatCard('停用', disabled, 'var(--neutral-400)', sf==='停用')
+    + tpStatCard('30天内到期', soon, '#b45309', tpExpireSoon);
 }
-function tpStatCard(label, val, color) {
-  return '<div class="metric-card"><div class="metric-label">'+label+'</div><div class="metric-value" style="color:'+color+'">'+val+'</div></div>';
+function tpStatCard(label, val, color, active) {
+  return '<div class="metric-card tp-stat-clickable'+(active?' active':'')+'" title="点击筛选：'+esc(label)+'" onclick="filterTpByStat(\''+idArg(label)+'\')">'
+    + '<div class="metric-label">'+label+'</div><div class="metric-value" style="color:'+color+'">'+val+'</div></div>';
 }
 function fmtTime(ts) {
   if(!ts) return '—';
