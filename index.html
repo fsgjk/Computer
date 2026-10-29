@@ -5961,23 +5961,38 @@ function loadThirdPartyFromOrigin() {
 
 // 填充子系统下拉、科室筛选（数据变化时增量补充）
 function populateTpFilters() {
+  // 子系统筛选：根据实际数据动态生成（仅列实际存在的子系统）
   var sub = document.getElementById('tpFilterSub');
-  if(sub && sub.options.length <= 1) {
-    TP_SUBSYSTEMS.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; sub.appendChild(o); });
+  if(sub) {
+    var cur = sub.value;
+    var subs = {};
+    tpAccounts.forEach(function(a){ if(a.subsystem) subs[a.subsystem] = 1; });
+    var subList = Object.keys(subs).sort();
+    if(subList.join('') !== sub.getAttribute('data-items')) {
+      sub.innerHTML = '<option value="">全部子系统</option>';
+      subList.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; sub.appendChild(o); });
+      sub.setAttribute('data-items', subList.join(''));
+    }
+    if(cur && subList.indexOf(cur) >= 0) sub.value = cur; else sub.value = '';
   }
+  // 科室筛选：根据实际数据动态生成（仅列实际存在的科室，并清理已无记录的项）
+  var dept = document.getElementById('tpFilterDept');
+  if(dept) {
+    var curd = dept.value;
+    var depts = {};
+    tpAccounts.forEach(function(a){ if(a.dept) depts[a.dept] = 1; });
+    var deptList = Object.keys(depts).sort();
+    if(deptList.join('') !== dept.getAttribute('data-items')) {
+      dept.innerHTML = '<option value="">全部科室</option>';
+      deptList.forEach(function(d){ var o=document.createElement('option'); o.value=d; o.textContent=d; dept.appendChild(o); });
+      dept.setAttribute('data-items', deptList.join(''));
+    }
+    if(curd && deptList.indexOf(curd) >= 0) dept.value = curd; else dept.value = '';
+  }
+  // 新增/编辑账号弹窗的子系统全集（保持静态，供录入选择）
   var msel = document.getElementById('tpSubSelect');
   if(msel && msel.options.length === 0) {
     TP_SUBSYSTEMS.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; msel.appendChild(o); });
-  }
-  var dept = document.getElementById('tpFilterDept');
-  if(dept) {
-    var depts = {};
-    tpAccounts.forEach(function(a){ if(a.dept) depts[a.dept]=1; });
-    Object.keys(depts).sort().forEach(function(d){
-      var exists = false;
-      for(var i=0;i<dept.options.length;i++){ if(dept.options[i].value===d){ exists=true; break; } }
-      if(!exists){ var o=document.createElement('option'); o.value=d; o.textContent=d; dept.appendChild(o); }
-    });
   }
 }
 
